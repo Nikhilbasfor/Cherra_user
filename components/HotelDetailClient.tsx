@@ -176,7 +176,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       </div>
 
       {/* Main Content Split */}
-      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-16">
+      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-24 lg:pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Details Column (8 cols) */}
           <div className="lg:col-span-8 space-y-7">
@@ -394,6 +394,36 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Mobile Sticky Booking Bar */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3 z-40 flex items-center justify-between shadow-lg">
+        <div>
+          <span className="text-[10px] text-slate-400 block">Direct Property Tariff</span>
+          <div className="flex items-baseline gap-1">
+            <span className="text-lg font-bold text-slate-900">
+              ₹{selectedRoom ? selectedRoom.price : hotel.pricePerNight}
+            </span>
+            <span className="text-xs text-slate-500">/ night</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <a
+            href={whatsappInquiryUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800"
+            title="Chat on WhatsApp"
+          >
+            <MessageSquare className="w-4 h-4 text-emerald-600" />
+          </a>
+          <button
+            onClick={() => setInquiryModalOpen(true)}
+            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-colors"
+          >
+            Book Now
+          </button>
         </div>
       </div>
 

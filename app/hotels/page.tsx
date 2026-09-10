@@ -53,9 +53,19 @@ function HotelsContent() {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>("featured");
   const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
-
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [selectedHotelForInquiry, setSelectedHotelForInquiry] = useState<Hotel | null>(null);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (selectedArea !== "All Areas") count++;
+    if (selectedStars.length > 0) count += selectedStars.length;
+    if (selectedAmenities.length > 0) count += selectedAmenities.length;
+    if (maxPrice < 15000) count++;
+    if (searchQuery.trim()) count++;
+    return count;
+  }, [selectedArea, selectedStars, selectedAmenities, maxPrice, searchQuery]);
 
   const availableAreas = useMemo(() => {
     const set = new Set<string>();
@@ -159,14 +169,14 @@ function HotelsContent() {
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Header */}
-      <div className="pt-24 pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-slate-200">
+      <div className="pt-20 pb-5 sm:pt-24 sm:pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-slate-200">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 mb-0.5">
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
               <span>Verified Cherrapunji Accommodations</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               Hotels & Resorts in Cherrapunji (Sohra)
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
@@ -203,7 +213,7 @@ function HotelsContent() {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
         {viewMode === "map" ? (
           <div className="space-y-6">
             <MapExplorer
@@ -221,9 +231,51 @@ function HotelsContent() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-7">
-            {/* Filter Sidebar (3 cols) */}
-            <aside className="lg:col-span-3 space-y-5">
+          <div>
+            {/* Mobile Quick Filter & Search Bar */}
+            <div className="lg:hidden flex items-center gap-2 mb-4">
+              <div className="relative flex-1">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Search hotel or area..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 shadow-xs"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold shadow-xs transition-colors shrink-0 ${
+                  mobileFilterOpen || activeFilterCount > 0
+                    ? "bg-emerald-600 text-white border-emerald-600"
+                    : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                }`}
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+                <span>Filters</span>
+                {activeFilterCount > 0 && (
+                  <span
+                    className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${
+                      mobileFilterOpen || activeFilterCount > 0
+                        ? "bg-white text-emerald-800"
+                        : "bg-emerald-600 text-white"
+                    }`}
+                  >
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-7">
+              {/* Filter Sidebar (3 cols on desktop, expandable on mobile) */}
+              <aside
+                className={`${
+                  mobileFilterOpen ? "block" : "hidden"
+                } lg:block lg:col-span-3 space-y-5 mb-4 lg:mb-0`}
+              >
               <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sticky top-24 space-y-5 shadow-xs">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <span className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
@@ -369,6 +421,17 @@ function HotelsContent() {
                     })}
                   </div>
                 </div>
+
+                {/* Mobile Apply Button */}
+                <div className="lg:hidden pt-3 border-t border-slate-100 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setMobileFilterOpen(false)}
+                    className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs text-center transition-colors"
+                  >
+                    Apply & Show {filteredHotels.length} Stays
+                  </button>
+                </div>
               </div>
             </aside>
 
@@ -429,8 +492,9 @@ function HotelsContent() {
               )}
             </main>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+    </div>
 
       <InquiryModal
         isOpen={inquiryModalOpen}

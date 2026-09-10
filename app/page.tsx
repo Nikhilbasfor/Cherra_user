@@ -79,32 +79,32 @@ export default function HomePage() {
       <HeroSection />
 
       {/* Stats Bar */}
-      <section className="border-y border-slate-200 bg-white py-6">
+      <section className="border-y border-slate-200 bg-white py-4 sm:py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="space-y-0.5">
-              <p className="text-2xl font-bold text-slate-900">25+</p>
-              <p className="text-xs text-slate-500 font-medium">Verified Stays in Sohra</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-6 text-center">
+            <div className="p-2.5 sm:p-0 rounded-xl bg-slate-50/80 sm:bg-transparent border border-slate-100 sm:border-0 space-y-0.5">
+              <p className="text-xl sm:text-2xl font-bold text-slate-900">25+</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Verified Stays in Sohra</p>
             </div>
-            <div className="space-y-0.5">
-              <p className="text-2xl font-bold text-emerald-700">4.8 / 5.0</p>
-              <p className="text-xs text-slate-500 font-medium">Average Guest Rating</p>
+            <div className="p-2.5 sm:p-0 rounded-xl bg-slate-50/80 sm:bg-transparent border border-slate-100 sm:border-0 space-y-0.5">
+              <p className="text-xl sm:text-2xl font-bold text-emerald-700">4.8 / 5.0</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Average Guest Rating</p>
             </div>
-            <div className="space-y-0.5">
-              <p className="text-2xl font-bold text-slate-900">100%</p>
-              <p className="text-xs text-slate-500 font-medium">Direct Hotel Tariffs</p>
+            <div className="p-2.5 sm:p-0 rounded-xl bg-slate-50/80 sm:bg-transparent border border-slate-100 sm:border-0 space-y-0.5">
+              <p className="text-xl sm:text-2xl font-bold text-slate-900">100%</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Direct Hotel Tariffs</p>
             </div>
-            <div className="space-y-0.5">
-              <p className="text-2xl font-bold text-emerald-700">15 Min</p>
-              <p className="text-xs text-slate-500 font-medium">Fast Inquiry Response</p>
+            <div className="p-2.5 sm:p-0 rounded-xl bg-slate-50/80 sm:bg-transparent border border-slate-100 sm:border-0 space-y-0.5">
+              <p className="text-xl sm:text-2xl font-bold text-emerald-700">15 Min</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Fast Inquiry Response</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Hotels Section */}
-      <section id="hotels" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+      <section id="hotels" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 sm:pt-16 sm:pb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4 mb-5 sm:mb-6">
           <div>
             <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 mb-1">
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
@@ -119,7 +119,7 @@ export default function HomePage() {
           </div>
 
           {/* Star Filter Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
             <button
               onClick={() => setActiveStarTab("all")}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
