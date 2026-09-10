@@ -35,10 +35,16 @@ function HotelsContent() {
   }, []);
   const searchParams = useSearchParams();
 
-  const initialArea = searchParams.get("area") || "All Areas";
+  const rawArea = searchParams.get("area");
+  const initialArea =
+    !rawArea || rawArea.toLowerCase() === "all" || rawArea === "All Areas"
+      ? "All Areas"
+      : rawArea;
   const initialStars = searchParams.get("stars")
     ? searchParams.get("stars")!.split(",").map(Number)
     : [];
+  const initialCheckIn = searchParams.get("checkIn") || "";
+  const initialCheckOut = searchParams.get("checkOut") || "";
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedArea, setSelectedArea] = useState(initialArea);
@@ -51,15 +57,30 @@ function HotelsContent() {
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [selectedHotelForInquiry, setSelectedHotelForInquiry] = useState<Hotel | null>(null);
 
-  const allAmenitiesList = [
-    "Free High-Speed Wi-Fi",
-    "Mountain View",
-    "Geyser / 24hr Hot Water",
-    "Bonfire Nights",
-    "Fine Dining Restaurant",
-    "Infinity View Pool",
-    "Private Balcony",
-  ];
+  const availableAreas = useMemo(() => {
+    const set = new Set<string>();
+    hotels.forEach((h) => {
+      if (h.area) set.add(h.area);
+    });
+    return ["All Areas", ...Array.from(set)];
+  }, [hotels]);
+
+  const allAmenitiesList = useMemo(() => {
+    const defaults = [
+      "Free High-Speed Wi-Fi",
+      "Mountain View",
+      "Geyser / 24hr Hot Water",
+      "Bonfire Nights",
+      "Fine Dining Restaurant",
+      "Infinity View Pool",
+      "Private Balcony",
+    ];
+    const set = new Set<string>(defaults);
+    hotels.forEach((h) => {
+      h.amenities?.forEach((a) => set.add(a));
+    });
+    return Array.from(set);
+  }, [hotels]);
 
   const toggleStar = (star: number) => {
     setSelectedStars((prev) =>
@@ -246,7 +267,7 @@ function HotelsContent() {
                     onChange={(e) => setSelectedArea(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white"
                   >
-                    {CHERRAPUNJI_AREAS.map((area) => (
+                    {availableAreas.map((area) => (
                       <option key={area} value={area}>
                         {area}
                       </option>
@@ -288,7 +309,7 @@ function HotelsContent() {
                             </span>
                           </div>
                           <span className="text-[10px] text-slate-400">
-                            ({CHERRAPUNJI_HOTELS.filter((h) => h.starRating === stars).length})
+                            ({hotels.filter((h) => h.starRating === stars).length})
                           </span>
                         </button>
                       );
@@ -415,6 +436,8 @@ function HotelsContent() {
         isOpen={inquiryModalOpen}
         onClose={() => setInquiryModalOpen(false)}
         preselectedHotel={selectedHotelForInquiry}
+        initialCheckIn={initialCheckIn}
+        initialCheckOut={initialCheckOut}
       />
 
       <Footer />

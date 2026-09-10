@@ -43,7 +43,14 @@ export async function POST(req: Request) {
       status: "new",
       budget: body.budget || 5000,
       notes: [],
-      createdAt: "Just now",
+      createdAt: new Date().toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      }),
     };
 
     const saved = await dbSaveInquiry(newInquiry);

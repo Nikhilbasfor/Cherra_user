@@ -128,7 +128,7 @@ export default function HomePage() {
                   : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-emerald-200"
               }`}
             >
-              All ({CHERRAPUNJI_HOTELS.length})
+              All ({hotels.length})
             </button>
             <button
               onClick={() => setActiveStarTab(5)}

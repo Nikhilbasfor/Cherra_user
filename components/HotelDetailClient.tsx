@@ -49,8 +49,9 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
     }
   };
 
-  const whatsappInquiryUrl = `https://wa.me/918794712345?text=${encodeURIComponent(
-    `Hello CherraStays! I am looking to book *${hotel.name}* in Cherrapunji. Please confirm room rates & availability.`
+  const hotelPhoneClean = hotel.phone ? hotel.phone.replace(/[^0-9]/g, "") : "918794712345";
+  const whatsappInquiryUrl = `https://wa.me/${hotelPhoneClean}?text=${encodeURIComponent(
+    `Hello! I am looking to book *${hotel.name}* (${selectedRoom ? selectedRoom.name : "Deluxe Room"}) in Cherrapunji. Please confirm room rates & availability.`
   )}`;
 
   return (
