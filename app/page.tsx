@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -19,13 +19,23 @@ import HotelCard from "@/components/HotelCard";
 import MapExplorer from "@/components/MapExplorer";
 import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_ATTRACTIONS } from "@/lib/mockData";
+import { getAllHotels } from "@/lib/firebase";
 import { Hotel } from "@/lib/types";
 
 export default function HomePage() {
+  const [hotels, setHotels] = useState<Hotel[]>(CHERRAPUNJI_HOTELS);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [selectedHotelForInquiry, setSelectedHotelForInquiry] = useState<Hotel | null>(null);
   const [activeStarTab, setActiveStarTab] = useState<number | "all">("all");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  useEffect(() => {
+    getAllHotels().then((data) => {
+      if (data && data.length > 0) {
+        setHotels(data);
+      }
+    }).catch(console.error);
+  }, []);
 
   const handleOpenInquiry = (hotel?: Hotel) => {
     setSelectedHotelForInquiry(hotel || null);
@@ -34,8 +44,8 @@ export default function HomePage() {
 
   const filteredHotels =
     activeStarTab === "all"
-      ? CHERRAPUNJI_HOTELS
-      : CHERRAPUNJI_HOTELS.filter((h) => h.starRating === activeStarTab);
+      ? hotels
+      : hotels.filter((h) => h.starRating === activeStarTab);
 
   const faqs = [
     {
@@ -179,7 +189,7 @@ export default function HomePage() {
       {/* Interactive Map Explorer Section */}
       <section id="map-explorer" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <MapExplorer
-          hotels={CHERRAPUNJI_HOTELS}
+          hotels={hotels}
           attractions={CHERRAPUNJI_ATTRACTIONS}
           onEnquire={(h) => handleOpenInquiry(h)}
         />

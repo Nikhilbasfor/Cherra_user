@@ -4,7 +4,7 @@ import {
   collection,
   getDocs,
   doc,
-  getDoc,
+  setDoc,
   addDoc,
   serverTimestamp,
   query,
@@ -42,7 +42,7 @@ if (typeof window !== "undefined" || isFirebaseConfigured) {
 }
 
 /**
- * Fetch all hotels from Firestore, or fallback to mock data
+ * Fetch all hotels from Firestore or local backend
  */
 export async function getAllHotels(): Promise<Hotel[]> {
   if (db && isFirebaseConfigured) {
@@ -55,11 +55,39 @@ export async function getAllHotels(): Promise<Hotel[]> {
           id: docSnap.id,
           ...(docSnap.data() as Omit<Hotel, "id">),
         }));
+      } else {
+        // Auto-seed Firestore so user's new Firebase project isn't empty!
+        for (const h of CHERRAPUNJI_HOTELS) {
+          await setDoc(doc(db, "hotels", h.id), h);
+        }
+        return CHERRAPUNJI_HOTELS;
       }
     } catch (err) {
-      console.warn("Firestore fetch error, falling back to local data:", err);
+      console.warn("Firestore fetch error, falling back to local backend:", err);
     }
   }
+
+  // If in browser, fetch from /api/hotels
+  if (typeof window !== "undefined") {
+    try {
+      const res = await fetch("/api/hotels", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) return data;
+      }
+    } catch {
+      // fallback
+    }
+  } else {
+    // Server-side
+    try {
+      const { dbGetHotels } = await import("./db");
+      return await dbGetHotels();
+    } catch {
+      // fallback
+    }
+  }
+
   return CHERRAPUNJI_HOTELS;
 }
 
@@ -68,14 +96,16 @@ export async function getAllHotels(): Promise<Hotel[]> {
  */
 export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
   const all = await getAllHotels();
-  const found = all.find((h) => h.slug === slug);
+  const found = all.find((h) => h.slug === slug || h.id === slug);
   return found || null;
 }
 
 /**
- * Submit an inquiry / booking request (Writes directly to Firestore `inquiries`)
+ * Submit an inquiry / booking request (Writes directly to Firestore and local API)
  */
 export async function submitInquiry(lead: Omit<InquiryLead, "id" | "createdAt" | "status">): Promise<{ success: boolean; id?: string }> {
+  let docId = "lead-" + Date.now();
+
   if (db && isFirebaseConfigured) {
     try {
       const inquiriesCol = collection(db, "inquiries");
@@ -84,15 +114,26 @@ export async function submitInquiry(lead: Omit<InquiryLead, "id" | "createdAt" |
         status: "new",
         createdAt: serverTimestamp(),
       });
-      return { success: true, id: docRef.id };
+      docId = docRef.id;
     } catch (err) {
       console.error("Failed to submit inquiry to Firestore:", err);
     }
   }
 
-  // Fallback simulation for offline/preview mode
-  console.log("Mock lead recorded locally:", lead);
-  return { success: true, id: "mock-lead-" + Date.now() };
+  // Also post to local backend API so Admin panel gets it immediately
+  if (typeof window !== "undefined") {
+    try {
+      await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...lead, id: docId }),
+      });
+    } catch (err) {
+      console.warn("Local API inquiry post fallback:", err);
+    }
+  }
+
+  return { success: true, id: docId };
 }
 
 export { app, db, isFirebaseConfigured };

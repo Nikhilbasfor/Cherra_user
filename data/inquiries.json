@@ -1,0 +1,76 @@
+[
+  {
+    "id": "lead-101",
+    "customerName": "Ananya Deshmukh",
+    "customerPhone": "+91 98201 44521",
+    "customerEmail": "ananya.d@gmail.com",
+    "hotelId": "polo-orchid-resort",
+    "hotelName": "Polo Orchid Resort",
+    "roomType": "Valley View Luxury Villa",
+    "checkIn": "2026-10-15",
+    "checkOut": "2026-10-18",
+    "guests": {
+      "adults": 2,
+      "children": 1
+    },
+    "specialRequests": "Anniversary celebration. Need cliff view room & airport cab.",
+    "status": "new",
+    "budget": 8500,
+    "notes": [],
+    "createdAt": "Just now"
+  },
+  {
+    "id": "lead-102",
+    "customerName": "Vikram Malhotra",
+    "customerPhone": "+91 98110 87654",
+    "customerEmail": "vikram.m@outlook.com",
+    "hotelId": "jiva-resort",
+    "hotelName": "Jiva Resort Cherrapunji",
+    "roomType": "Deluxe Pine Cottage",
+    "checkIn": "2026-10-20",
+    "checkOut": "2026-10-22",
+    "guests": {
+      "adults": 2,
+      "children": 0
+    },
+    "specialRequests": "Need quiet cottage away from reception.",
+    "status": "contacted",
+    "budget": 6200,
+    "notes": [
+      {
+        "id": "n1",
+        "text": "Spoke with client on phone. Sent WhatsApp quotation with 10% advance details.",
+        "author": "Admin Desk",
+        "createdAt": "2 hours ago"
+      }
+    ],
+    "createdAt": "Today, 11:30 AM"
+  },
+  {
+    "id": "lead-103",
+    "customerName": "Rohan & Priyam Chatterjee",
+    "customerPhone": "+91 94330 19283",
+    "customerEmail": "rohan.chat@yahoo.in",
+    "hotelId": "cherrapunjee-holiday-resort",
+    "hotelName": "Cherrapunjee Holiday Resort",
+    "roomType": "Country Comfort Room",
+    "checkIn": "2026-11-02",
+    "checkOut": "2026-11-05",
+    "guests": {
+      "adults": 4,
+      "children": 0
+    },
+    "specialRequests": "Trekking guide needed for Double Decker living root bridge.",
+    "status": "quote_sent",
+    "budget": 3800,
+    "notes": [
+      {
+        "id": "n2",
+        "text": "Sent customized 3-day trek itinerary with guide fee included.",
+        "author": "Trek Desk",
+        "createdAt": "Yesterday"
+      }
+    ],
+    "createdAt": "Yesterday, 04:15 PM"
+  }
+]

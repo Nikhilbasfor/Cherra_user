@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, Suspense } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   SlidersHorizontal,
@@ -20,9 +20,19 @@ import HotelCard from "@/components/HotelCard";
 import MapExplorer from "@/components/MapExplorer";
 import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_AREAS } from "@/lib/mockData";
+import { getAllHotels } from "@/lib/firebase";
 import { Hotel } from "@/lib/types";
 
 function HotelsContent() {
+  const [hotels, setHotels] = useState<Hotel[]>(CHERRAPUNJI_HOTELS);
+
+  useEffect(() => {
+    getAllHotels().then((data) => {
+      if (data && data.length > 0) {
+        setHotels(data);
+      }
+    }).catch(console.error);
+  }, []);
   const searchParams = useSearchParams();
 
   const initialArea = searchParams.get("area") || "All Areas";
@@ -73,7 +83,7 @@ function HotelsContent() {
   };
 
   const filteredHotels = useMemo(() => {
-    let list = [...CHERRAPUNJI_HOTELS];
+    let list = [...hotels];
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -116,7 +126,7 @@ function HotelsContent() {
     }
 
     return list;
-  }, [searchQuery, selectedArea, selectedStars, maxPrice, selectedAmenities, sortBy]);
+  }, [hotels, searchQuery, selectedArea, selectedStars, maxPrice, selectedAmenities, sortBy]);
 
   const handleOpenInquiry = (hotel?: Hotel) => {
     setSelectedHotelForInquiry(hotel || null);

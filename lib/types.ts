@@ -37,6 +37,14 @@ export interface Hotel {
   distanceToCenter?: string;
   phone?: string;
   email?: string;
+  status?: "active" | "inactive";
+}
+
+export interface FollowUpNote {
+  id: string;
+  text: string;
+  author: string;
+  createdAt: string;
 }
 
 export interface InquiryLead {
@@ -56,6 +64,7 @@ export interface InquiryLead {
   specialRequests?: string;
   status: "new" | "contacted" | "quote_sent" | "converted" | "cancelled";
   budget?: number;
+  notes?: FollowUpNote[];
   createdAt: string;
 }
 
