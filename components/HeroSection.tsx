@@ -52,7 +52,7 @@ export default function HeroSection() {
 
   return (
     <div className="relative pt-20 pb-10 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
-      {/* Cherrapunji Nature Video & Mist Background */}
+      {/* Real Cherrapunji Nohsngithiang Waterfall & Mist Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <video
           ref={videoRef}
@@ -64,7 +64,8 @@ export default function HeroSection() {
           poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=80"
           className="w-full h-full object-cover object-center scale-105"
         >
-          <source src="https://assets.mixkit.co/videos/43118/43118-720.mp4" type="video/mp4" />
+          <source src="/videos/cherrapunji-waterfall.webm" type="video/webm" />
+          <source src="/videos/cherrapunji-waterfall.mp4" type="video/mp4" />
         </video>
         {/* Soft mint & daylight gradient overlay preserving calm contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/92 via-emerald-50/45 to-[#f8faf9] backdrop-blur-[0.5px]" />
