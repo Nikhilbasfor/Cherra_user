@@ -25,8 +25,9 @@ export async function GET(req: Request, { params }: Params) {
       return NextResponse.json({ error: "Hotel not found" }, { status: 404, headers: corsHeaders });
     }
     return NextResponse.json(found, { headers: corsHeaders });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Internal server error";
+    return NextResponse.json({ error: message }, { status: 500, headers: corsHeaders });
   }
 }
 
@@ -37,8 +38,9 @@ export async function PUT(req: Request, { params }: Params) {
     body.id = id;
     const saved = await dbSaveHotel(body);
     return NextResponse.json(saved, { headers: corsHeaders });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Internal server error";
+    return NextResponse.json({ error: message }, { status: 500, headers: corsHeaders });
   }
 }
 
@@ -47,7 +49,8 @@ export async function DELETE(req: Request, { params }: Params) {
     const { id } = await params;
     await dbDeleteHotel(id);
     return NextResponse.json({ success: true }, { headers: corsHeaders });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Internal server error";
+    return NextResponse.json({ error: message }, { status: 500, headers: corsHeaders });
   }
 }

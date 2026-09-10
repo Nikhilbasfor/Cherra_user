@@ -7,7 +7,6 @@ import {
   collection,
   getDocs,
   doc,
-  getDoc,
   setDoc,
   deleteDoc,
   query,
@@ -66,7 +65,7 @@ export async function dbGetHotels(): Promise<Hotel[]> {
   try {
     const raw = fs.readFileSync(HOTELS_FILE, "utf-8");
     return JSON.parse(raw);
-  } catch (err) {
+  } catch {
     return CHERRAPUNJI_HOTELS;
   }
 }

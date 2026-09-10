@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { Search, MapPin, Calendar, Users, ShieldCheck, Sparkles, Compass } from "lucide-react";
 import { CHERRAPUNJI_AREAS } from "@/lib/mockData";
 

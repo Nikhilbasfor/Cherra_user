@@ -23,7 +23,7 @@ export default function InquiryModal({
   const [selectedHotelId, setSelectedHotelId] = useState(
     preselectedHotel ? preselectedHotel.id : CHERRAPUNJI_HOTELS[0].id
   );
-  const [roomType, setRoomType] = useState(preselectedRoom || "");
+  const roomType = preselectedRoom || "";
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");

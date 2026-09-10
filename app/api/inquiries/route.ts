@@ -16,8 +16,9 @@ export async function GET() {
   try {
     const inquiries = await dbGetInquiries();
     return NextResponse.json(inquiries, { headers: corsHeaders });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Internal server error";
+    return NextResponse.json({ error: message }, { status: 500, headers: corsHeaders });
   }
 }
 
@@ -47,7 +48,8 @@ export async function POST(req: Request) {
 
     const saved = await dbSaveInquiry(newInquiry);
     return NextResponse.json(saved, { status: 201, headers: corsHeaders });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Internal server error";
+    return NextResponse.json({ error: message }, { status: 500, headers: corsHeaders });
   }
 }

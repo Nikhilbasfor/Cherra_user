@@ -34,7 +34,8 @@ export async function PATCH(req: Request, { params }: Params) {
 
     const saved = await dbSaveInquiry(updated);
     return NextResponse.json(saved, { headers: corsHeaders });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Internal server error";
+    return NextResponse.json({ error: message }, { status: 500, headers: corsHeaders });
   }
 }
