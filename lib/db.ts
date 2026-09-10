@@ -31,6 +31,15 @@ function ensureFilesExist() {
   }
 }
 
+function withTimeout<T>(promise: Promise<T>, ms = 2000): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`Operation timed out after ${ms}ms`)), ms)
+    ),
+  ]);
+}
+
 // ----------------- HOTELS -----------------
 
 export async function dbGetHotels(): Promise<Hotel[]> {
@@ -39,15 +48,12 @@ export async function dbGetHotels(): Promise<Hotel[]> {
     try {
       const hotelsCol = collection(db, "hotels");
       const q = query(hotelsCol, orderBy("rating", "desc"));
-      const snapshot = await getDocs(q);
+      const snapshot = await withTimeout(getDocs(q), 2000);
       if (!snapshot.empty) {
         return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Hotel));
       } else {
-        // Auto-seed Firestore so it's never blank
-        console.log("Seeding Firestore with initial Cherrapunji hotels...");
-        for (const h of CHERRAPUNJI_HOTELS) {
-          await setDoc(doc(db, "hotels", h.id), h);
-        }
+        // Auto-seed Firestore in background
+        Promise.all(CHERRAPUNJI_HOTELS.map((h) => setDoc(doc(db!, "hotels", h.id), h))).catch(console.warn);
         return CHERRAPUNJI_HOTELS;
       }
     } catch (err) {
@@ -69,7 +75,7 @@ export async function dbSaveHotel(hotel: Hotel): Promise<Hotel> {
   // Save to Firebase if configured
   if (db && isFirebaseConfigured) {
     try {
-      await setDoc(doc(db, "hotels", hotel.id), hotel, { merge: true });
+      await withTimeout(setDoc(doc(db, "hotels", hotel.id), hotel, { merge: true }), 2500);
     } catch (err) {
       console.warn("Firestore save error:", err);
     }
@@ -91,7 +97,7 @@ export async function dbSaveHotel(hotel: Hotel): Promise<Hotel> {
 export async function dbDeleteHotel(hotelId: string): Promise<boolean> {
   if (db && isFirebaseConfigured) {
     try {
-      await deleteDoc(doc(db, "hotels", hotelId));
+      await withTimeout(deleteDoc(doc(db, "hotels", hotelId)), 2500);
     } catch (err) {
       console.warn("Firestore delete error:", err);
     }
@@ -111,7 +117,7 @@ export async function dbGetInquiries(): Promise<InquiryLead[]> {
     try {
       const col = collection(db, "inquiries");
       const q = query(col, orderBy("createdAt", "desc"));
-      const snapshot = await getDocs(q);
+      const snapshot = await withTimeout(getDocs(q), 2000);
       if (!snapshot.empty) {
         return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as InquiryLead));
       }
@@ -135,10 +141,13 @@ export async function dbSaveInquiry(inquiry: InquiryLead): Promise<InquiryLead> 
 
   if (db && isFirebaseConfigured) {
     try {
-      await setDoc(doc(db, "inquiries", inquiryId), {
-        ...finalInquiry,
-        createdAt: serverTimestamp(),
-      });
+      await withTimeout(
+        setDoc(doc(db, "inquiries", inquiryId), {
+          ...finalInquiry,
+          createdAt: serverTimestamp(),
+        }),
+        2500
+      );
     } catch (err) {
       console.warn("Firestore save inquiry error:", err);
     }
