@@ -14,18 +14,53 @@ import {
   Pause,
   Video,
   Eye,
+  Camera,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { CHERRAPUNJI_AREAS } from "@/lib/mockData";
 import { AnimatedTabs, TabOption } from "@/components/motion/AnimatedTabs";
 
-// Renowned hospitality collection tabs (no star ratings)
+// Renowned hospitality collection tabs
 const COLLECTION_TABS: TabOption[] = [
   { id: "all", label: "All Stays" },
   { id: "cliffside", label: "Cliffside & Waterfalls" },
   { id: "resorts", label: "Luxury Forest Resorts" },
   { id: "cottages", label: "Boutique Cottages" },
   { id: "homestays", label: "Heritage Homestays" },
+];
+
+interface VideoAngle {
+  id: string;
+  name: string;
+  badge: string;
+  location: string;
+  src: string;
+  type: string;
+  fallbackSrc?: string;
+  fallbackType?: string;
+}
+
+const VIDEO_ANGLES: VideoAngle[] = [
+  {
+    id: "drone",
+    name: "Drone Flyover",
+    badge: "4K Drone Sweep",
+    location: "Nohkalikai Falls & Cliffs, Sohra",
+    src: "/videos/cherrapunji-drone.webm",
+    type: "video/webm",
+    fallbackSrc: "/videos/cherrapunji-waterfall.mp4",
+    fallbackType: "video/mp4",
+  },
+  {
+    id: "cascade",
+    name: "Cascades Stream",
+    badge: "Rainforest Waterfalls",
+    location: "Cherrapunji Forest Valley",
+    src: "/videos/cherrapunji-waterfall.mp4",
+    type: "video/mp4",
+    fallbackSrc: "/videos/cherrapunji-waterfall.webm",
+    fallbackType: "video/webm",
+  },
 ];
 
 export default function HeroSection() {
@@ -37,16 +72,22 @@ export default function HeroSection() {
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState("2 Adults");
 
+  // Default video angle: Drone Flyover of Nohkalikai Falls
+  const [activeAngleId, setActiveAngleId] = useState<string>("drone");
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  const currentAngle =
+    VIDEO_ANGLES.find((a) => a.id === activeAngleId) || VIDEO_ANGLES[0];
+
   useEffect(() => {
     if (videoRef.current) {
+      videoRef.current.load();
       videoRef.current.play().catch(() => {
         // Handled silently for browser auto-play restrictions
       });
     }
-  }, []);
+  }, [activeAngleId]);
 
   const toggleVideo = () => {
     if (videoRef.current) {
@@ -87,17 +128,20 @@ export default function HeroSection() {
           {/* Unblurred, High-Definition Video Player */}
           <div className="absolute inset-0 z-0">
             <video
+              key={currentAngle.src}
               ref={videoRef}
               autoPlay
               loop
               muted
               playsInline
               preload="auto"
-              // Crucial: No CSS blur, high definition rendering
+              // Crucial: No CSS blur, high definition native rendering
               className="w-full h-full object-cover object-center scale-[1.01] transform-gpu will-change-transform"
             >
-              <source src="/videos/cherrapunji-waterfall.mp4" type="video/mp4" />
-              <source src="/videos/cherrapunji-waterfall.webm" type="video/webm" />
+              <source src={currentAngle.src} type={currentAngle.type} />
+              {currentAngle.fallbackSrc && (
+                <source src={currentAngle.fallbackSrc} type={currentAngle.fallbackType} />
+              )}
             </video>
 
             {/* Directional Cinematic Scrim (NOT a blur): Dark vignette at top & bottom ensures text legibility while keeping the video 100% sharp */}
@@ -107,41 +151,69 @@ export default function HeroSection() {
 
           {/* Top Bar inside the Hero Video Card */}
           <div className="relative z-20 p-4 sm:p-6 lg:p-8 flex flex-wrap items-center justify-between gap-3">
-            {/* Live 4K Ambience Status */}
+            {/* Live Status with Current Angle & Location */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/45 backdrop-blur-md border border-white/25 text-white shadow-lg text-[11px] sm:text-xs font-semibold"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/25 text-white shadow-lg text-[11px] sm:text-xs font-semibold"
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
               <span className="tracking-wider uppercase text-[10px] sm:text-[11px] text-white">
-                Live 4K Ambience
+                {currentAngle.badge}
               </span>
               <span className="text-white/40">•</span>
-              <span className="text-emerald-300 font-medium">Sohra, Meghalaya</span>
+              <span className="text-emerald-300 font-medium">{currentAngle.location}</span>
             </motion.div>
 
-            {/* Video Controls & Mode */}
+            {/* Angle Switcher & Video Playback Controls */}
             <div className="flex items-center gap-2">
+              {/* Drone / Cascade View Switcher Pill */}
+              <div className="inline-flex items-center p-0.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20">
+                {VIDEO_ANGLES.map((angle) => {
+                  const isActive = activeAngleId === angle.id;
+                  return (
+                    <button
+                      key={angle.id}
+                      type="button"
+                      onClick={() => setActiveAngleId(angle.id)}
+                      className={`relative px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold transition-colors duration-200 select-none ${
+                        isActive ? "text-emerald-950 font-bold" : "text-white/80 hover:text-white"
+                      }`}
+                    >
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeAnglePill"
+                          transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                          className="absolute inset-0 bg-white rounded-full shadow-xs"
+                          style={{ zIndex: 0 }}
+                        />
+                      )}
+                      <span className="relative z-10">{angle.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Play / Pause Toggle */}
               <button
                 type="button"
                 onClick={toggleVideo}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/45 hover:bg-black/60 backdrop-blur-md text-white text-[11px] font-medium border border-white/20 shadow-md transition-all active:scale-95"
-                title={isPlaying ? "Pause cinematic footage" : "Play cinematic footage"}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/45 hover:bg-black/60 backdrop-blur-md text-white text-[11px] font-medium border border-white/20 shadow-md transition-all active:scale-95 cursor-pointer"
+                title={isPlaying ? "Pause footage" : "Play footage"}
               >
                 {isPlaying ? (
                   <>
                     <Pause className="w-3 h-3 text-emerald-400" />
-                    <span>Pause Stream</span>
+                    <span className="hidden sm:inline">Pause</span>
                   </>
                 ) : (
                   <>
                     <Play className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                    <span>Play Stream</span>
+                    <span className="hidden sm:inline">Play</span>
                   </>
                 )}
               </button>
