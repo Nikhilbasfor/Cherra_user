@@ -43,11 +43,13 @@ function HotelsContent() {
   const initialStars = searchParams.get("stars")
     ? searchParams.get("stars")!.split(",").map(Number)
     : [];
+  const initialCollection = searchParams.get("collection") || "all";
   const initialCheckIn = searchParams.get("checkIn") || "";
   const initialCheckOut = searchParams.get("checkOut") || "";
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedArea, setSelectedArea] = useState(initialArea);
+  const [selectedCollection, setSelectedCollection] = useState(initialCollection);
   const [selectedStars, setSelectedStars] = useState<number[]>(initialStars);
   const [maxPrice, setMaxPrice] = useState<number>(15000);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -60,12 +62,13 @@ function HotelsContent() {
   const activeFilterCount = useMemo(() => {
     let count = 0;
     if (selectedArea !== "All Areas") count++;
+    if (selectedCollection !== "all") count++;
     if (selectedStars.length > 0) count += selectedStars.length;
     if (selectedAmenities.length > 0) count += selectedAmenities.length;
     if (maxPrice < 15000) count++;
     if (searchQuery.trim()) count++;
     return count;
-  }, [selectedArea, selectedStars, selectedAmenities, maxPrice, searchQuery]);
+  }, [selectedArea, selectedCollection, selectedStars, selectedAmenities, maxPrice, searchQuery]);
 
   const availableAreas = useMemo(() => {
     const set = new Set<string>();
@@ -107,6 +110,7 @@ function HotelsContent() {
   const resetFilters = () => {
     setSearchQuery("");
     setSelectedArea("All Areas");
+    setSelectedCollection("all");
     setSelectedStars([]);
     setMaxPrice(15000);
     setSelectedAmenities([]);
@@ -128,6 +132,39 @@ function HotelsContent() {
 
     if (selectedArea && selectedArea !== "All Areas") {
       list = list.filter((h) => h.area.toLowerCase().includes(selectedArea.toLowerCase()));
+    }
+
+    if (selectedCollection && selectedCollection !== "all") {
+      if (selectedCollection === "cliffside") {
+        list = list.filter(
+          (h) =>
+            h.tagline.toLowerCase().includes("cliff") ||
+            h.tagline.toLowerCase().includes("valley") ||
+            h.tagline.toLowerCase().includes("falls") ||
+            h.name.toLowerCase().includes("orchid") ||
+            h.name.toLowerCase().includes("kutmadan") ||
+            h.amenities.some(
+              (a) => a.toLowerCase().includes("view") || a.toLowerCase().includes("waterfall")
+            )
+        );
+      } else if (selectedCollection === "resorts") {
+        list = list.filter((h) => h.name.toLowerCase().includes("resort") || h.starRating >= 4);
+      } else if (selectedCollection === "cottages") {
+        list = list.filter(
+          (h) =>
+            h.rooms.some((r) => r.name.toLowerCase().includes("cottage")) ||
+            h.description.toLowerCase().includes("cottage") ||
+            h.description.toLowerCase().includes("pine")
+        );
+      } else if (selectedCollection === "homestays") {
+        list = list.filter(
+          (h) =>
+            h.name.toLowerCase().includes("homestay") ||
+            h.name.toLowerCase().includes("holiday resort") ||
+            h.starRating <= 3 ||
+            h.tagline.toLowerCase().includes("pioneer")
+        );
+      }
     }
 
     if (selectedStars.length > 0) {
@@ -157,7 +194,7 @@ function HotelsContent() {
     }
 
     return list;
-  }, [hotels, searchQuery, selectedArea, selectedStars, maxPrice, selectedAmenities, sortBy]);
+  }, [hotels, searchQuery, selectedArea, selectedCollection, selectedStars, maxPrice, selectedAmenities, sortBy]);
 
   const handleOpenInquiry = (hotel?: Hotel) => {
     setSelectedHotelForInquiry(hotel || null);
@@ -327,10 +364,42 @@ function HotelsContent() {
                   </select>
                 </div>
 
+                {/* Curated Collection */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Curated Collection
+                  </label>
+                  <div className="space-y-1">
+                    {[
+                      { id: "all", label: "All Collections" },
+                      { id: "resorts", label: "Luxury Forest Resorts" },
+                      { id: "cliffside", label: "Cliffside & Waterfalls" },
+                      { id: "cottages", label: "Boutique Pine Cottages" },
+                      { id: "homestays", label: "Heritage Homestays" },
+                    ].map((col) => {
+                      const isSelected = selectedCollection === col.id;
+                      return (
+                        <button
+                          key={col.id}
+                          onClick={() => setSelectedCollection(col.id)}
+                          className={`w-full flex items-center justify-between p-2 rounded-xl text-xs transition-all ${
+                            isSelected
+                              ? "bg-emerald-50 text-emerald-900 border border-emerald-200 font-semibold"
+                              : "bg-slate-50 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent"
+                          }`}
+                        >
+                          <span>{col.label}</span>
+                          {isSelected && <Check className="w-3.5 h-3.5 text-emerald-600" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 {/* Star Rating */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Star Classification
+                    Property Rating
                   </label>
                   <div className="space-y-1">
                     {[5, 4, 3, 2].map((stars) => {

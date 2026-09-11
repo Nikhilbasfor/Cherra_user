@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -11,7 +11,11 @@ import {
   Trees,
   Footprints,
   PhoneCall,
+  ShieldCheck,
+  Award,
+  Zap,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
@@ -21,20 +25,32 @@ import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_ATTRACTIONS } from "@/lib/mockData";
 import { getAllHotels } from "@/lib/firebase";
 import { Hotel } from "@/lib/types";
+import { AnimatedTabs, TabOption } from "@/components/motion/AnimatedTabs";
+
+// Renowned hospitality collection tabs
+const HOME_COLLECTION_TABS: TabOption[] = [
+  { id: "all", label: "All Collections" },
+  { id: "cliffside", label: "Cliffside & Waterfalls" },
+  { id: "resorts", label: "Luxury Forest Resorts" },
+  { id: "cottages", label: "Boutique Cottages" },
+  { id: "homestays", label: "Heritage Homestays" },
+];
 
 export default function HomePage() {
   const [hotels, setHotels] = useState<Hotel[]>(CHERRAPUNJI_HOTELS);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [selectedHotelForInquiry, setSelectedHotelForInquiry] = useState<Hotel | null>(null);
-  const [activeStarTab, setActiveStarTab] = useState<number | "all">("all");
+  const [activeCollectionTab, setActiveCollectionTab] = useState<string>("all");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   useEffect(() => {
-    getAllHotels().then((data) => {
-      if (data && data.length > 0) {
-        setHotels(data);
-      }
-    }).catch(console.error);
+    getAllHotels()
+      .then((data) => {
+        if (data && data.length > 0) {
+          setHotels(data);
+        }
+      })
+      .catch(console.error);
   }, []);
 
   const handleOpenInquiry = (hotel?: Hotel) => {
@@ -42,129 +58,154 @@ export default function HomePage() {
     setInquiryModalOpen(true);
   };
 
-  const filteredHotels =
-    activeStarTab === "all"
-      ? hotels
-      : hotels.filter((h) => h.starRating === activeStarTab);
+  // Filter hotels based on renowned hospitality categories
+  const filteredHotels = useMemo(() => {
+    if (activeCollectionTab === "all") return hotels;
+    if (activeCollectionTab === "cliffside") {
+      return hotels.filter(
+        (h) =>
+          h.tagline.toLowerCase().includes("cliff") ||
+          h.tagline.toLowerCase().includes("valley") ||
+          h.tagline.toLowerCase().includes("falls") ||
+          h.name.toLowerCase().includes("orchid") ||
+          h.name.toLowerCase().includes("kutmadan") ||
+          h.amenities.some(
+            (a) => a.toLowerCase().includes("view") || a.toLowerCase().includes("waterfall")
+          )
+      );
+    }
+    if (activeCollectionTab === "resorts") {
+      return hotels.filter(
+        (h) => h.name.toLowerCase().includes("resort") || h.starRating >= 4
+      );
+    }
+    if (activeCollectionTab === "cottages") {
+      return hotels.filter(
+        (h) =>
+          h.rooms.some((r) => r.name.toLowerCase().includes("cottage")) ||
+          h.description.toLowerCase().includes("cottage") ||
+          h.description.toLowerCase().includes("pine")
+      );
+    }
+    if (activeCollectionTab === "homestays") {
+      return hotels.filter(
+        (h) =>
+          h.name.toLowerCase().includes("homestay") ||
+          h.name.toLowerCase().includes("holiday resort") ||
+          h.starRating <= 3 ||
+          h.tagline.toLowerCase().includes("pioneer")
+      );
+    }
+    return hotels;
+  }, [hotels, activeCollectionTab]);
 
   const faqs = [
     {
       q: "What is the best time to visit Cherrapunji (Sohra)?",
-      a: "Cherrapunji is spectacular year-round. For roaring waterfalls and lush greenery, the monsoon season from June to September is unmatched. For trekking to the Double Decker Living Root Bridge and clear skies, October to April is ideal.",
+      a: "Cherrapunji is spectacular year-round. For roaring waterfalls and dramatic misty canyon clouds, the monsoon season from June to September is magical. For trekking down to the Double Decker Living Root Bridge and clear sunny skies, October to April is ideal.",
     },
     {
       q: "How do I book hotels through CherraStays without commission?",
-      a: "When you submit an inquiry through our portal, your details are sent directly to the hotel management and our reservation desk. There are no middleman commissions, and you receive direct rates with WhatsApp confirmation.",
+      a: "When you submit an inquiry through our portal, your request connects directly with the resort management and our local desk in Sohra. There are no middleman surcharges, ensuring you get direct front-desk tariffs along with prompt WhatsApp verification.",
     },
     {
       q: "Are hotels in Cherrapunji safe for families and solo female travelers?",
-      a: "Yes! Meghalaya is globally recognized for its matrilineal society, peaceful culture, and warm Khasi hospitality. All hotels listed on CherraStays are physically verified properties with high safety and hygiene standards.",
+      a: "Yes, exceptionally so. Meghalaya is globally recognized for its matrilineal society, peaceful culture, and warm Khasi hospitality. All hotels in our collection are verified physical properties adhering to strict safety and hygiene benchmarks.",
     },
     {
-      q: "Can hotels arrange taxis from Guwahati Airport or Shillong?",
-      a: "Yes. Almost all our listed partner resorts provide direct airport pick-and-drop services from Guwahati (GAU) and Shillong (SHL) upon prior notification.",
+      q: "Can hotels arrange airport transfers from Guwahati or Shillong?",
+      a: "Yes. Our partner resorts and boutique stays coordinate reliable cab pickups and drop-offs from Guwahati Airport (GAU) and Shillong Airport (SHL) with verified local drivers.",
     },
     {
-      q: "Do hotels in Cherrapunji have 24/7 hot water geysers?",
-      a: "Yes. Because Cherrapunji stays cool and misty throughout the year, all verified hotels in our directory are equipped with reliable water geysers in private bathrooms.",
+      q: "Do hotels in Cherrapunji provide 24/7 hot water geysers?",
+      a: "Yes. Because Cherrapunji remains crisp and misty throughout the year, every stay in our curated portfolio is equipped with reliable hot water geysers in private bathrooms.",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8faf9] text-slate-900">
-      {/* Navigation */}
+    <div className="min-h-screen bg-[#f8faf9] text-slate-900 selection:bg-emerald-200 selection:text-emerald-950">
+      {/* Editorial Noise / Texture Overlay across entire page */}
+      <div className="fixed inset-0 bg-grain pointer-events-none z-50 opacity-25" />
+
+      {/* Taskbar Top (Navbar in refined green) */}
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
-      {/* Hero Section */}
+      {/* Hero Section with Unblurred HD Video & Crisp Contrast Typography */}
       <HeroSection />
 
-      {/* Stats Bar */}
-      <section className="border-y border-slate-200 bg-white py-4 sm:py-6">
+      {/* Stats Bar with Tactile Cards */}
+      <section className="relative z-10 border-y border-slate-200/80 bg-white/95 backdrop-blur-md py-6 sm:py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-6 text-center">
-            <div className="p-2.5 sm:p-0 rounded-xl bg-slate-50/80 sm:bg-transparent border border-slate-100 sm:border-0 space-y-0.5">
-              <p className="text-xl sm:text-2xl font-bold text-slate-900">25+</p>
-              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Verified Stays in Sohra</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 text-center">
+            <div className="p-3 sm:p-4 rounded-2xl bg-slate-50/80 border border-slate-200/60 shadow-xs">
+              <div className="flex items-center justify-center gap-1.5 text-emerald-600 mb-1">
+                <ShieldCheck className="w-4 h-4" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Inventory</span>
+              </div>
+              <p className="text-2xl sm:text-3xl font-black text-slate-900">25+</p>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">Verified Stays in Sohra</p>
             </div>
-            <div className="p-2.5 sm:p-0 rounded-xl bg-slate-50/80 sm:bg-transparent border border-slate-100 sm:border-0 space-y-0.5">
-              <p className="text-xl sm:text-2xl font-bold text-emerald-700">4.8 / 5.0</p>
-              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Average Guest Rating</p>
+
+            <div className="p-3 sm:p-4 rounded-2xl bg-slate-50/80 border border-slate-200/60 shadow-xs">
+              <div className="flex items-center justify-center gap-1.5 text-amber-500 mb-1">
+                <Award className="w-4 h-4 fill-amber-500" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Score</span>
+              </div>
+              <p className="text-2xl sm:text-3xl font-black text-emerald-700">4.9 / 5.0</p>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">Guest Satisfaction Rate</p>
             </div>
-            <div className="p-2.5 sm:p-0 rounded-xl bg-slate-50/80 sm:bg-transparent border border-slate-100 sm:border-0 space-y-0.5">
-              <p className="text-xl sm:text-2xl font-bold text-slate-900">100%</p>
-              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Direct Hotel Tariffs</p>
+
+            <div className="p-3 sm:p-4 rounded-2xl bg-slate-50/80 border border-slate-200/60 shadow-xs">
+              <div className="flex items-center justify-center gap-1.5 text-emerald-600 mb-1">
+                <Sparkles className="w-4 h-4" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Pricing</span>
+              </div>
+              <p className="text-2xl sm:text-3xl font-black text-slate-900">100%</p>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">Direct Hotel Tariffs</p>
             </div>
-            <div className="p-2.5 sm:p-0 rounded-xl bg-slate-50/80 sm:bg-transparent border border-slate-100 sm:border-0 space-y-0.5">
-              <p className="text-xl sm:text-2xl font-bold text-emerald-700">15 Min</p>
-              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">Fast Inquiry Response</p>
+
+            <div className="p-3 sm:p-4 rounded-2xl bg-slate-50/80 border border-slate-200/60 shadow-xs">
+              <div className="flex items-center justify-center gap-1.5 text-teal-600 mb-1">
+                <Zap className="w-4 h-4" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Speed</span>
+              </div>
+              <p className="text-2xl sm:text-3xl font-black text-emerald-700">15 Min</p>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">Avg WhatsApp Response</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Hotels Section */}
-      <section id="hotels" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 sm:pt-16 sm:pb-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4 mb-5 sm:mb-6">
+      {/* Featured Stays Section with Motion Primitives Tabs */}
+      <section id="hotels" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10 sm:pt-20 sm:pb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 mb-1">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold uppercase tracking-wider border border-emerald-200/70 mb-2">
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Handpicked Accommodations</span>
+              <span>Handpicked Sanctuaries</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               Featured Stays in Cherrapunji
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5 max-w-xl">
-              From cliffside luxury resorts facing Seven Sisters Falls to peaceful pine cottages and homestays.
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl leading-relaxed">
+              From cliff-edge luxury suites facing Nohsngithiang Falls to cozy pine cottages and heritage tribal homestays.
             </p>
           </div>
 
-          {/* Star Filter Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
-            <button
-              onClick={() => setActiveStarTab("all")}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
-                activeStarTab === "all"
-                  ? "bg-emerald-600 text-white font-semibold shadow-xs"
-                  : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-emerald-200"
-              }`}
-            >
-              All ({hotels.length})
-            </button>
-            <button
-              onClick={() => setActiveStarTab(5)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
-                activeStarTab === 5
-                  ? "bg-emerald-600 text-white font-semibold shadow-xs"
-                  : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-emerald-200"
-              }`}
-            >
-              5★ Luxury
-            </button>
-            <button
-              onClick={() => setActiveStarTab(4)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
-                activeStarTab === 4
-                  ? "bg-emerald-600 text-white font-semibold shadow-xs"
-                  : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-emerald-200"
-              }`}
-            >
-              4★ Premium
-            </button>
-            <button
-              onClick={() => setActiveStarTab(3)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
-                activeStarTab === 3
-                  ? "bg-emerald-600 text-white font-semibold shadow-xs"
-                  : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-emerald-200"
-              }`}
-            >
-              3★ Comfort
-            </button>
+          {/* Renowned Category Tabs (Motion Primitives AnimatedTabs) */}
+          <div className="overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
+            <AnimatedTabs
+              tabs={HOME_COLLECTION_TABS}
+              activeId={activeCollectionTab}
+              onChange={setActiveCollectionTab}
+              layoutId="homeSectionTabPill"
+              variant="light"
+            />
           </div>
         </div>
 
-        {/* Hotels Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+        {/* Hotels Grid with Motion Stagger */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {filteredHotels.map((hotel) => (
             <HotelCard
               key={hotel.id}
@@ -175,13 +216,13 @@ export default function HomePage() {
         </div>
 
         {/* View All Stays Link */}
-        <div className="mt-10 text-center">
+        <div className="mt-12 text-center">
           <Link
             href="/hotels"
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 hover:text-emerald-700 font-semibold text-xs shadow-xs transition-colors"
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300/80 hover:border-emerald-400 text-slate-900 hover:text-emerald-700 font-bold text-xs shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
           >
-            <span>Explore All Stays With Custom Filters & Map</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <span>Explore All Stays With Interactive Map & Filters</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
@@ -195,128 +236,157 @@ export default function HomePage() {
         />
       </section>
 
-      {/* Why Cherrapunji Section */}
-      <section id="about-cherrapunji" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs font-semibold text-emerald-800 uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200">
+      {/* Destination Spotlight: Why Cherrapunji */}
+      <section id="about-cherrapunji" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
             Destination Spotlight
           </span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-3 tracking-tight">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-4 tracking-tight">
             Why Visit Cherrapunji (Sohra)?
           </h2>
-          <p className="text-slate-600 text-xs sm:text-sm mt-2 leading-relaxed">
-            Perched at 4,800 feet above sea level in the East Khasi Hills, Cherrapunji is an earthly paradise of clouds, living root architecture, and turquoise waterfalls.
+          <p className="text-slate-600 text-xs sm:text-sm mt-2.5 leading-relaxed">
+            Perched at 4,800 feet in Meghalaya's East Khasi Hills, Cherrapunji is an earthly wonderland of rolling clouds, ancient living root architecture, and turquoise canyon plunges.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1 */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-200 shadow-xs transition-all">
-            <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4">
-              <CloudRain className="w-5 h-5" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          {/* Spotlight 1 */}
+          <motion.div
+            whileHover={{ y: -4 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="p-7 rounded-3xl bg-white border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-5 border border-emerald-100 shadow-xs">
+              <CloudRain className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 mb-1.5">The Abode of Clouds</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Watch mist roll over the canyons straight from the plains of Bangladesh. Experience hundreds of seasonal waterfalls cascading through emerald forests.
+            <h3 className="text-lg font-bold text-slate-900 mb-2">The Abode of Clouds</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Watch dramatic mist clouds ascend from the plains of Bangladesh right into your balcony. Cherrapunji hosts hundreds of seasonal and perennial cascades.
             </p>
-          </div>
+          </motion.div>
 
-          {/* Card 2 */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-200 shadow-xs transition-all">
-            <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4">
-              <Trees className="w-5 h-5" />
+          {/* Spotlight 2 */}
+          <motion.div
+            whileHover={{ y: -4 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="p-7 rounded-3xl bg-white border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-5 border border-emerald-100 shadow-xs">
+              <Trees className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 mb-1.5">Living Root Bridges</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Trek down to the world-famous Double Decker Living Root Bridge in Nongriat, crafted over centuries by Khasi tribes weaving living Ficus elastica tree roots.
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Living Root Bridges</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Descend into the valley of Nongriat to cross the iconic Double Decker Living Root Bridge, organically bio-engineered across centuries by indigenous Khasi villagers.
             </p>
-          </div>
+          </motion.div>
 
-          {/* Card 3 */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-200 shadow-xs transition-all">
-            <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4">
-              <Footprints className="w-5 h-5" />
+          {/* Spotlight 3 */}
+          <motion.div
+            whileHover={{ y: -4 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="p-7 rounded-3xl bg-white border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-5 border border-emerald-100 shadow-xs">
+              <Footprints className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 mb-1.5">Ancient Caves & Canyons</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Explore the limestone wonders of Mawsmai and Arwah caves with marine fossils, and gaze into the 1,115-foot plunge of Nohkalikai Falls.
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Ancient Caves & Canyons</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Explore subterranean limestone passages in Mawsmai and Arwah caves embedded with prehistoric marine fossils, and witness the 1,115-ft Nohkalikai plunge.
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 mb-1">
+      {/* FAQ Accordion Section with Framer Motion Springs */}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 mb-2">
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>Got Questions?</span>
+            <span>Traveler Guide</span>
           </div>
-          <h2 className="text-2xl font-bold text-slate-900">Frequently Asked Questions</h2>
-          <p className="text-slate-500 text-xs mt-0.5">
-            Key details regarding hotel bookings and travel in Cherrapunji.
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Frequently Asked Questions</h2>
+          <p className="text-slate-500 text-xs sm:text-sm mt-1">
+            Essential information regarding accommodations, seasons, and reservations in Sohra.
           </p>
         </div>
 
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           {faqs.map((faq, idx) => {
             const isOpen = openFaqIndex === idx;
             return (
               <div
                 key={idx}
-                className="rounded-xl bg-white border border-slate-200 overflow-hidden shadow-xs transition-colors"
+                className="rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-xs hover:border-emerald-300 transition-colors"
               >
                 <button
                   onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
-                  className="w-full px-5 py-3.5 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800 hover:text-emerald-700 transition-colors"
+                  className="w-full px-5 sm:px-6 py-4 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-slate-900 hover:text-emerald-700 transition-colors cursor-pointer"
                 >
                   <span>{faq.q}</span>
                   <ChevronDown
-                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-3 ${
+                    className={`w-4 h-4 text-slate-400 transition-transform duration-300 shrink-0 ml-3 ${
                       isOpen ? "rotate-180 text-emerald-600" : ""
                     }`}
                   />
                 </button>
-                {isOpen && (
-                  <div className="px-5 pb-4 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100">
-                    {faq.a}
-                  </div>
-                )}
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-5 sm:px-6 pb-5 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* Calm CTA Banner */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="rounded-2xl bg-gradient-to-r from-emerald-800 to-teal-900 p-7 sm:p-10 text-white shadow-md">
-          <div className="max-w-2xl space-y-3">
-            <span className="text-[11px] font-semibold text-emerald-200 uppercase tracking-wider bg-white/10 px-2.5 py-1 rounded-full border border-white/15">
-              Personalized Assistance
+      {/* Luxury Concierge CTA Banner */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="rounded-3xl bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-900 p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
+          {/* Subtle noise in banner */}
+          <div className="absolute inset-0 bg-grain opacity-20 pointer-events-none" />
+
+          <div className="relative z-10 max-w-2xl space-y-3.5">
+            <span className="text-[11px] font-bold text-emerald-200 uppercase tracking-widest bg-white/10 px-3 py-1 rounded-full border border-white/20">
+              Personalized Concierge Desk
             </span>
-            <h3 className="text-xl sm:text-3xl font-bold tracking-tight">
-              Planning a Trip to Cherrapunji? Let Our Local Desk Help.
+            <h3 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-snug">
+              Planning a Journey to Cherrapunji? Let Our Local Specialists Assist.
             </h3>
             <p className="text-emerald-100 text-xs sm:text-sm leading-relaxed">
-              Share your travel dates and requirements. We will verify real-time room availability across Sohra resorts and send confirmed tariffs on WhatsApp.
+              Share your travel window and guest preferences. We verify real-time room availability across Sohra's premier resorts and send verified tariffs with zero markups.
             </p>
-            <div className="pt-2 flex flex-wrap gap-3">
-              <button
+            <div className="pt-3 flex flex-wrap gap-3">
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => handleOpenInquiry()}
-                className="px-5 py-2.5 rounded-xl bg-white text-emerald-900 font-semibold text-xs shadow-xs hover:bg-emerald-50 transition-colors"
+                className="px-6 py-3 rounded-xl bg-white text-emerald-950 font-bold text-xs sm:text-sm shadow-md hover:bg-emerald-50 transition-colors cursor-pointer"
               >
-                Get Free Custom Quote
-              </button>
-              <a
+                Request Custom Itinerary Quote
+              </motion.button>
+              <motion.a
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
                 href="https://wa.me/918794712345?text=Hi%20CherraStays,%20I%20need%20help%20booking%20a%20hotel%20in%20Cherrapunji"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-xl bg-emerald-700/50 hover:bg-emerald-700 text-white font-medium text-xs border border-emerald-600 transition-colors flex items-center gap-1.5"
+                className="px-6 py-3 rounded-xl bg-emerald-900/60 hover:bg-emerald-900 text-white font-semibold text-xs sm:text-sm border border-emerald-500/30 transition-colors flex items-center gap-2"
               >
-                <PhoneCall className="w-3.5 h-3.5" />
+                <PhoneCall className="w-4 h-4" />
                 <span>WhatsApp Helpline</span>
-              </a>
+              </motion.a>
             </div>
           </div>
         </div>

@@ -37,33 +37,33 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Star Categories */}
+          {/* Curated Collections */}
           <div>
             <h4 className="text-slate-900 font-bold text-xs uppercase tracking-wider mb-3">
-              Browse by Stars
+              Curated Collections
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link href="/hotels?stars=5" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
-                  <span>5-Star Luxury Resorts</span>
+                <Link href="/hotels?collection=resorts" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>Luxury Forest Resorts</span>
                   <ArrowUpRight className="w-3 h-3 text-slate-400" />
                 </Link>
               </li>
               <li>
-                <Link href="/hotels?stars=4" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
-                  <span>4-Star Premium Stays</span>
+                <Link href="/hotels?collection=cliffside" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>Cliffside & Waterfall Views</span>
                   <ArrowUpRight className="w-3 h-3 text-slate-400" />
                 </Link>
               </li>
               <li>
-                <Link href="/hotels?stars=3" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
-                  <span>3-Star Comfort Hotels</span>
+                <Link href="/hotels?collection=cottages" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>Boutique Pine Cottages</span>
                   <ArrowUpRight className="w-3 h-3 text-slate-400" />
                 </Link>
               </li>
               <li>
-                <Link href="/hotels?stars=2,1" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
-                  <span>Budget Homestays</span>
+                <Link href="/hotels?collection=homestays" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>Heritage Tribal Homestays</span>
                   <ArrowUpRight className="w-3 h-3 text-slate-400" />
                 </Link>
               </li>
