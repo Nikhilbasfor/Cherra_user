@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import Image from "next/image";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -28,6 +27,14 @@ export default function HeroSection() {
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Handled silently if browser restrictions apply
+      });
+    }
+  }, []);
+
   const toggleVideo = () => {
     if (videoRef.current) {
       if (isPlaying) {
@@ -52,7 +59,7 @@ export default function HeroSection() {
 
   return (
     <div className="relative pt-20 pb-10 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
-      {/* Real Cherrapunji Nohsngithiang Waterfall & Mist Background */}
+      {/* Real Cherrapunji Waterfall Nature Video Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <video
           ref={videoRef}
@@ -60,15 +67,14 @@ export default function HeroSection() {
           loop
           muted
           playsInline
-          preload="metadata"
-          poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=80"
+          preload="auto"
           className="w-full h-full object-cover object-center scale-105"
         >
-          <source src="/videos/cherrapunji-waterfall.webm" type="video/webm" />
           <source src="/videos/cherrapunji-waterfall.mp4" type="video/mp4" />
+          <source src="/videos/cherrapunji-waterfall.webm" type="video/webm" />
         </video>
-        {/* Soft mint & daylight gradient overlay preserving calm contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/92 via-emerald-50/45 to-[#f8faf9] backdrop-blur-[0.5px]" />
+        {/* Balanced translucent overlay allowing the waterfall video to show vividly while keeping text crisp */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/35 to-[#f8faf9]/95" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
