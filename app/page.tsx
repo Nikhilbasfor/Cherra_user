@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -186,9 +186,9 @@ export default function HomePage() {
 
       {/* Featured Stays Section with Motion Primitives Tabs & Subtle Leaf Prints */}
       <section id="hotels" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10 sm:pt-20 sm:pb-16 overflow-hidden">
-        {/* Subtle Botanical Fronds on the flanks */}
-        <BotanicalPalmWatermark side="left" className="-left-14 top-20 opacity-70" />
-        <BotanicalWatermark variant="right" className="-right-14 bottom-10 opacity-70" />
+        {/* Subtle Botanical Fronds placed inward towards the middle */}
+        <BotanicalPalmWatermark side="left" className="left-[1%] sm:left-[6%] lg:left-[10%] top-20 opacity-75" />
+        <BotanicalWatermark variant="right" className="right-[1%] sm:right-[6%] lg:right-[10%] bottom-10 opacity-75" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
@@ -252,8 +252,8 @@ export default function HomePage() {
       <section id="about-cherrapunji" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 my-6 overflow-hidden rounded-3xl border border-emerald-900/5 bg-gradient-to-b from-emerald-50/40 via-white/60 to-emerald-50/30 shadow-xs">
         {/* Ambient Watercolor Mist & Botanical Watermark Shading */}
         <div className="absolute inset-0 bg-radial-[ellipse_at_top] from-emerald-100/40 via-transparent to-transparent pointer-events-none" />
-        <BotanicalWatermark variant="left" className="-left-10 sm:-left-6 top-6 opacity-90" />
-        <BotanicalPalmWatermark side="right" className="-right-12 sm:-right-8 top-12 opacity-90" />
+        <BotanicalWatermark variant="left" className="left-[2%] sm:left-[8%] lg:left-[14%] top-4 opacity-85" />
+        <BotanicalPalmWatermark side="right" className="right-[2%] sm:right-[8%] lg:right-[14%] top-10 opacity-85" />
 
         <div className="relative z-10 text-center max-w-2xl mx-auto mb-12">
           <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-xs border border-emerald-200/80 shadow-xs">
@@ -317,8 +317,8 @@ export default function HomePage() {
 
       {/* FAQ Accordion Section with Leaf Shading */}
       <section className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 overflow-hidden">
-        <BotanicalWatermark variant="left" className="-left-20 -bottom-6 opacity-60" />
-        <BotanicalPalmWatermark side="right" className="-right-20 -top-6 opacity-60" />
+        <BotanicalWatermark variant="left" className="left-[1%] sm:left-[5%] -bottom-6 opacity-65" />
+        <BotanicalPalmWatermark side="right" className="right-[1%] sm:right-[5%] -top-6 opacity-65" />
 
         <div className="relative z-10 text-center mb-10">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 mb-2">

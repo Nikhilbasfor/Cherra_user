@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -216,7 +216,7 @@ export default function HeroSection() {
             >
               <span className="text-stroke-black-lg block sm:inline">Tranquil Stays</span>{" "}
               <span className="text-stroke-black-lg">Above the Clouds in</span>{" "}
-              <span className="text-emerald-400 text-stroke-black-lg font-black inline-block underline decoration-emerald-500/40 decoration-wavy underline-offset-8">
+              <span className="text-emerald-400 text-stroke-black-lg font-black inline-block">
                 Cherrapunji
               </span>
             </motion.h1>

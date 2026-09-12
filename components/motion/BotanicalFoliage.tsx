@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 interface LeafProps {
   className?: string;
@@ -93,7 +93,7 @@ export function LongPalmLeaf({ className = "", style }: LeafProps) {
   );
 }
 
-// Side botanical watermark with motion primitives sway
+// Side botanical watermark that moves as user scrolls up or down
 export function BotanicalWatermark({
   variant = "left",
   className = "",
@@ -102,19 +102,22 @@ export function BotanicalWatermark({
   className?: string;
 }) {
   const isRight = variant === "right";
+  const { scrollY } = useScroll();
+  const yParallax = useTransform(scrollY, [0, 3000], [0, isRight ? -140 : 160]);
 
   return (
-    <div
+    <motion.div
+      style={{ y: yParallax }}
       aria-hidden="true"
       className={`pointer-events-none select-none overflow-hidden absolute z-0 ${className}`}
     >
       <motion.div
         animate={{
-          y: [0, -14, 0],
-          rotate: isRight ? [0, -2, 0] : [0, 2, 0],
+          y: [0, -10, 0],
+          rotate: isRight ? [0, -1.8, 0] : [0, 1.8, 0],
         }}
         transition={{
-          duration: 10,
+          duration: 9,
           repeat: Infinity,
           ease: "easeInOut",
         }}
@@ -122,13 +125,13 @@ export function BotanicalWatermark({
           isRight ? "scale-x-[-1]" : ""
         } filter drop-shadow-sm`}
       >
-        <LongFernLeaf className="h-[480px] sm:h-[650px] lg:h-[820px]" />
+        <LongFernLeaf className="h-[460px] sm:h-[620px] lg:h-[760px]" />
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
 
-// Side floating palm frond with motion
+// Side floating palm frond that moves as user scrolls up or down
 export function BotanicalPalmWatermark({
   side = "right",
   className = "",
@@ -137,85 +140,133 @@ export function BotanicalPalmWatermark({
   className?: string;
 }) {
   const isRight = side === "right";
+  const { scrollY } = useScroll();
+  const yParallax = useTransform(scrollY, [0, 3000], [0, isRight ? 150 : -130]);
 
   return (
-    <div
+    <motion.div
+      style={{ y: yParallax }}
       aria-hidden="true"
       className={`pointer-events-none select-none overflow-hidden absolute z-0 ${className}`}
     >
       <motion.div
         animate={{
-          y: [0, -18, 0],
-          rotate: isRight ? [0, 2.5, 0] : [0, -2.5, 0],
+          y: [0, -12, 0],
+          rotate: isRight ? [0, 2, 0] : [0, -2, 0],
         }}
         transition={{
-          duration: 12,
+          duration: 11,
           repeat: Infinity,
           ease: "easeInOut",
-          delay: 1.2,
+          delay: 1,
         }}
         className={`text-emerald-900/[0.06] transform ${
           isRight ? "" : "scale-x-[-1]"
         }`}
       >
-        <LongPalmLeaf className="h-[440px] sm:h-[600px] lg:h-[750px]" />
+        <LongPalmLeaf className="h-[420px] sm:h-[560px] lg:h-[700px]" />
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
 
-// Global Ambient Botanical Page Backdrop (Fills empty white space with minimal leafy shade prints)
+// Global Ambient Botanical Page Backdrop - Placed inward towards the middle, drifting with scroll
 export function BotanicalPageBackdrop() {
+  const { scrollY } = useScroll();
+
+  // Scroll-linked parallax movements (moves as user scrolls up or down)
+  const yFernLeft = useTransform(scrollY, [0, 3500], [0, -260]);
+  const yPalmRight = useTransform(scrollY, [0, 3500], [0, 280]);
+  const yFernMid = useTransform(scrollY, [0, 3500], [40, -320]);
+  const yPalmLeftMid = useTransform(scrollY, [0, 3500], [-30, 220]);
+
   return (
     <div aria-hidden="true" className="fixed inset-0 pointer-events-none select-none z-0 overflow-hidden">
-      {/* Top Left Floating Frond */}
+      {/* 1. Inward Left-Center Fern Frond (Moves with scroll up/down) */}
       <motion.div
-        animate={{
-          y: [0, -16, 0],
-          rotate: [0, 1.8, 0],
-        }}
-        transition={{
-          duration: 13,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute -left-16 sm:-left-12 top-[35%] text-emerald-800/[0.055]"
+        style={{ y: yFernLeft }}
+        className="absolute left-[6%] sm:left-[14%] lg:left-[18%] top-[28%]"
       >
-        <LongFernLeaf className="h-[600px] lg:h-[850px]" />
+        <motion.div
+          animate={{
+            y: [0, -14, 0],
+            rotate: [0, 2, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="text-emerald-800/[0.05]"
+        >
+          <LongFernLeaf className="h-[520px] lg:h-[740px]" />
+        </motion.div>
       </motion.div>
 
-      {/* Mid Right Palm Frond */}
+      {/* 2. Inward Right-Center Palm Frond (Moves inversely with scroll) */}
       <motion.div
-        animate={{
-          y: [0, -20, 0],
-          rotate: [0, -2.2, 0],
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2,
-        }}
-        className="absolute -right-20 sm:-right-16 top-[55%] text-emerald-900/[0.05]"
+        style={{ y: yPalmRight }}
+        className="absolute right-[8%] sm:right-[15%] lg:right-[20%] top-[48%]"
       >
-        <LongPalmLeaf className="h-[650px] lg:h-[900px]" />
+        <motion.div
+          animate={{
+            y: [0, -16, 0],
+            rotate: [0, -2.4, 0],
+          }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1.5,
+          }}
+          className="text-emerald-900/[0.045]"
+        >
+          <LongPalmLeaf className="h-[560px] lg:h-[780px]" />
+        </motion.div>
       </motion.div>
 
-      {/* Bottom Left Leaf Frond */}
+      {/* 3. Subtle Central Canopy Frond (Between lower sections) */}
       <motion.div
-        animate={{
-          y: [0, -15, 0],
-          rotate: [0, 2, 0],
-        }}
-        transition={{
-          duration: 14,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 3.5,
-        }}
-        className="absolute -left-20 sm:-left-14 bottom-[10%] text-emerald-800/[0.055]"
+        style={{ y: yFernMid }}
+        className="absolute left-[45%] -translate-x-1/2 top-[68%]"
       >
-        <LongPalmLeaf className="h-[550px] lg:h-[800px] scale-x-[-1]" />
+        <motion.div
+          animate={{
+            y: [0, -12, 0],
+            rotate: [-1.5, 1.5, -1.5],
+          }}
+          transition={{
+            duration: 16,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2.8,
+          }}
+          className="text-emerald-700/[0.04] opacity-80"
+        >
+          <LongFernLeaf className="h-[480px] lg:h-[680px]" />
+        </motion.div>
+      </motion.div>
+
+      {/* 4. Lower Left-Center Palm Frond */}
+      <motion.div
+        style={{ y: yPalmLeftMid }}
+        className="absolute left-[10%] sm:left-[18%] bottom-[12%]"
+      >
+        <motion.div
+          animate={{
+            y: [0, -15, 0],
+            rotate: [0, 2.2, 0],
+          }}
+          transition={{
+            duration: 13,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
+          className="text-emerald-800/[0.045]"
+        >
+          <LongPalmLeaf className="h-[480px] lg:h-[700px] scale-x-[-1]" />
+        </motion.div>
       </motion.div>
     </div>
   );
