@@ -26,6 +26,11 @@ import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_ATTRACTIONS } from "@/lib/mockData";
 import { getAllHotels } from "@/lib/firebase";
 import { Hotel } from "@/lib/types";
 import { AnimatedTabs, TabOption } from "@/components/motion/AnimatedTabs";
+import {
+  BotanicalWatermark,
+  BotanicalPalmWatermark,
+  BotanicalPageBackdrop,
+} from "@/components/motion/BotanicalFoliage";
 
 // Renowned hospitality collection tabs
 const HOME_COLLECTION_TABS: TabOption[] = [
@@ -123,14 +128,17 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8faf9] text-slate-900 selection:bg-emerald-200 selection:text-emerald-950">
-      {/* Editorial Noise / Texture Overlay across entire page */}
+    <div className="min-h-screen bg-rainforest-mist text-slate-900 selection:bg-emerald-200 selection:text-emerald-950 relative overflow-x-hidden">
+      {/* Editorial Noise / Film Grain Texture Overlay */}
       <div className="fixed inset-0 bg-grain pointer-events-none z-50 opacity-25" />
+
+      {/* Global Ambient Botanical Leafy Prints (Fills empty background with subtle moving leafy fronds) */}
+      <BotanicalPageBackdrop />
 
       {/* Taskbar Top (Navbar in refined green) */}
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
-      {/* Hero Section with Unblurred HD Video & Crisp Contrast Typography */}
+      {/* Hero Section with Unblurred HD Video & Clean Uplifted Typography */}
       <HeroSection />
 
       {/* Stats Bar with Tactile Cards */}
@@ -176,9 +184,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Stays Section with Motion Primitives Tabs */}
-      <section id="hotels" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10 sm:pt-20 sm:pb-16">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      {/* Featured Stays Section with Motion Primitives Tabs & Subtle Leaf Prints */}
+      <section id="hotels" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10 sm:pt-20 sm:pb-16 overflow-hidden">
+        {/* Subtle Botanical Fronds on the flanks */}
+        <BotanicalPalmWatermark side="left" className="-left-14 top-20 opacity-70" />
+        <BotanicalWatermark variant="right" className="-right-14 bottom-10 opacity-70" />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold uppercase tracking-wider border border-emerald-200/70 mb-2">
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
@@ -205,7 +217,7 @@ export default function HomePage() {
         </div>
 
         {/* Hotels Grid with Motion Stagger */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {filteredHotels.map((hotel) => (
             <HotelCard
               key={hotel.id}
@@ -216,7 +228,7 @@ export default function HomePage() {
         </div>
 
         {/* View All Stays Link */}
-        <div className="mt-12 text-center">
+        <div className="relative z-10 mt-12 text-center">
           <Link
             href="/hotels"
             className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300/80 hover:border-emerald-400 text-slate-900 hover:text-emerald-700 font-bold text-xs shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
@@ -228,7 +240,7 @@ export default function HomePage() {
       </section>
 
       {/* Interactive Map Explorer Section */}
-      <section id="map-explorer" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <section id="map-explorer" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <MapExplorer
           hotels={hotels}
           attractions={CHERRAPUNJI_ATTRACTIONS}
@@ -236,10 +248,15 @@ export default function HomePage() {
         />
       </section>
 
-      {/* Destination Spotlight: Why Cherrapunji */}
-      <section id="about-cherrapunji" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
+      {/* Destination Spotlight: Why Cherrapunji with Minimal Long Leafy Prints */}
+      <section id="about-cherrapunji" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 my-6 overflow-hidden rounded-3xl border border-emerald-900/5 bg-gradient-to-b from-emerald-50/40 via-white/60 to-emerald-50/30 shadow-xs">
+        {/* Ambient Watercolor Mist & Botanical Watermark Shading */}
+        <div className="absolute inset-0 bg-radial-[ellipse_at_top] from-emerald-100/40 via-transparent to-transparent pointer-events-none" />
+        <BotanicalWatermark variant="left" className="-left-10 sm:-left-6 top-6 opacity-90" />
+        <BotanicalPalmWatermark side="right" className="-right-12 sm:-right-8 top-12 opacity-90" />
+
+        <div className="relative z-10 text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-xs border border-emerald-200/80 shadow-xs">
             Destination Spotlight
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-4 tracking-tight">
@@ -250,12 +267,12 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {/* Spotlight 1 */}
           <motion.div
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="p-7 rounded-3xl bg-white border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
+            className="p-7 rounded-3xl bg-white/95 backdrop-blur-sm border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
           >
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-5 border border-emerald-100 shadow-xs">
               <CloudRain className="w-6 h-6" />
@@ -270,7 +287,7 @@ export default function HomePage() {
           <motion.div
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="p-7 rounded-3xl bg-white border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
+            className="p-7 rounded-3xl bg-white/95 backdrop-blur-sm border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
           >
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-5 border border-emerald-100 shadow-xs">
               <Trees className="w-6 h-6" />
@@ -285,7 +302,7 @@ export default function HomePage() {
           <motion.div
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="p-7 rounded-3xl bg-white border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
+            className="p-7 rounded-3xl bg-white/95 backdrop-blur-sm border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
           >
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-5 border border-emerald-100 shadow-xs">
               <Footprints className="w-6 h-6" />
@@ -298,9 +315,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FAQ Accordion Section with Framer Motion Springs */}
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-10">
+      {/* FAQ Accordion Section with Leaf Shading */}
+      <section className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 overflow-hidden">
+        <BotanicalWatermark variant="left" className="-left-20 -bottom-6 opacity-60" />
+        <BotanicalPalmWatermark side="right" className="-right-20 -top-6 opacity-60" />
+
+        <div className="relative z-10 text-center mb-10">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 mb-2">
             <HelpCircle className="w-3.5 h-3.5" />
             <span>Traveler Guide</span>
@@ -311,13 +331,13 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="space-y-3">
+        <div className="relative z-10 space-y-3">
           {faqs.map((faq, idx) => {
             const isOpen = openFaqIndex === idx;
             return (
               <div
                 key={idx}
-                className="rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-xs hover:border-emerald-300 transition-colors"
+                className="rounded-2xl bg-white/95 backdrop-blur-sm border border-slate-200/90 overflow-hidden shadow-xs hover:border-emerald-300 transition-colors"
               >
                 <button
                   onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
@@ -352,7 +372,7 @@ export default function HomePage() {
       </section>
 
       {/* Luxury Concierge CTA Banner */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="rounded-3xl bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-900 p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
           {/* Subtle noise in banner */}
           <div className="absolute inset-0 bg-grain opacity-20 pointer-events-none" />
