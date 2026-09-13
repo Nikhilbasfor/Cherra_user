@@ -97,18 +97,19 @@ function InquiryModalContent({
   }, []);
 
   const [selectedHotelId, setSelectedHotelId] = useState(
-    preselectedHotel ? preselectedHotel.id : CHERRAPUNJI_HOTELS[0]?.id || ""
+    preselectedHotel ? preselectedHotel.id : ""
   );
 
-  const activeHotel: Hotel =
+  const activeHotel: Hotel | null =
+    (selectedHotelId ? hotelsList.find((h) => h.id === selectedHotelId) : null) ||
     preselectedHotel ||
-    hotelsList.find((h) => h.id === selectedHotelId) ||
-    CHERRAPUNJI_HOTELS[0];
+    null;
 
   const availableRooms =
-    activeHotel.rooms && activeHotel.rooms.length > 0
+    activeHotel && activeHotel.rooms && activeHotel.rooms.length > 0
       ? activeHotel.rooms
-      : [
+      : activeHotel
+      ? [
           {
             id: "r-default",
             name: "Standard Deluxe Room",
@@ -117,14 +118,15 @@ function InquiryModalContent({
             beds: "1 Queen Bed",
             features: ["Hot Water", "Scenic View"],
           },
-        ];
+        ]
+      : [];
 
   const [selectedRoomName, setSelectedRoomName] = useState(
-    preselectedRoom || availableRooms[0]?.name || "Standard Deluxe Room"
+    preselectedRoom || ""
   );
 
   const activeRoom =
-    availableRooms.find((r) => r.name === selectedRoomName) || availableRooms[0];
+    availableRooms.find((r) => r.name === selectedRoomName) || null;
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -140,16 +142,23 @@ function InquiryModalContent({
 
   const handleHotelSelect = (hotelId: string) => {
     setSelectedHotelId(hotelId);
-    const target = hotelsList.find((h) => h.id === hotelId);
-    if (target?.rooms?.[0]) {
-      setSelectedRoomName(target.rooms[0].name);
-    }
+    setSelectedRoomName("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim() || !checkIn || !checkOut) {
       setErrorMsg("Please fill all required fields (Name, WhatsApp number, Check-in, Check-out)");
+      return;
+    }
+
+    if (!activeHotel) {
+      setErrorMsg("Please select a hotel or homestay from the list");
+      return;
+    }
+
+    if (!selectedRoomName) {
+      setErrorMsg("Please select a room configuration");
       return;
     }
 
@@ -183,8 +192,10 @@ function InquiryModalContent({
   };
 
   const hotelPhoneClean = "919864879505";
+  const hotelNameForWa = activeHotel ? activeHotel.name : "Selected Homestay";
+  const roomNameForWa = selectedRoomName || "Standard Room";
   const whatsappMessage = encodeURIComponent(
-    `Hello CherraStays! I submitted a booking inquiry for *${activeHotel.name}* (${selectedRoomName}). Dates: ${checkIn} to ${checkOut} for ${adults} Adults${children > 0 ? `, ${children} Children` : ""}. Guest Name: ${name}. Contact: ${phone}. Please confirm direct front-desk rates & room availability!`
+    `Hello CherraStays! I submitted a booking inquiry for *${hotelNameForWa}* (${roomNameForWa}). Dates: ${checkIn} to ${checkOut} for ${adults} Adults${children > 0 ? `, ${children} Children` : ""}. Guest Name: ${name}. Contact: ${phone}. Please confirm direct front-desk rates & room availability!`
   );
 
   const todayStr = new Date().toISOString().split("T")[0];
@@ -229,18 +240,18 @@ function InquiryModalContent({
             <h4 className="text-xl font-bold text-slate-900">Inquiry Confirmed</h4>
             <p className="text-slate-600 text-xs sm:text-sm mt-1 max-w-md mx-auto leading-relaxed">
               Thank you <span className="text-emerald-800 font-semibold">{name}</span>. Your request for{" "}
-              <span className="text-emerald-800 font-semibold">{activeHotel.name}</span> has been routed to our local Sohra desk.
+              <span className="text-emerald-800 font-semibold">{activeHotel?.name || "Selected Sanctuary"}</span> has been routed to our local Sohra desk.
             </p>
           </div>
 
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left text-xs space-y-1.5 max-w-md mx-auto">
             <div className="flex justify-between">
               <span className="text-slate-500">Property:</span>
-              <span className="text-slate-900 font-bold">{activeHotel.name}</span>
+              <span className="text-slate-900 font-bold">{activeHotel?.name || "Selected Sanctuary"}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Room:</span>
-              <span className="text-slate-900 font-medium">{selectedRoomName}</span>
+              <span className="text-slate-900 font-medium">{selectedRoomName || "Standard Deluxe"}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Dates:</span>
@@ -252,7 +263,7 @@ function InquiryModalContent({
             </div>
             <div className="flex justify-between border-t border-slate-200/80 pt-1.5">
               <span className="text-slate-500">Est. Tariff:</span>
-              <span className="text-emerald-700 font-extrabold">₹{activeRoom?.price || activeHotel.pricePerNight} / night</span>
+              <span className="text-emerald-700 font-extrabold">₹{activeRoom?.price || activeHotel?.pricePerNight || 0} / night</span>
             </div>
           </div>
 
@@ -288,19 +299,19 @@ function InquiryModalContent({
             <div className="p-3.5 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                  {activeHotel.starRating}★
+                  {preselectedHotel.starRating}★
                 </div>
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">{activeHotel.name}</h4>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">{preselectedHotel.name}</h4>
                   <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
                     <MapPin className="w-3 h-3 text-emerald-600 shrink-0" />
-                    <span>{activeHotel.area}</span>
+                    <span>{preselectedHotel.area}</span>
                   </p>
                 </div>
               </div>
               <div className="text-right pl-2">
                 <span className="text-[10px] text-slate-400 block font-medium">Verified Direct Rate</span>
-                <span className="text-xs sm:text-sm font-extrabold text-emerald-800">₹{activeHotel.pricePerNight}</span>
+                <span className="text-xs sm:text-sm font-extrabold text-emerald-800">₹{preselectedHotel.pricePerNight}</span>
                 <span className="text-[10px] text-slate-500"> / night</span>
               </div>
             </div>
@@ -313,10 +324,15 @@ function InquiryModalContent({
               <select
                 value={selectedHotelId}
                 onChange={(e) => handleHotelSelect(e.target.value)}
-                className="w-full bg-slate-50/80 hover:bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-500/15 transition-all cursor-pointer"
+                className={`w-full bg-slate-50/80 hover:bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-500/15 transition-all cursor-pointer ${
+                  !selectedHotelId ? "text-slate-400" : "text-slate-900 font-medium"
+                }`}
               >
+                <option value="" disabled>
+                  Select Hotel / Homestay
+                </option>
                 {hotelsList.map((hotel) => (
-                  <option key={hotel.id} value={hotel.id}>
+                  <option key={hotel.id} value={hotel.id} className="text-slate-900 font-normal">
                     {hotel.name} ({hotel.starRating}★) — ₹{hotel.pricePerNight}/night • {hotel.area}
                   </option>
                 ))}
@@ -339,11 +355,17 @@ function InquiryModalContent({
             </label>
             <select
               value={selectedRoomName}
+              disabled={!activeHotel}
               onChange={(e) => setSelectedRoomName(e.target.value)}
-              className="w-full bg-slate-50/80 hover:bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-500/15 transition-all cursor-pointer"
+              className={`w-full bg-slate-50/80 hover:bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-500/15 transition-all ${
+                !activeHotel ? "opacity-60 cursor-not-allowed text-slate-400" : "cursor-pointer"
+              } ${!selectedRoomName ? "text-slate-400" : "text-slate-900 font-medium"}`}
             >
+              <option value="" disabled>
+                {activeHotel ? "Select Room Configuration" : "Select a hotel first"}
+              </option>
               {availableRooms.map((r) => (
-                <option key={r.id || r.name} value={r.name}>
+                <option key={r.id || r.name} value={r.name} className="text-slate-900 font-normal">
                   {r.name} — ₹{r.price}/night ({r.capacity}, {r.beds})
                 </option>
               ))}
