@@ -23,7 +23,7 @@ import HotelCard from "@/components/HotelCard";
 import HomestaysDroneShowcase from "@/components/HomestaysDroneShowcase";
 import MapExplorer from "@/components/MapExplorer";
 import InquiryModal from "@/components/InquiryModal";
-import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_ATTRACTIONS } from "@/lib/mockData";
+import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_ATTRACTIONS, INITIAL_STATS } from "@/lib/mockData";
 import { getAllHotels, getAllFAQs, getSiteStats, getAllAttractions } from "@/lib/firebase";
 import { Hotel, FAQItem, SiteStats, Attraction } from "@/lib/types";
 import { AnimatedTabs, TabOption } from "@/components/motion/AnimatedTabs";
@@ -50,12 +50,7 @@ export default function HomePage() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   // Dynamic backend stats, FAQs, and attractions
-  const [stats, setStats] = useState<SiteStats>({
-    verifiedStays: "25+",
-    satisfactionRate: "4.9 / 5.0",
-    tariffPledge: "100%",
-    avgResponseTime: "15 Min",
-  });
+  const [stats, setStats] = useState<SiteStats>(INITIAL_STATS);
   const [faqsList, setFaqsList] = useState<FAQItem[]>([]);
   const [attractionsList, setAttractionsList] = useState<Attraction[]>(CHERRAPUNJI_ATTRACTIONS);
 
