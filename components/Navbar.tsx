@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Mountain, Phone, Sparkles, Menu, X, User as UserIcon, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -46,25 +47,20 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo & Brand Identity */}
-            <Link href="/" className="flex items-center gap-2.5 group">
+            <Link href="/" className="flex items-center group py-0.5">
               <motion.div
-                whileHover={{ rotate: 5, scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-9 h-9 rounded-xl bg-white text-emerald-700 flex items-center justify-center shadow-md font-bold"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="relative h-10 sm:h-12 w-52 sm:w-64"
               >
-                <Mountain className="w-5 h-5" />
+                <Image
+                  src="/images/cherrapunji-hotels-logo.png"
+                  alt="Cherrapunji Hotels Web - Hotels, Living Bridges & Waterfalls"
+                  fill
+                  priority
+                  className="object-contain object-left drop-shadow-xs"
+                />
               </motion.div>
-              <div>
-                <span className="text-lg font-bold tracking-tight text-white flex items-center gap-1.5 drop-shadow-xs">
-                  Cherra<span className="text-emerald-100">Stays</span>
-                  <span className="text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded-full bg-white/20 text-white border border-white/25">
-                    Sohra
-                  </span>
-                </span>
-                <p className="text-[11px] text-emerald-100/80 -mt-0.5 font-medium">
-                  Luxury & Nature Stays
-                </p>
-              </div>
             </Link>
 
             {/* Desktop Navigation with Motion Primitives Spring Indicator */}

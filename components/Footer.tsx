@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Mountain, Mail, Phone, MapPin, ShieldCheck, Heart, ArrowUpRight } from "lucide-react";
 
 export default function Footer() {
@@ -10,14 +11,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand & About */}
           <div className="lg:col-span-2 space-y-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-xs">
-                <Mountain className="w-4 h-4" />
+            <Link href="/" className="block">
+              <div className="relative h-10 w-52">
+                <Image
+                  src="/images/cherrapunji-hotels-logo-dark.png"
+                  alt="Cherrapunji Hotels Web - Hotels, Living Bridges & Waterfalls"
+                  fill
+                  className="object-contain object-left"
+                />
               </div>
-              <span className="text-lg font-bold tracking-tight text-slate-900">
-                Cherra<span className="text-emerald-700">Stays</span>
-              </span>
-            </div>
+            </Link>
             <p className="text-slate-500 text-xs leading-relaxed max-w-sm">
               The premier curated hotel booking and nature discovery network for Cherrapunji (Sohra), Meghalaya. Connect directly with verified cliffside resorts, pine cottages, and homestays.
             </p>
