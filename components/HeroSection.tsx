@@ -29,9 +29,19 @@ interface VideoAngle {
 
 const VIDEO_ANGLES: VideoAngle[] = [
   {
+    id: "homestays",
+    name: "Homestays Drone",
+    badge: "Village & Homestays Aerial",
+    location: "Sohrarim & Valley Homestays, Sohra",
+    src: "/videos/cherrapunji-homestays-drone.webm",
+    type: "video/webm",
+    fallbackSrc: "/videos/cherrapunji-drone.webm",
+    fallbackType: "video/webm",
+  },
+  {
     id: "drone",
-    name: "Drone Flyover",
-    badge: "4K Drone Sweep",
+    name: "Falls Drone",
+    badge: "4K Falls Sweep",
     location: "Nohkalikai Falls & Cliffs, Sohra",
     src: "/videos/cherrapunji-drone.webm",
     type: "video/webm",
@@ -58,8 +68,8 @@ export default function HeroSection() {
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState("2 Adults");
 
-  // Default video angle: Drone Flyover of Nohkalikai Falls
-  const [activeAngleId, setActiveAngleId] = useState<string>("drone");
+  // Default video angle: Aerial Drone of Cherrapunji Homestays & Villages
+  const [activeAngleId, setActiveAngleId] = useState<string>("homestays");
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 

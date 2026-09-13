@@ -20,6 +20,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
 import HotelCard from "@/components/HotelCard";
+import HomestaysDroneShowcase from "@/components/HomestaysDroneShowcase";
 import MapExplorer from "@/components/MapExplorer";
 import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_ATTRACTIONS } from "@/lib/mockData";
@@ -184,8 +185,16 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Aerial Drone Showcase: Best Homestays in Cherrapunji */}
+      <HomestaysDroneShowcase
+        onOpenInquiry={(hotelId) => {
+          const found = hotels.find((h) => h.id === hotelId);
+          handleOpenInquiry(found);
+        }}
+      />
+
       {/* Featured Stays Section with Motion Primitives Tabs & Subtle Leaf Prints */}
-      <section id="hotels" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10 sm:pt-20 sm:pb-16 overflow-hidden">
+      <section id="hotels" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-10 sm:pt-14 sm:pb-16 overflow-hidden">
         {/* Subtle Botanical Fronds placed inward towards the middle */}
         <BotanicalPalmWatermark side="left" className="left-[1%] sm:left-[6%] lg:left-[10%] top-20 opacity-75" />
         <BotanicalWatermark variant="right" className="right-[1%] sm:right-[6%] lg:right-[10%] bottom-10 opacity-75" />
