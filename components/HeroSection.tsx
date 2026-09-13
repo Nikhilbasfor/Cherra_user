@@ -13,9 +13,10 @@ import {
   Play,
   Pause,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { CHERRAPUNJI_AREAS } from "@/lib/mockData";
 import { getAllHotels } from "@/lib/firebase";
+import { LongFernLeaf, LongPalmLeaf } from "@/components/motion/BotanicalFoliage";
 
 interface VideoAngle {
   id: string;
@@ -53,6 +54,12 @@ export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const currentAngle = VIDEO_ANGLES[0];
 
+  const { scrollY } = useScroll();
+  const yLeft = useTransform(scrollY, [0, 800], [0, -50]);
+  const yRight = useTransform(scrollY, [0, 800], [0, 60]);
+  const rotateLeft = useTransform(scrollY, [0, 800], [-3, 4]);
+  const rotateRight = useTransform(scrollY, [0, 800], [4, -3]);
+
   useEffect(() => {
     getAllHotels().then((data) => {
       if (data && data.length > 0) {
@@ -86,6 +93,21 @@ export default function HeroSection() {
       {/* Ambient Lighting Gradient */}
       <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-emerald-600/25 via-emerald-950/20 to-transparent pointer-events-none z-0" />
 
+      {/* Whitish Botanical Leaf & Plant Imprints in Dark Hero Background */}
+      <motion.div
+        style={{ y: yLeft, rotate: rotateLeft }}
+        className="absolute -left-8 sm:left-2 lg:left-6 top-8 sm:top-14 w-36 sm:w-56 lg:w-72 h-[480px] sm:h-[600px] pointer-events-none z-10 text-white/15 drop-shadow-[0_0_20px_rgba(255,255,255,0.06)]"
+      >
+        <LongPalmLeaf className="w-full h-full" />
+      </motion.div>
+
+      <motion.div
+        style={{ y: yRight, rotate: rotateRight }}
+        className="absolute -right-8 sm:right-2 lg:right-6 top-14 sm:top-24 w-32 sm:w-52 lg:w-64 h-[500px] sm:h-[620px] pointer-events-none z-10 text-white/15 drop-shadow-[0_0_20px_rgba(255,255,255,0.06)]"
+      >
+        <LongFernLeaf className="w-full h-full" />
+      </motion.div>
+
       {/* Main Hero Container */}
       <div className="relative z-20 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         
@@ -114,6 +136,16 @@ export default function HeroSection() {
             {/* Directional Cinematic Scrim (NOT a blur): Subtle vignette for text clarity while video stays 100% sharp */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/15 to-black/75 pointer-events-none" />
             <div className="absolute inset-0 bg-radial-at-c from-transparent via-transparent to-black/35 pointer-events-none" />
+          </div>
+
+          {/* Whitish Botanical Silhouette Imprints on Card Edges */}
+          <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+            <div className="absolute -left-12 sm:-left-8 top-1/2 -translate-y-1/2 w-36 sm:w-52 h-[400px] text-white/15 opacity-75 rotate-6">
+              <LongPalmLeaf className="w-full h-full drop-shadow-[0_0_15px_rgba(255,255,255,0.08)]" />
+            </div>
+            <div className="absolute -right-10 sm:-right-6 top-1/2 -translate-y-1/2 w-32 sm:w-48 h-[400px] text-white/15 opacity-75 -rotate-6">
+              <LongFernLeaf className="w-full h-full drop-shadow-[0_0_15px_rgba(255,255,255,0.08)]" />
+            </div>
           </div>
 
           {/* Top spacing inside the Hero Video Card */}

@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required inquiry fields" }, { status: 400, headers: corsHeaders });
     }
     const newInquiry: InquiryLead = {
-      id: "lead-" + Date.now(),
+      id: body.id || ("lead-" + Date.now()),
       customerName: body.customerName,
       customerPhone: body.customerPhone,
       customerEmail: body.customerEmail || "",

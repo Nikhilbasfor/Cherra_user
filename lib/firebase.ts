@@ -119,38 +119,48 @@ export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
 }
 
 /**
- * Submit an inquiry / booking request (Writes directly to Firestore and local API)
+ * Submit an inquiry / booking request (Clean single write via API with Firestore fallback)
  */
 export async function submitInquiry(lead: Omit<InquiryLead, "id" | "createdAt" | "status">): Promise<{ success: boolean; id?: string }> {
-  let docId = "lead-" + Date.now();
+  const docId = "lead-" + Date.now();
 
-  if (db && isFirebaseConfigured) {
-    try {
-      const inquiriesCol = collection(db, "inquiries");
-      const docRef = await withTimeout(
-        addDoc(inquiriesCol, {
-          ...lead,
-          status: "new",
-          createdAt: serverTimestamp(),
-        }),
-        2500
-      );
-      docId = docRef.id;
-    } catch (err) {
-      console.error("Failed to submit inquiry to Firestore:", err);
-    }
-  }
-
-  // Also post to local backend API so Admin panel gets it immediately
+  // 1. Route through API to cleanly persist to Firestore and local store exactly once
   if (typeof window !== "undefined") {
     try {
-      await fetch("/api/inquiries", {
+      const res = await fetch("/api/inquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...lead, id: docId }),
       });
+      if (res.ok) {
+        const data = await res.json();
+        return { success: true, id: data.id || docId };
+      }
     } catch (err) {
-      console.warn("Local API inquiry post fallback:", err);
+      console.warn("API inquiry submission fallback to direct Firestore:", err);
+    }
+  }
+
+  // 2. Direct Firestore fallback only if API post fails
+  if (db && isFirebaseConfigured) {
+    try {
+      const finalLead: InquiryLead = {
+        id: docId,
+        ...lead,
+        status: "new",
+        createdAt: new Date().toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        }),
+      };
+      await withTimeout(setDoc(doc(db, "inquiries", docId), finalLead), 2500);
+      return { success: true, id: docId };
+    } catch (err) {
+      console.error("Firestore direct inquiry save error:", err);
     }
   }
 
