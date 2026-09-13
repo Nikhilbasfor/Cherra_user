@@ -57,10 +57,10 @@ export const INITIAL_FAQS: FAQItem[] = [
 ];
 
 export const INITIAL_STATS: SiteStats = {
-  verifiedStays: "25+",
-  satisfactionRate: "4.9 / 5.0",
+  verifiedStays: "10+",
+  satisfactionRate: "4.8 / 5.0",
   tariffPledge: "100%",
-  avgResponseTime: "15 Min",
+  avgResponseTime: "20 Min",
 };
 
 export const INITIAL_REVIEWS: HotelReview[] = [
@@ -210,6 +210,40 @@ export async function dbDeleteHotel(hotelId: string): Promise<boolean> {
 
 // ----------------- INQUIRIES / LEADS -----------------
 
+function formatInquiryTimestamp(ts: any): string {
+  if (!ts) return "Recently";
+  if (typeof ts === "string") return ts;
+  if (typeof ts.toDate === "function") {
+    try {
+      return ts.toDate().toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+    } catch {
+      return "Recently";
+    }
+  }
+  if (ts.seconds) {
+    try {
+      return new Date(ts.seconds * 1000).toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+    } catch {
+      return "Recently";
+    }
+  }
+  return String(ts);
+}
+
 export async function dbGetInquiries(): Promise<InquiryLead[]> {
   if (db && isFirebaseConfigured) {
     try {
@@ -217,7 +251,14 @@ export async function dbGetInquiries(): Promise<InquiryLead[]> {
       const q = query(col, orderBy("createdAt", "desc"));
       const snapshot = await withTimeout(getDocs(q), 2000);
       if (!snapshot.empty) {
-        return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as InquiryLead));
+        return snapshot.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: d.id,
+            ...data,
+            createdAt: formatInquiryTimestamp(data.createdAt),
+          } as InquiryLead;
+        });
       }
     } catch (err) {
       console.warn("Firestore inquiries fetch error:", err);

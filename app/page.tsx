@@ -60,29 +60,39 @@ export default function HomePage() {
   const [attractionsList, setAttractionsList] = useState<Attraction[]>(CHERRAPUNJI_ATTRACTIONS);
 
   useEffect(() => {
-    getAllHotels()
-      .then((data) => {
-        if (data && data.length > 0) setHotels(data);
-      })
-      .catch(console.error);
+    let isMounted = true;
+    const loadAll = () => {
+      getAllHotels()
+        .then((data) => {
+          if (isMounted && data && data.length > 0) setHotels(data);
+        })
+        .catch(console.error);
 
-    getSiteStats()
-      .then((s) => {
-        if (s) setStats(s);
-      })
-      .catch(console.warn);
+      getSiteStats()
+        .then((s) => {
+          if (isMounted && s) setStats(s);
+        })
+        .catch(console.warn);
 
-    getAllFAQs()
-      .then((f) => {
-        if (f && f.length > 0) setFaqsList(f);
-      })
-      .catch(console.warn);
+      getAllFAQs()
+        .then((f) => {
+          if (isMounted && f && f.length > 0) setFaqsList(f);
+        })
+        .catch(console.warn);
 
-    getAllAttractions()
-      .then((a) => {
-        if (a && a.length > 0) setAttractionsList(a);
-      })
-      .catch(console.warn);
+      getAllAttractions()
+        .then((a) => {
+          if (isMounted && a && a.length > 0) setAttractionsList(a);
+        })
+        .catch(console.warn);
+    };
+
+    loadAll();
+    const interval = setInterval(loadAll, 10000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   const handleOpenInquiry = (hotel?: Hotel) => {

@@ -474,10 +474,10 @@ export const INITIAL_FAQS: FAQItem[] = [
 ];
 
 export const INITIAL_STATS: SiteStats = {
-  verifiedStays: "25+",
-  satisfactionRate: "4.9 / 5.0",
+  verifiedStays: "10+",
+  satisfactionRate: "4.8 / 5.0",
   tariffPledge: "100%",
-  avgResponseTime: "15 Min",
+  avgResponseTime: "20 Min",
 };
 
 export const INITIAL_REVIEWS: HotelReview[] = [
