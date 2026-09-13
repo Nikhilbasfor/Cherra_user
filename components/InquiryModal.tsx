@@ -244,7 +244,7 @@ function InquiryModalContent({
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Dates:</span>
-              <span className="text-slate-900 font-medium">{checkIn} ? {checkOut}</span>
+              <span className="text-slate-900 font-medium">{checkIn} → {checkOut}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Guests:</span>
@@ -252,7 +252,7 @@ function InquiryModalContent({
             </div>
             <div className="flex justify-between border-t border-slate-200/80 pt-1.5">
               <span className="text-slate-500">Est. Tariff:</span>
-              <span className="text-emerald-700 font-extrabold">?{activeRoom?.price || activeHotel.pricePerNight} / night</span>
+              <span className="text-emerald-700 font-extrabold">₹{activeRoom?.price || activeHotel.pricePerNight} / night</span>
             </div>
           </div>
 
@@ -288,7 +288,7 @@ function InquiryModalContent({
             <div className="p-3.5 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                  {activeHotel.starRating}?
+                  {activeHotel.starRating}★
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-sm font-bold text-slate-900">{activeHotel.name}</h4>
@@ -300,7 +300,7 @@ function InquiryModalContent({
               </div>
               <div className="text-right pl-2">
                 <span className="text-[10px] text-slate-400 block font-medium">Verified Direct Rate</span>
-                <span className="text-xs sm:text-sm font-extrabold text-emerald-800">?{activeHotel.pricePerNight}</span>
+                <span className="text-xs sm:text-sm font-extrabold text-emerald-800">₹{activeHotel.pricePerNight}</span>
                 <span className="text-[10px] text-slate-500"> / night</span>
               </div>
             </div>
@@ -317,7 +317,7 @@ function InquiryModalContent({
               >
                 {hotelsList.map((hotel) => (
                   <option key={hotel.id} value={hotel.id}>
-                    {hotel.name} ({hotel.starRating}?) — ?{hotel.pricePerNight}/night • {hotel.area}
+                    {hotel.name} ({hotel.starRating}★) — ₹{hotel.pricePerNight}/night • {hotel.area}
                   </option>
                 ))}
               </select>
@@ -333,7 +333,7 @@ function InquiryModalContent({
               </span>
               {activeRoom && (
                 <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
-                  ?{activeRoom.price} / night
+                  ₹{activeRoom.price} / night
                 </span>
               )}
             </label>
@@ -344,7 +344,7 @@ function InquiryModalContent({
             >
               {availableRooms.map((r) => (
                 <option key={r.id || r.name} value={r.name}>
-                  {r.name} — ?{r.price}/night ({r.capacity}, {r.beds})
+                  {r.name} — ₹{r.price}/night ({r.capacity}, {r.beds})
                 </option>
               ))}
             </select>
