@@ -14,8 +14,13 @@ export async function OPTIONS() {
 
 export async function GET() {
   try {
-    const stats = await dbGetStats();
-    return NextResponse.json(stats, { headers: corsHeaders });
+    const [stats, hotels] = await Promise.all([dbGetStats(), dbGetHotels()]);
+    const liveVerifiedStays =
+      hotels && hotels.length > 0 ? `${hotels.length}+` : stats.verifiedStays;
+    return NextResponse.json(
+      { ...stats, verifiedStays: liveVerifiedStays },
+      { headers: corsHeaders }
+    );
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Internal server error";
     return NextResponse.json({ error: message }, { status: 500, headers: corsHeaders });

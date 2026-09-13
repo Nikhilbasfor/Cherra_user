@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   query,
   orderBy,
+  onSnapshot,
 } from "firebase/firestore";
 import { Hotel, InquiryLead, Attraction, FAQItem, SiteStats, HotelReview } from "./types";
 import {
@@ -298,6 +299,121 @@ export async function submitHotelReview(review: HotelReview): Promise<{ success:
     }
   }
   return { success: false };
+}
+
+/**
+ * Real-time subscription to Site Stats in Firestore
+ */
+export function subscribeToSiteStats(callback: (stats: SiteStats) => void): () => void {
+  if (typeof window === "undefined" || !db || !isFirebaseConfigured) {
+    return () => {};
+  }
+  try {
+    const unsub = onSnapshot(
+      doc(db, "site_stats", "main"),
+      (snap) => {
+        if (snap.exists()) {
+          callback(snap.data() as SiteStats);
+        }
+      },
+      (err) => {
+        console.warn("Realtime stats listener warning:", err);
+      }
+    );
+    return unsub;
+  } catch (err) {
+    console.warn("Failed to subscribe to site stats:", err);
+    return () => {};
+  }
+}
+
+/**
+ * Real-time subscription to Hotels in Firestore
+ */
+export function subscribeToHotels(callback: (hotels: Hotel[]) => void): () => void {
+  if (typeof window === "undefined" || !db || !isFirebaseConfigured) {
+    return () => {};
+  }
+  try {
+    const q = query(collection(db, "hotels"), orderBy("rating", "desc"));
+    const unsub = onSnapshot(
+      q,
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const list = snapshot.docs.map(
+            (d) => ({ id: d.id, ...d.data() } as Hotel)
+          );
+          callback(list);
+        }
+      },
+      (err) => {
+        console.warn("Realtime hotels listener warning:", err);
+      }
+    );
+    return unsub;
+  } catch (err) {
+    console.warn("Failed to subscribe to hotels:", err);
+    return () => {};
+  }
+}
+
+/**
+ * Real-time subscription to Attractions in Firestore
+ */
+export function subscribeToAttractions(callback: (attractions: Attraction[]) => void): () => void {
+  if (typeof window === "undefined" || !db || !isFirebaseConfigured) {
+    return () => {};
+  }
+  try {
+    const unsub = onSnapshot(
+      collection(db, "attractions"),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const list = snapshot.docs.map(
+            (d) => ({ id: d.id, ...d.data() } as Attraction)
+          );
+          callback(list);
+        }
+      },
+      (err) => {
+        console.warn("Realtime attractions listener warning:", err);
+      }
+    );
+    return unsub;
+  } catch (err) {
+    console.warn("Failed to subscribe to attractions:", err);
+    return () => {};
+  }
+}
+
+/**
+ * Real-time subscription to FAQs in Firestore
+ */
+export function subscribeToFAQs(callback: (faqs: FAQItem[]) => void): () => void {
+  if (typeof window === "undefined" || !db || !isFirebaseConfigured) {
+    return () => {};
+  }
+  try {
+    const q = query(collection(db, "faqs"), orderBy("order", "asc"));
+    const unsub = onSnapshot(
+      q,
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const list = snapshot.docs.map(
+            (d) => ({ id: d.id, ...d.data() } as FAQItem)
+          );
+          callback(list);
+        }
+      },
+      (err) => {
+        console.warn("Realtime faqs listener warning:", err);
+      }
+    );
+    return unsub;
+  } catch (err) {
+    console.warn("Failed to subscribe to FAQs:", err);
+    return () => {};
+  }
 }
 
 export { app, db, auth, isFirebaseConfigured };
