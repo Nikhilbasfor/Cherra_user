@@ -72,10 +72,45 @@ export interface Attraction {
   id: string;
   name: string;
   khasiName?: string;
-  category: "Waterfall" | "Caves" | "Living Root Bridge" | "Canyon / Viewpoint";
+  category: "Waterfall" | "Caves" | "Living Root Bridge" | "Canyon / Viewpoint" | string;
   description: string;
   distanceFromSohra: string;
   image: string;
   rating: number;
   bestTime: string;
+}
+
+export interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+  order?: number;
+}
+
+export interface SiteStats {
+  verifiedStays: string;
+  satisfactionRate: string;
+  tariffPledge: string;
+  avgResponseTime: string;
+}
+
+export interface HotelReview {
+  id: string;
+  hotelId: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  rating: number;
+  title: string;
+  comment: string;
+  stayMonth?: string;
+  createdAt: string;
+  verified: boolean;
+}
+
+export interface UserProfile {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL?: string;
 }

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef } from "react";
 import Image from "next/image";
@@ -164,8 +164,8 @@ export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDrone
                 preload="auto"
                 className="w-full h-full object-cover object-center scale-[1.01]"
               >
-                <source src="/videos/cherrapunji-homestays-drone.webm" type="video/webm" />
                 <source src="/videos/cherrapunji-drone.webm" type="video/webm" />
+                <source src="/videos/cherrapunji-waterfall.mp4" type="video/mp4" />
               </video>
               {/* Subtle top and bottom dark gradient for telemetry HUD clarity */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/60 pointer-events-none" />

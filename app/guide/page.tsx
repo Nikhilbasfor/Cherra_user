@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Compass, MapPin, ArrowRight } from "lucide-react";
@@ -8,9 +7,22 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_ATTRACTIONS } from "@/lib/mockData";
+import { getAllAttractions } from "@/lib/firebase";
+import { Attraction } from "@/lib/types";
 
 export default function GuidePage() {
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
+  const [attractions, setAttractions] = useState<Attraction[]>(CHERRAPUNJI_ATTRACTIONS);
+
+  useEffect(() => {
+    getAllAttractions()
+      .then((data) => {
+        if (data && data.length > 0) {
+          setAttractions(data);
+        }
+      })
+      .catch(console.warn);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#f8faf9] text-slate-900">
@@ -34,7 +46,7 @@ export default function GuidePage() {
 
       {/* Attractions List */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        {CHERRAPUNJI_ATTRACTIONS.map((att) => (
+        {attractions.map((att) => (
           <div
             key={att.id}
             id={att.id}

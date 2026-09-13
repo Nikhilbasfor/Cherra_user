@@ -10,8 +10,14 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { Hotel, InquiryLead } from "./types";
-import { CHERRAPUNJI_HOTELS } from "./mockData";
+import { Hotel, InquiryLead, Attraction, FAQItem, SiteStats, HotelReview } from "./types";
+import {
+  CHERRAPUNJI_HOTELS,
+  CHERRAPUNJI_ATTRACTIONS,
+  INITIAL_FAQS,
+  INITIAL_STATS,
+  INITIAL_REVIEWS,
+} from "./mockData";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyCqJAgcMfdnyIzG-zFY3mdJDJxEO04tj-I",
@@ -23,18 +29,22 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-726185CDW3",
 };
 
+import { getAuth } from "firebase/auth";
+
 const isFirebaseConfigured = Boolean(
   firebaseConfig.apiKey && firebaseConfig.projectId
 );
 
 let app: ReturnType<typeof initializeApp> | null = null;
 let db: ReturnType<typeof getFirestore> | null = null;
+let auth: ReturnType<typeof getAuth> | null = null;
 
 if (typeof window !== "undefined" || isFirebaseConfigured) {
   try {
     if (isFirebaseConfigured) {
       app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
       db = getFirestore(app);
+      auth = getAuth(app);
     }
   } catch (error) {
     console.warn("Firebase initialization skipped or failed:", error);
@@ -146,4 +156,148 @@ export async function submitInquiry(lead: Omit<InquiryLead, "id" | "createdAt" |
   return { success: true, id: docId };
 }
 
-export { app, db, isFirebaseConfigured };
+/**
+ * Fetch all attractions from Firestore or local backend
+ */
+export async function getAllAttractions(): Promise<Attraction[]> {
+  if (typeof window !== "undefined") {
+    try {
+      const res = await fetch("/api/attractions", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) return data;
+      }
+    } catch {
+      // fallback
+    }
+  }
+
+  if (db && isFirebaseConfigured) {
+    try {
+      const col = collection(db, "attractions");
+      const q = query(col, orderBy("rating", "desc"));
+      const snapshot = await withTimeout(getDocs(q), 2000);
+      if (!snapshot.empty) {
+        return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Attraction));
+      }
+    } catch (err) {
+      console.warn("Firestore attractions fetch error:", err);
+    }
+  }
+
+  return CHERRAPUNJI_ATTRACTIONS;
+}
+
+/**
+ * Fetch all FAQs from Firestore or local backend
+ */
+export async function getAllFAQs(): Promise<FAQItem[]> {
+  if (typeof window !== "undefined") {
+    try {
+      const res = await fetch("/api/faqs", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) return data;
+      }
+    } catch {
+      // fallback
+    }
+  }
+
+  if (db && isFirebaseConfigured) {
+    try {
+      const col = collection(db, "faqs");
+      const q = query(col, orderBy("order", "asc"));
+      const snapshot = await withTimeout(getDocs(q), 2000);
+      if (!snapshot.empty) {
+        return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as FAQItem));
+      }
+    } catch (err) {
+      console.warn("Firestore FAQs fetch error:", err);
+    }
+  }
+
+  return INITIAL_FAQS;
+}
+
+/**
+ * Fetch site metrics / stats
+ */
+export async function getSiteStats(): Promise<SiteStats> {
+  if (typeof window !== "undefined") {
+    try {
+      const res = await fetch("/api/stats", { cache: "no-store" });
+      if (res.ok) return await res.json();
+    } catch {
+      // fallback
+    }
+  }
+
+  if (db && isFirebaseConfigured) {
+    try {
+      const col = collection(db, "site_stats");
+      const snapshot = await withTimeout(getDocs(col), 2000);
+      if (!snapshot.empty) {
+        return snapshot.docs[0].data() as SiteStats;
+      }
+    } catch (err) {
+      console.warn("Firestore stats fetch error:", err);
+    }
+  }
+
+  return INITIAL_STATS;
+}
+
+/**
+ * Fetch reviews for a hotel
+ */
+export async function getHotelReviews(hotelId?: string): Promise<HotelReview[]> {
+  if (typeof window !== "undefined") {
+    try {
+      const url = hotelId ? `/api/reviews?hotelId=${encodeURIComponent(hotelId)}` : "/api/reviews";
+      const res = await fetch(url, { cache: "no-store" });
+      if (res.ok) return await res.json();
+    } catch {
+      // fallback
+    }
+  }
+
+  if (db && isFirebaseConfigured) {
+    try {
+      const col = collection(db, "reviews");
+      const snapshot = await withTimeout(getDocs(col), 2000);
+      if (!snapshot.empty) {
+        const all = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as HotelReview));
+        return hotelId ? all.filter((r) => r.hotelId === hotelId) : all;
+      }
+    } catch (err) {
+      console.warn("Firestore reviews fetch error:", err);
+    }
+  }
+
+  return hotelId ? INITIAL_REVIEWS.filter((r) => r.hotelId === hotelId) : INITIAL_REVIEWS;
+}
+
+/**
+ * Submit a verified guest review
+ */
+export async function submitHotelReview(review: HotelReview): Promise<{ success: boolean; data?: HotelReview }> {
+  if (typeof window !== "undefined") {
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(review),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return { success: true, data };
+      }
+    } catch (err) {
+      console.error("Failed to submit review:", err);
+    }
+  }
+  return { success: false };
+}
+
+export { app, db, auth, isFirebaseConfigured };

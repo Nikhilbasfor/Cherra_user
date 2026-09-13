@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { CHERRAPUNJI_AREAS } from "@/lib/mockData";
+import { getAllHotels } from "@/lib/firebase";
 
 interface VideoAngle {
   id: string;
@@ -38,63 +39,34 @@ const VIDEO_ANGLES: VideoAngle[] = [
     fallbackSrc: "/videos/cherrapunji-drone.webm",
     fallbackType: "video/webm",
   },
-  {
-    id: "drone",
-    name: "Falls Drone",
-    badge: "4K Falls Sweep",
-    location: "Nohkalikai Falls & Cliffs, Sohra",
-    src: "/videos/cherrapunji-drone.webm",
-    type: "video/webm",
-    fallbackSrc: "/videos/cherrapunji-waterfall.mp4",
-    fallbackType: "video/mp4",
-  },
-  {
-    id: "cascade",
-    name: "Cascades Stream",
-    badge: "Rainforest Waterfalls",
-    location: "Cherrapunji Forest Valley",
-    src: "/videos/cherrapunji-waterfall.mp4",
-    type: "video/mp4",
-    fallbackSrc: "/videos/cherrapunji-waterfall.webm",
-    fallbackType: "video/webm",
-  },
 ];
 
 export default function HeroSection() {
   const router = useRouter();
 
   const [selectedArea, setSelectedArea] = useState("All Areas");
+  const [availableAreas, setAvailableAreas] = useState<string[]>(["All Areas", ...CHERRAPUNJI_AREAS.filter(a => a !== "All Areas")]);
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState("2 Adults");
 
-  // Default video angle: Aerial Drone of Cherrapunji Homestays & Villages
-  const [activeAngleId, setActiveAngleId] = useState<string>("homestays");
-  const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const currentAngle = VIDEO_ANGLES[0];
 
-  const currentAngle =
-    VIDEO_ANGLES.find((a) => a.id === activeAngleId) || VIDEO_ANGLES[0];
+  useEffect(() => {
+    getAllHotels().then((data) => {
+      if (data && data.length > 0) {
+        const unique = Array.from(new Set(data.map((h) => h.area).filter(Boolean)));
+        setAvailableAreas(["All Areas", ...unique]);
+      }
+    }).catch(console.warn);
+  }, []);
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.load();
-      videoRef.current.play().catch(() => {
-        // Handled silently for browser auto-play restrictions
-      });
+      videoRef.current.play().catch(() => {});
     }
-  }, [activeAngleId]);
-
-  const toggleVideo = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,76 +116,8 @@ export default function HeroSection() {
             <div className="absolute inset-0 bg-radial-at-c from-transparent via-transparent to-black/35 pointer-events-none" />
           </div>
 
-          {/* Top Bar inside the Hero Video Card */}
-          <div className="relative z-20 p-4 sm:p-6 lg:p-7 flex flex-wrap items-center justify-between gap-3">
-            {/* Live Status with Current Angle & Location */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/25 text-white shadow-lg text-[11px] sm:text-xs font-semibold"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="tracking-wider uppercase text-[10px] sm:text-[11px] text-white">
-                {currentAngle.badge}
-              </span>
-              <span className="text-white/40">•</span>
-              <span className="text-emerald-300 font-medium">{currentAngle.location}</span>
-            </motion.div>
-
-            {/* Angle Switcher & Video Playback Controls */}
-            <div className="flex items-center gap-2">
-              {/* Drone / Cascade View Switcher Pill */}
-              <div className="inline-flex items-center p-0.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20">
-                {VIDEO_ANGLES.map((angle) => {
-                  const isActive = activeAngleId === angle.id;
-                  return (
-                    <button
-                      key={angle.id}
-                      type="button"
-                      onClick={() => setActiveAngleId(angle.id)}
-                      className={`relative px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold transition-colors duration-200 select-none ${
-                        isActive ? "text-emerald-950 font-bold" : "text-white/80 hover:text-white"
-                      }`}
-                    >
-                      {isActive && (
-                        <motion.div
-                          layoutId="activeAnglePill"
-                          transition={{ type: "spring", stiffness: 450, damping: 32 }}
-                          className="absolute inset-0 bg-white rounded-full shadow-xs"
-                          style={{ zIndex: 0 }}
-                        />
-                      )}
-                      <span className="relative z-10">{angle.name}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Play / Pause Toggle */}
-              <button
-                type="button"
-                onClick={toggleVideo}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/45 hover:bg-black/60 backdrop-blur-md text-white text-[11px] font-medium border border-white/20 shadow-md transition-all active:scale-95 cursor-pointer"
-                title={isPlaying ? "Pause footage" : "Play footage"}
-              >
-                {isPlaying ? (
-                  <>
-                    <Pause className="w-3 h-3 text-emerald-400" />
-                    <span className="hidden sm:inline">Pause</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                    <span className="hidden sm:inline">Play</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
+          {/* Top spacing inside the Hero Video Card */}
+          <div className="relative z-20 pt-6 sm:pt-8" />
 
           {/* Center Content: Uplifted, Elegant Typography without Clutter */}
           <div className="relative z-20 px-4 sm:px-8 lg:px-12 pt-2 sm:pt-4 pb-8 sm:pb-12 max-w-4xl mx-auto text-center">
@@ -268,7 +172,7 @@ export default function HeroSection() {
                 onChange={(e) => setSelectedArea(e.target.value)}
                 className="w-full bg-transparent text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none cursor-pointer py-0.5"
               >
-                {CHERRAPUNJI_AREAS.map((area) => (
+                {availableAreas.map((area) => (
                   <option key={area} value={area}>
                     {area}
                   </option>

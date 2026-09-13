@@ -24,8 +24,8 @@ import HomestaysDroneShowcase from "@/components/HomestaysDroneShowcase";
 import MapExplorer from "@/components/MapExplorer";
 import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_ATTRACTIONS } from "@/lib/mockData";
-import { getAllHotels } from "@/lib/firebase";
-import { Hotel } from "@/lib/types";
+import { getAllHotels, getAllFAQs, getSiteStats, getAllAttractions } from "@/lib/firebase";
+import { Hotel, FAQItem, SiteStats, Attraction } from "@/lib/types";
 import { AnimatedTabs, TabOption } from "@/components/motion/AnimatedTabs";
 import {
   BotanicalWatermark,
@@ -49,14 +49,40 @@ export default function HomePage() {
   const [activeCollectionTab, setActiveCollectionTab] = useState<string>("all");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
+  // Dynamic backend stats, FAQs, and attractions
+  const [stats, setStats] = useState<SiteStats>({
+    verifiedStays: "25+",
+    satisfactionRate: "4.9 / 5.0",
+    tariffPledge: "100%",
+    avgResponseTime: "15 Min",
+  });
+  const [faqsList, setFaqsList] = useState<FAQItem[]>([]);
+  const [attractionsList, setAttractionsList] = useState<Attraction[]>(CHERRAPUNJI_ATTRACTIONS);
+
   useEffect(() => {
     getAllHotels()
       .then((data) => {
-        if (data && data.length > 0) {
-          setHotels(data);
-        }
+        if (data && data.length > 0) setHotels(data);
       })
       .catch(console.error);
+
+    getSiteStats()
+      .then((s) => {
+        if (s) setStats(s);
+      })
+      .catch(console.warn);
+
+    getAllFAQs()
+      .then((f) => {
+        if (f && f.length > 0) setFaqsList(f);
+      })
+      .catch(console.warn);
+
+    getAllAttractions()
+      .then((a) => {
+        if (a && a.length > 0) setAttractionsList(a);
+      })
+      .catch(console.warn);
   }, []);
 
   const handleOpenInquiry = (hotel?: Hotel) => {
@@ -151,7 +177,7 @@ export default function HomePage() {
                 <ShieldCheck className="w-4 h-4" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Inventory</span>
               </div>
-              <p className="text-2xl sm:text-3xl font-black text-slate-900">25+</p>
+              <p className="text-2xl sm:text-3xl font-black text-slate-900">{stats.verifiedStays}</p>
               <p className="text-xs text-slate-500 font-medium mt-0.5">Verified Stays in Sohra</p>
             </div>
 
@@ -160,7 +186,7 @@ export default function HomePage() {
                 <Award className="w-4 h-4 fill-amber-500" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Score</span>
               </div>
-              <p className="text-2xl sm:text-3xl font-black text-emerald-700">4.9 / 5.0</p>
+              <p className="text-2xl sm:text-3xl font-black text-emerald-700">{stats.satisfactionRate}</p>
               <p className="text-xs text-slate-500 font-medium mt-0.5">Guest Satisfaction Rate</p>
             </div>
 
@@ -169,7 +195,7 @@ export default function HomePage() {
                 <Sparkles className="w-4 h-4" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Pricing</span>
               </div>
-              <p className="text-2xl sm:text-3xl font-black text-slate-900">100%</p>
+              <p className="text-2xl sm:text-3xl font-black text-slate-900">{stats.tariffPledge}</p>
               <p className="text-xs text-slate-500 font-medium mt-0.5">Direct Hotel Tariffs</p>
             </div>
 
@@ -178,7 +204,7 @@ export default function HomePage() {
                 <Zap className="w-4 h-4" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Speed</span>
               </div>
-              <p className="text-2xl sm:text-3xl font-black text-emerald-700">15 Min</p>
+              <p className="text-2xl sm:text-3xl font-black text-emerald-700">{stats.avgResponseTime}</p>
               <p className="text-xs text-slate-500 font-medium mt-0.5">Avg WhatsApp Response</p>
             </div>
           </div>
@@ -252,7 +278,7 @@ export default function HomePage() {
       <section id="map-explorer" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <MapExplorer
           hotels={hotels}
-          attractions={CHERRAPUNJI_ATTRACTIONS}
+          attractions={attractionsList}
           onEnquire={(h) => handleOpenInquiry(h)}
         />
       </section>
@@ -341,7 +367,10 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10 space-y-3">
-          {faqs.map((faq, idx) => {
+          {(faqsList.length > 0
+            ? faqsList.map((f) => ({ q: f.question, a: f.answer }))
+            : faqs
+          ).map((faq, idx) => {
             const isOpen = openFaqIndex === idx;
             return (
               <div
@@ -408,13 +437,13 @@ export default function HomePage() {
               <motion.a
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                href="https://wa.me/918794712345?text=Hi%20CherraStays,%20I%20need%20help%20booking%20a%20hotel%20in%20Cherrapunji"
+                href="https://wa.me/919864879505?text=Hi%20CherraStays,%20I%20need%20help%20booking%20a%20hotel%20in%20Cherrapunji"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 py-3 rounded-xl bg-emerald-900/60 hover:bg-emerald-900 text-white font-semibold text-xs sm:text-sm border border-emerald-500/30 transition-colors flex items-center gap-2"
               >
                 <PhoneCall className="w-4 h-4" />
-                <span>WhatsApp Helpline</span>
+                <span>WhatsApp: +91 98648 79505</span>
               </motion.a>
             </div>
           </div>

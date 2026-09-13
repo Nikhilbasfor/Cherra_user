@@ -1,4 +1,4 @@
-import { Hotel, Attraction } from "./types";
+import { Hotel, Attraction, FAQItem, SiteStats, HotelReview } from "./types";
 
 export const CHERRAPUNJI_HOTELS: Hotel[] = [
   {
@@ -68,7 +68,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkInTime: "14:00",
     checkOutTime: "11:00",
     distanceToCenter: "3.5 km from Sohra Market",
-    phone: "+91 87947 12345",
+    phone: "+91 98648 79505",
     email: "bookings@cherrapunjistays.com",
   },
   {
@@ -136,7 +136,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkInTime: "13:00",
     checkOutTime: "11:00",
     distanceToCenter: "2.1 km from Sohra Town",
-    phone: "+91 87947 12346",
+    phone: "+91 98648 79505",
     email: "jiva@cherrapunjistays.com",
   },
   {
@@ -192,7 +192,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkInTime: "12:00",
     checkOutTime: "10:30",
     distanceToCenter: "14 km from Sohra Market (Scenic Drive)",
-    phone: "+91 87947 12347",
+    phone: "+91 98648 79505",
     email: "holidayresort@cherrapunjistays.com",
   },
   {
@@ -247,7 +247,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkInTime: "13:00",
     checkOutTime: "11:00",
     distanceToCenter: "4.2 km from Sohra Town",
-    phone: "+91 87947 12348",
+    phone: "+91 98648 79505",
     email: "kutmadan@cherrapunjistays.com",
   },
   {
@@ -302,7 +302,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkInTime: "12:00",
     checkOutTime: "11:00",
     distanceToCenter: "3.0 km from Sohra Center",
-    phone: "+91 87947 12349",
+    phone: "+91 98648 79505",
     email: "saimika@cherrapunjistays.com",
   },
   {
@@ -357,7 +357,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkInTime: "12:00",
     checkOutTime: "11:00",
     distanceToCenter: "300m from Central Sohra Market",
-    phone: "+91 87947 12350",
+    phone: "+91 98648 79505",
     email: "sohraplaza@cherrapunjistays.com",
   },
 ];
@@ -434,3 +434,94 @@ export const CHERRAPUNJI_AREAS = [
   "Khliehshnong",
   "Mawkdok / Sohra Rim",
 ];
+
+export const INITIAL_FAQS: FAQItem[] = [
+  {
+    id: "faq-1",
+    question: "What is the best time to visit Cherrapunji (Sohra)?",
+    answer:
+      "Cherrapunji is spectacular year-round. For roaring waterfalls and dramatic misty canyon clouds, the monsoon season from June to September is magical. For trekking down to the Double Decker Living Root Bridge and clear sunny skies, October to April is ideal.",
+    order: 1,
+  },
+  {
+    id: "faq-2",
+    question: "How do I book hotels through CherraStays without commission?",
+    answer:
+      "When you submit an inquiry through our portal, your request connects directly with the resort management and our local desk in Sohra. There are no middleman surcharges, ensuring you get direct front-desk tariffs along with prompt WhatsApp verification.",
+    order: 2,
+  },
+  {
+    id: "faq-3",
+    question: "Are hotels in Cherrapunji safe for families and solo female travelers?",
+    answer:
+      "Yes, exceptionally so. Meghalaya is globally recognized for its matrilineal society, peaceful culture, and warm Khasi hospitality. All hotels in our collection are verified physical properties adhering to strict safety and hygiene benchmarks.",
+    order: 3,
+  },
+  {
+    id: "faq-4",
+    question: "Can hotels arrange airport transfers from Guwahati or Shillong?",
+    answer:
+      "Yes. Our partner resorts and boutique stays coordinate reliable cab pickups and drop-offs from Guwahati Airport (GAU) and Shillong Airport (SHL) with verified local drivers.",
+    order: 4,
+  },
+  {
+    id: "faq-5",
+    question: "Do hotels in Cherrapunji provide 24/7 hot water geysers?",
+    answer:
+      "Yes. Because Cherrapunji remains crisp and misty throughout the year, every stay in our curated portfolio is equipped with reliable hot water geysers in private bathrooms.",
+    order: 5,
+  },
+];
+
+export const INITIAL_STATS: SiteStats = {
+  verifiedStays: "25+",
+  satisfactionRate: "4.9 / 5.0",
+  tariffPledge: "100%",
+  avgResponseTime: "15 Min",
+};
+
+export const INITIAL_REVIEWS: HotelReview[] = [
+  {
+    id: "rev-1",
+    hotelId: "polo-orchid-resort",
+    userId: "user-1",
+    userName: "Aditi Sharma",
+    userEmail: "aditi@gmail.com",
+    rating: 5,
+    title: "Unmatched sunrise view over Nohsngithiang Falls",
+    comment:
+      "Waking up to the clouds rising from the Bangladesh plains was surreal. The log cabin was warm with 24/7 hot water, and the bonfire dinner was exceptional.",
+    stayMonth: "October 2024",
+    createdAt: "Nov 2, 2024",
+    verified: true,
+  },
+  {
+    id: "rev-2",
+    hotelId: "cherrapunjee-holiday-resort",
+    userId: "user-2",
+    userName: "Rahul Sengupta",
+    userEmail: "rahul@outlook.com",
+    rating: 5,
+    title: "The true authentic Khasi homestay experience",
+    comment:
+      "Denis and his family treated us like personal guests. Best guidance for the Living Root Bridge trek, and homecooked local meals were pure comfort.",
+    stayMonth: "December 2024",
+    createdAt: "Dec 18, 2024",
+    verified: true,
+  },
+  {
+    id: "rev-3",
+    hotelId: "saimika-park-resort",
+    userId: "user-3",
+    userName: "Vikram Mehta",
+    userEmail: "vikram@yahoo.com",
+    rating: 4,
+    title: "Serene stream & stone cottages in nature",
+    comment:
+      "Very rustic and peaceful. Listening to local Khasi musicians around the campfire was memorable.",
+    stayMonth: "January 2025",
+    createdAt: "Jan 12, 2025",
+    verified: true,
+  },
+];
+
