@@ -8,7 +8,6 @@ import {
   MapPin,
   Star,
   ShieldCheck,
-  Eye,
   Play,
   Pause,
   ArrowRight,
@@ -280,8 +279,8 @@ export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDrone
                         className="object-cover"
                       />
                       {isSelected && (
-                        <div className="absolute inset-0 bg-emerald-950/20 flex items-center justify-center">
-                          <Eye className="w-5 h-5 text-white drop-shadow-md" />
+                        <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-emerald-600/90 backdrop-blur-xs text-[9px] font-bold text-white shadow-xs">
+                          Active
                         </div>
                       )}
                     </div>

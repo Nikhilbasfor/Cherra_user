@@ -1,9 +1,10 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, MapPin, Sparkles, ChevronLeft, ChevronRight, Check, Eye, Heart } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Star, MapPin, Sparkles, ChevronLeft, ChevronRight, Check, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { Hotel } from "@/lib/types";
 
@@ -13,8 +14,17 @@ interface HotelCardProps {
 }
 
 export default function HotelCard({ hotel, onEnquire }: HotelCardProps) {
+  const router = useRouter();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.metaKey || e.ctrlKey) {
+      window.open(`/hotels/${hotel.slug}`, "_blank");
+      return;
+    }
+    router.push(`/hotels/${hotel.slug}`);
+  };
 
   const nextImage = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -36,7 +46,8 @@ export default function HotelCard({ hotel, onEnquire }: HotelCardProps) {
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 350, damping: 25 }}
-      className="group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl hover:shadow-emerald-950/5 transition-all duration-300 flex flex-col h-full"
+      onClick={handleCardClick}
+      className="group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl hover:shadow-emerald-950/5 transition-all duration-300 flex flex-col h-full cursor-pointer select-none"
     >
       {/* Photo Carousel Container */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
@@ -132,8 +143,12 @@ export default function HotelCard({ hotel, onEnquire }: HotelCardProps) {
           </div>
 
           {/* Hotel Name */}
-          <Link href={`/hotels/${hotel.slug}`} className="block group-hover:text-emerald-700 transition-colors">
-            <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-snug line-clamp-1">
+          <Link
+            href={`/hotels/${hotel.slug}`}
+            onClick={(e) => e.stopPropagation()}
+            className="block group-hover:text-emerald-700 transition-colors"
+          >
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-700 tracking-tight leading-snug line-clamp-1 transition-colors">
               {hotel.name}
             </h3>
           </Link>
@@ -178,19 +193,15 @@ export default function HotelCard({ hotel, onEnquire }: HotelCardProps) {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <Link
-              href={`/hotels/${hotel.slug}`}
-              className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200/80 transition-colors"
-              title="View Rooms & Photos"
-            >
-              <Eye className="w-4 h-4" />
-            </Link>
-
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => onEnquire(hotel)}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-sm shadow-emerald-700/20 transition-all cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onEnquire(hotel);
+              }}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-sm shadow-emerald-700/20 transition-all cursor-pointer"
             >
               Book Direct
             </motion.button>
