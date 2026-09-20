@@ -35,11 +35,6 @@ import {
 } from "@/lib/firebase";
 import { Hotel, FAQItem, SiteStats, Attraction } from "@/lib/types";
 import { AnimatedTabs, TabOption } from "@/components/motion/AnimatedTabs";
-import {
-  BotanicalWatermark,
-  BotanicalPalmWatermark,
-  BotanicalPageBackdrop,
-} from "@/components/motion/BotanicalFoliage";
 
 // Renowned hospitality collection tabs
 const HOME_COLLECTION_TABS: TabOption[] = [
@@ -248,13 +243,7 @@ export default function HomePageClient({
       : defaultFaqs;
 
   return (
-    <div className="min-h-screen bg-rainforest-mist text-slate-900 selection:bg-emerald-200 selection:text-emerald-950 relative overflow-x-hidden">
-      {/* Editorial Noise / Film Grain Texture Overlay */}
-      <div className="fixed inset-0 bg-grain pointer-events-none z-50 opacity-25" />
-
-      {/* Global Ambient Botanical Leafy Prints (Fills empty background with subtle moving leafy fronds) */}
-      <BotanicalPageBackdrop />
-
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 selection:bg-emerald-200 selection:text-emerald-950 relative overflow-x-hidden">
       {/* Taskbar Top (Navbar in refined green) */}
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
@@ -316,12 +305,8 @@ export default function HomePageClient({
         }}
       />
 
-      {/* Featured Stays Section with Motion Primitives Tabs & Subtle Leaf Prints */}
+      {/* Featured Stays Section */}
       <section id="hotels" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-10 sm:pt-14 sm:pb-16 overflow-hidden">
-        {/* Subtle Botanical Fronds placed inward towards the middle */}
-        <BotanicalPalmWatermark side="left" className="left-[1%] sm:left-[6%] lg:left-[10%] top-20 opacity-75" />
-        <BotanicalWatermark variant="right" className="right-[1%] sm:right-[6%] lg:right-[10%] bottom-10 opacity-75" />
-
         <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold uppercase tracking-wider border border-emerald-200/70 mb-2">
@@ -380,15 +365,10 @@ export default function HomePageClient({
         />
       </section>
 
-      {/* Destination Spotlight: Why Cherrapunji with Minimal Long Leafy Prints */}
-      <section id="about-cherrapunji" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 my-6 overflow-hidden rounded-3xl border border-emerald-900/5 bg-gradient-to-b from-emerald-50/40 via-white/60 to-emerald-50/30 shadow-xs">
-        {/* Ambient Watercolor Mist & Botanical Watermark Shading */}
-        <div className="absolute inset-0 bg-radial-[ellipse_at_top] from-emerald-100/40 via-transparent to-transparent pointer-events-none" />
-        <BotanicalWatermark variant="left" className="left-[2%] sm:left-[8%] lg:left-[14%] top-4 opacity-85" />
-        <BotanicalPalmWatermark side="right" className="right-[2%] sm:right-[8%] lg:right-[14%] top-10 opacity-85" />
-
+      {/* Destination Spotlight: Why Cherrapunji */}
+      <section id="about-cherrapunji" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 my-6 overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-xs">
         <div className="relative z-10 text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-xs border border-emerald-200/80 shadow-xs">
+          <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 shadow-xs">
             Destination Spotlight
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-4 tracking-tight">
@@ -404,7 +384,7 @@ export default function HomePageClient({
           <motion.div
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="p-7 rounded-3xl bg-white/95 backdrop-blur-sm border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
+            className="p-7 rounded-3xl bg-slate-50/70 border border-slate-200/90 hover:border-emerald-300 shadow-xs hover:shadow-md transition-all"
           >
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-5 border border-emerald-100 shadow-xs">
               <CloudRain className="w-6 h-6" />
@@ -419,7 +399,7 @@ export default function HomePageClient({
           <motion.div
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="p-7 rounded-3xl bg-white/95 backdrop-blur-sm border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
+            className="p-7 rounded-3xl bg-slate-50/70 border border-slate-200/90 hover:border-emerald-300 shadow-xs hover:shadow-md transition-all"
           >
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-5 border border-emerald-100 shadow-xs">
               <Trees className="w-6 h-6" />
@@ -434,7 +414,7 @@ export default function HomePageClient({
           <motion.div
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="p-7 rounded-3xl bg-white/95 backdrop-blur-sm border border-slate-200/90 hover:border-emerald-300 shadow-sm hover:shadow-xl transition-all"
+            className="p-7 rounded-3xl bg-slate-50/70 border border-slate-200/90 hover:border-emerald-300 shadow-xs hover:shadow-md transition-all"
           >
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-5 border border-emerald-100 shadow-xs">
               <Footprints className="w-6 h-6" />
@@ -447,11 +427,8 @@ export default function HomePageClient({
         </div>
       </section>
 
-      {/* FAQ Accordion Section with Leaf Shading */}
+      {/* FAQ Accordion Section */}
       <section className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 overflow-hidden">
-        <BotanicalWatermark variant="left" className="left-[1%] sm:left-[5%] -bottom-6 opacity-65" />
-        <BotanicalPalmWatermark side="right" className="right-[1%] sm:right-[5%] -top-6 opacity-65" />
-
         <div className="relative z-10 text-center mb-10">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 mb-2">
             <HelpCircle className="w-3.5 h-3.5" />

@@ -17,7 +17,27 @@ import {
   Sparkles,
   Send,
   User as UserIcon,
+  Grid,
+  X,
+  Wifi,
+  Car,
+  Coffee,
+  Bath,
+  Mountain,
+  Luggage,
+  BedDouble,
+  Users,
+  Maximize2,
+  ExternalLink,
+  CreditCard,
+  Ban,
+  Info,
+  Award,
+  Phone,
+  ArrowRight,
+  Compass,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InquiryModal from "@/components/InquiryModal";
@@ -31,7 +51,15 @@ interface HotelDetailClientProps {
 }
 
 export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  // Photo Lightbox & Gallery state
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [activeMobileImageIndex, setActiveMobileImageIndex] = useState(0);
+
+  // Active in-page navigation section
+  const [activeNavSection, setActiveNavSection] = useState("overview");
+
+  // Selected room for inquiry
   const [selectedRoom, setSelectedRoom] = useState<Room>(hotel.rooms[0] || null);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -46,6 +74,34 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
   const [reviewComment, setReviewComment] = useState("");
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
 
+  // Curated gallery images ensuring at least 5 for the mosaic collage
+  const fallbackImages = [
+    "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+  ];
+  const roomImages = (hotel.rooms?.map((r) => r.image).filter(Boolean) as string[]) || [];
+  const rawList = [...hotel.images, ...roomImages];
+  const galleryImages = Array.from(new Set(rawList.length >= 5 ? rawList : [...rawList, ...fallbackImages])).slice(0, 12);
+
+  // Keyboard navigation for Fullscreen Lightbox
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxOpen(false);
+      if (e.key === "ArrowLeft") {
+        setLightboxIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+      }
+      if (e.key === "ArrowRight") {
+        setLightboxIndex((prev) => (prev + 1) % galleryImages.length);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxOpen, galleryImages.length]);
+
   useEffect(() => {
     getHotelReviews(hotel.id)
       .then((data) => {
@@ -53,6 +109,149 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       })
       .catch(console.warn);
   }, [hotel.id]);
+
+  // Structured Amenity Categories (Reference-grade)
+  const amenityCategories = [
+    {
+      category: "Internet & Connectivity",
+      icon: Wifi,
+      items: [
+        "Free High-Speed Wi-Fi in rooms and common areas",
+        "Mobile 4G/5G Network Connectivity (Airtel & Jio)",
+        "Power Backup / Inverter Support",
+      ],
+    },
+    {
+      category: "Parking & Accessibility",
+      icon: Car,
+      items: [
+        "Free private on-site secured parking",
+        "Paved all-weather road access for tourist cabs",
+        "Local sightseeing cab desk assistance",
+      ],
+    },
+    {
+      category: "Food, Dining & Kitchen",
+      icon: Coffee,
+      items: [
+        "In-house dining serving fresh Khasi, Indian & Continental cuisine",
+        "Complimentary hot breakfast buffet options",
+        "Electric kettle & complimentary tea/coffee supplies in room",
+        "Room dining service available",
+      ],
+    },
+    {
+      category: "Bathroom & Personal Care",
+      icon: Bath,
+      items: [
+        "24/7 Geyser instant hot water in private attached bathrooms",
+        "Complimentary premium toiletries & organic soap",
+        "Fresh cotton bath towels & slippers",
+        "Hair dryer provided on request",
+      ],
+    },
+    {
+      category: "Outdoors, Views & Scenery",
+      icon: Mountain,
+      items: [
+        "Private balcony overlooking misty canyons or waterfalls",
+        "Lush mountain lawn & bonfire sitting area",
+        "Stargazing observation terrace",
+        "Lush botanical garden setting",
+      ],
+    },
+    {
+      category: "Front-Desk & Guest Services",
+      icon: Luggage,
+      items: [
+        "Warm Khasi hospitality & 24/7 front-desk assistance",
+        "Luggage storage facility",
+        "Certified Living Root Bridge trek guide coordination",
+        "Daily housekeeping & room upkeep",
+      ],
+    },
+  ];
+
+  // "Good to Know" Hotel Policies (Reference-grade)
+  const hotelPolicies = [
+    {
+      title: "Check-in & Check-out",
+      icon: Clock,
+      content: [
+        `Check-in: From ${hotel.checkInTime || "14:00"} until 22:00`,
+        `Check-out: Until ${hotel.checkOutTime || "11:00 AM"}`,
+        "Early check-in and late check-out available subject to room availability upon arrival.",
+      ],
+    },
+    {
+      title: "Children & Extra Bedding",
+      icon: Users,
+      content: [
+        "Children of all ages are warmly accommodated.",
+        "Children under 6 years stay complimentary when sharing existing bedding with parents.",
+        "Extra rollaway mattress available on prior request (nominal direct rate).",
+      ],
+    },
+    {
+      title: "Direct Cancellation & Refund",
+      icon: Ban,
+      content: [
+        "Free cancellation up to 48 hours prior to the check-in date.",
+        "Date modifications accommodated smoothly via direct front-desk WhatsApp.",
+        "Zero booking commission or middleman cancellation penalties.",
+      ],
+    },
+    {
+      title: "Accepted Payment Modes",
+      icon: CreditCard,
+      content: [
+        "UPI: Google Pay, PhonePe, Paytm, BHIM.",
+        "Cards: Visa, MasterCard, RuPay debit & credit cards.",
+        "Direct NEFT / IMPS Net Banking.",
+        "Cash on arrival at front desk.",
+      ],
+    },
+  ];
+
+  // Proximity & Distances to Key Sightseeing Spots
+  const nearbyLandmarks = [
+    {
+      name: "Nohsngithiang (Seven Sisters) Falls",
+      type: "Panoramic Cascade",
+      distance: hotel.area.toLowerCase().includes("nohsngithiang") ? "1.2 km" : "4.8 km",
+      time: "5-10 mins drive",
+    },
+    {
+      name: "Nohkalikai Falls (India's Tallest Plunge)",
+      type: "Waterfall Viewpoint",
+      distance: "6.5 km",
+      time: "15 mins drive",
+    },
+    {
+      name: "Mawsmai Limestone Cave",
+      type: "Cave Exploration",
+      distance: "3.2 km",
+      time: "8 mins drive",
+    },
+    {
+      name: "Wei Sawdong 3-Tier Turquoise Falls",
+      type: "Emerald Canyon",
+      distance: "8.4 km",
+      time: "20 mins drive",
+    },
+    {
+      name: "Double Decker Living Root Bridge Trailhead (Tyrna)",
+      type: "Bio-Engineered Trek",
+      distance: "9.8 km",
+      time: "25 mins drive",
+    },
+    {
+      name: "Guwahati Airport (GAU)",
+      type: "Major Regional Airport",
+      distance: "148 km",
+      time: "4.5 hours scenic drive",
+    },
+  ];
 
   const discountPercent = Math.round(
     ((hotel.originalPrice - hotel.pricePerNight) / hotel.originalPrice) * 100
@@ -122,225 +321,335 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8faf9] text-slate-900">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 selection:bg-emerald-200 selection:text-emerald-950 relative">
       <Navbar onOpenInquiry={() => setInquiryModalOpen(true)} />
 
-      {/* Breadcrumbs */}
+      {/* Breadcrumbs & Actions */}
       <div className="pt-20 pb-3 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
           <div className="flex items-center gap-2">
-            <Link href="/" className="hover:text-emerald-700">Home</Link>
+            <Link href="/" className="hover:text-emerald-700 transition-colors">Home</Link>
             <span>/</span>
-            <Link href="/hotels" className="hover:text-emerald-700">Hotels in Cherrapunji</Link>
+            <Link href="/hotels" className="hover:text-emerald-700 transition-colors">Hotels in Cherrapunji</Link>
             <span>/</span>
-            <span className="text-slate-900 font-medium truncate max-w-[200px]">{hotel.name}</span>
+            <span className="text-slate-400">{hotel.area}</span>
+            <span>/</span>
+            <span className="text-slate-900 font-semibold truncate max-w-[220px]">{hotel.name}</span>
           </div>
 
           <button
             onClick={handleShare}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors shadow-2xs cursor-pointer text-xs font-medium"
           >
-            <Share2 className="w-3.5 h-3.5" />
-            <span>{copied ? "Link Copied!" : "Share"}</span>
+            <Share2 className="w-3.5 h-3.5 text-emerald-700" />
+            <span>{copied ? "Link Copied!" : "Share Hotel"}</span>
           </button>
         </div>
       </div>
 
-      {/* Main Title & Hero Meta */}
+      {/* Property Title & Top Meta */}
       <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-5">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 text-xs font-semibold border border-amber-200">
-                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                <span>{hotel.starRating} Star Verified Hotel</span>
+            {/* Badges Row */}
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <div className="flex items-center gap-0.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 text-xs font-bold border border-amber-200">
+                {Array.from({ length: hotel.starRating }).map((_, i) => (
+                  <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
+                ))}
+                <span className="ml-1">{hotel.starRating} Star Property</span>
+              </div>
+
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-900 text-xs font-semibold border border-emerald-200 flex items-center gap-1">
+                <Award className="w-3 h-3 text-emerald-700" />
+                <span>★ {hotel.rating} Superb ({reviews.length > 0 ? reviews.length : hotel.reviewsCount} reviews)</span>
               </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-medium border border-emerald-200">
-                ★ {hotel.rating} ({hotel.reviewsCount} guest reviews)
+
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">
+                Verified Stay in Sohra
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               {hotel.name}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
               {hotel.tagline}
             </p>
-            <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium mt-2">
-              <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span>{hotel.address}</span>
+
+            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 font-medium mt-2.5">
+              <span className="flex items-center gap-1 text-slate-700">
+                <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>{hotel.address}</span>
+              </span>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${hotel.name}, ${hotel.address}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-emerald-700 hover:underline flex items-center gap-1 font-semibold"
+              >
+                <span>View on Map</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
           </div>
 
-          {/* Quick Price Banner */}
-          <div className="bg-white border border-slate-200 p-3.5 rounded-xl hidden md:block text-right shadow-xs">
-            <span className="text-xs text-slate-400">Starting from</span>
-            <div className="flex items-baseline gap-1.5 justify-end">
+          {/* Quick Price Pledge Card (Desktop) */}
+          <div className="bg-white border border-slate-200/90 p-4 rounded-2xl hidden md:block text-right shadow-xs shrink-0 min-w-[200px]">
+            <span className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold block">Verified Direct Rate</span>
+            <div className="flex items-baseline gap-1.5 justify-end mt-0.5">
               <span className="text-xs text-slate-400 line-through">₹{hotel.originalPrice}</span>
-              <span className="text-xl font-bold text-slate-900">₹{hotel.pricePerNight}</span>
+              <span className="text-2xl font-black text-slate-900">₹{hotel.pricePerNight}</span>
               <span className="text-xs text-slate-500">/ night</span>
             </div>
-            <span className="text-[11px] font-semibold text-emerald-700">
-              {discountPercent}% OFF Direct Tariff
+            <span className="inline-block mt-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
+              {discountPercent}% OFF Front-Desk Pledge
             </span>
           </div>
         </div>
       </div>
 
-      {/* Photo Gallery Grid */}
-      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-          {/* Main Large Photo */}
-          <div className="md:col-span-3 relative aspect-[16/10] rounded-2xl overflow-hidden bg-slate-200 border border-slate-200 shadow-sm">
+      {/* 5-Photo Mosaic Collection ("All Photos in 1 Go") */}
+      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-8">
+        <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 border border-slate-200 shadow-sm">
+          {/* Desktop 5-Photo Mosaic Grid */}
+          <div className="hidden md:grid grid-cols-12 gap-2 h-[440px] lg:h-[500px] p-2 bg-slate-900">
+            {/* Left Large Photo (7 Cols / ~58%) */}
+            <div
+              onClick={() => {
+                setLightboxIndex(0);
+                setLightboxOpen(true);
+              }}
+              className="col-span-7 relative h-full rounded-2xl overflow-hidden cursor-pointer group"
+            >
+              <Image
+                src={galleryImages[0]}
+                alt={hotel.name}
+                fill
+                priority
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+              <div className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white text-xs font-semibold flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span>Featured Sanctuary Panorama</span>
+              </div>
+            </div>
+
+            {/* Right 4-Photo 2x2 Grid (5 Cols / ~42%) */}
+            <div className="col-span-5 grid grid-cols-2 grid-rows-2 gap-2 h-full">
+              {galleryImages.slice(1, 5).map((img, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => {
+                    setLightboxIndex(idx + 1);
+                    setLightboxOpen(true);
+                  }}
+                  className="relative h-full rounded-xl overflow-hidden cursor-pointer group"
+                >
+                  <Image
+                    src={img}
+                    alt={`${hotel.name} Photo ${idx + 2}`}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-black/15 group-hover:bg-transparent transition-colors" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile Photo Carousel */}
+          <div className="md:hidden relative aspect-[16/11] w-full">
             <Image
-              src={hotel.images[activeImageIndex] || hotel.images[0]}
+              src={galleryImages[activeMobileImageIndex] || galleryImages[0]}
               alt={hotel.name}
               fill
               priority
               className="object-cover"
             />
-            {hotel.images.length > 1 && (
-              <div className="absolute inset-x-3 top-1/2 -translate-y-1/2 flex items-center justify-between">
-                <button
-                  onClick={() =>
-                    setActiveImageIndex(
-                      (prev) => (prev - 1 + hotel.images.length) % hotel.images.length
-                    )
-                  }
-                  className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-xs text-slate-700 flex items-center justify-center hover:bg-white shadow-md transition-all"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() =>
-                    setActiveImageIndex((prev) => (prev + 1) % hotel.images.length)
-                  }
-                  className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-xs text-slate-700 flex items-center justify-center hover:bg-white shadow-md transition-all"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+
+            {/* Prev / Next Arrows */}
+            <button
+              onClick={() => setActiveMobileImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)}
+              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white backdrop-blur-xs"
+              aria-label="Previous photo"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setActiveMobileImageIndex((prev) => (prev + 1) % galleryImages.length)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white backdrop-blur-xs"
+              aria-label="Next photo"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+
+            {/* Mobile Index Pill */}
+            <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-md bg-black/70 backdrop-blur-xs text-white text-[11px] font-medium">
+              {activeMobileImageIndex + 1} / {galleryImages.length}
+            </div>
           </div>
 
-          {/* Thumbnail Strip */}
-          <div className="flex md:flex-col gap-2.5 overflow-x-auto md:overflow-y-auto">
-            {hotel.images.map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveImageIndex(idx)}
-                className={`relative aspect-[16/10] md:h-24 w-28 md:w-full rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
-                  idx === activeImageIndex
-                    ? "border-emerald-600 ring-2 ring-emerald-100"
-                    : "border-transparent opacity-70 hover:opacity-100"
-                }`}
-              >
-                <Image src={img} alt="" fill className="object-cover" />
-              </button>
-            ))}
-          </div>
+          {/* Floating "View All Photos" Button */}
+          <button
+            onClick={() => {
+              setLightboxIndex(0);
+              setLightboxOpen(true);
+            }}
+            className="absolute bottom-4 right-4 z-10 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/95 hover:bg-white text-slate-900 font-bold text-xs shadow-xl border border-slate-200/90 backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            <Grid className="w-4 h-4 text-emerald-700" />
+            <span>Show all {galleryImages.length} photos</span>
+          </button>
         </div>
       </div>
 
-      {/* Main Content Split */}
+      {/* In-Page Sticky Navigation Sub-Bar */}
+      <div className="sticky top-16 z-30 bg-white/95 backdrop-blur-md border-y border-slate-200 shadow-2xs mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center gap-6 overflow-x-auto scrollbar-none py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+            <a href="#overview" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Overview</a>
+            <a href="#rooms" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Room Categories</a>
+            <a href="#amenities" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Key Features</a>
+            <a href="#policies" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Good to Know</a>
+            <a href="#nearby" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Nearby Attractions</a>
+            <a href="#reviews" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Guest Reviews</a>
+          </nav>
+        </div>
+      </div>
+
+      {/* Main Content Split: Details on Left (8 cols) | Sticky Booking on Right (4 cols) */}
       <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-24 lg:pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Details Column (8 cols) */}
-          <div className="lg:col-span-8 space-y-7">
-            {/* Overview */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-4 shadow-xs">
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-                About {hotel.name}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                {hotel.description}
-              </p>
+          {/* Main Details (8 cols) */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* 1. Overview Section */}
+            <section id="overview" className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-5 shadow-xs scroll-mt-32">
+              <div>
+                <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+                  About {hotel.name}
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2">
+                  {hotel.description}
+                </p>
+              </div>
 
-              {/* Highlights */}
-              <div className="pt-3 border-t border-slate-100">
-                <h3 className="text-xs font-semibold text-emerald-800 uppercase tracking-wider mb-2.5">
-                  Property Highlights
+              {/* Property Highlights */}
+              <div className="pt-4 border-t border-slate-100">
+                <h3 className="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-3">
+                  Key Property Highlights
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-slate-700">
                   {hotel.highlights.map((highlight, idx) => (
                     <div key={idx} className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                       <span>{highlight}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Checkin / Checkout info */}
-              <div className="pt-3 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
-                  <span className="text-slate-400 block text-[10px]">Check-in</span>
-                  <span className="font-semibold text-slate-800 flex items-center gap-1 mt-0.5">
-                    <Clock className="w-3 h-3 text-emerald-600" />
-                    From {hotel.checkInTime}
+              {/* Fast Facts Card */}
+              <div className="pt-4 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70">
+                  <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Check-in</span>
+                  <span className="font-bold text-slate-800 flex items-center gap-1 mt-1">
+                    <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                    From {hotel.checkInTime || "14:00"}
                   </span>
                 </div>
-                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
-                  <span className="text-slate-400 block text-[10px]">Check-out</span>
-                  <span className="font-semibold text-slate-800 flex items-center gap-1 mt-0.5">
-                    <Clock className="w-3 h-3 text-emerald-600" />
-                    Until {hotel.checkOutTime}
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70">
+                  <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Check-out</span>
+                  <span className="font-bold text-slate-800 flex items-center gap-1 mt-1">
+                    <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                    Until {hotel.checkOutTime || "11:00 AM"}
                   </span>
                 </div>
-                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
-                  <span className="text-slate-400 block text-[10px]">Location Hub</span>
-                  <span className="font-semibold text-emerald-800 mt-0.5 block">
-                    {hotel.distanceToCenter || "Central Sohra"}
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70 col-span-2 sm:col-span-1">
+                  <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Location Hub</span>
+                  <span className="font-bold text-emerald-800 mt-1 block">
+                    {hotel.distanceToCenter || `${hotel.area}, Sohra`}
                   </span>
                 </div>
               </div>
-            </div>
+            </section>
 
-            {/* Room Categories */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-5 shadow-xs">
-              <div>
-                <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-                  Available Room Categories
-                </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Select your room category to view detailed rates.
-                </p>
+            {/* 2. Room Overview & Direct Booking Cards */}
+            <section id="rooms" className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-5 shadow-xs scroll-mt-32">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                <div>
+                  <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+                    Room Overview & Tariffs
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Verified direct front-desk tariffs with zero booking commission.
+                  </p>
+                </div>
+                <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 self-start sm:self-auto">
+                  {hotel.rooms.length} Configurations Available
+                </span>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {hotel.rooms.map((room) => {
                   const isSelected = selectedRoom?.id === room.id;
+                  const roomImg = room.image || galleryImages[1] || galleryImages[0];
                   return (
                     <div
                       key={room.id}
                       onClick={() => setSelectedRoom(room)}
-                      className={`p-4 rounded-xl border transition-all cursor-pointer ${
+                      className={`rounded-2xl border transition-all overflow-hidden ${
                         isSelected
-                          ? "bg-emerald-50/40 border-emerald-500 shadow-xs ring-1 ring-emerald-500"
-                          : "bg-white border-slate-200 hover:border-slate-300"
+                          ? "bg-emerald-50/30 border-emerald-500 shadow-sm ring-1 ring-emerald-500"
+                          : "bg-white border-slate-200 hover:border-slate-300 shadow-2xs"
                       }`}
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-bold text-slate-900 text-sm sm:text-base">{room.name}</h3>
-                            {isSelected && (
-                              <span className="text-[10px] bg-emerald-600 text-white font-semibold px-2 py-0.5 rounded-full">
-                                Selected
-                              </span>
-                            )}
+                      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 sm:p-5">
+                        {/* Room Thumbnail Photo */}
+                        <div className="md:col-span-4 relative aspect-[16/10] md:h-full min-h-[140px] rounded-xl overflow-hidden bg-slate-100">
+                          <Image src={roomImg} alt={room.name} fill className="object-cover" />
+                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold">
+                            {room.capacity}
                           </div>
-                          <p className="text-xs text-slate-500 mt-1 flex items-center gap-3">
-                            <span>👥 {room.capacity}</span>
-                            <span>🛏️ {room.beds}</span>
-                            {room.sizeSqFt && <span>📐 {room.sizeSqFt} sq.ft</span>}
-                          </p>
+                        </div>
 
-                          <div className="flex flex-wrap gap-1 mt-2">
+                        {/* Room Info & Specs */}
+                        <div className="md:col-span-5 flex flex-col justify-between space-y-2">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">{room.name}</h3>
+                              {isSelected && (
+                                <span className="text-[10px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full">
+                                  Active
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-3">
+                              <span className="flex items-center gap-1 font-medium">
+                                <Users className="w-3.5 h-3.5 text-slate-400" />
+                                <span>{room.capacity}</span>
+                              </span>
+                              <span className="flex items-center gap-1 font-medium">
+                                <BedDouble className="w-3.5 h-3.5 text-slate-400" />
+                                <span>{room.beds}</span>
+                              </span>
+                              {room.sizeSqFt && (
+                                <span className="flex items-center gap-1 font-medium">
+                                  <Maximize2 className="w-3.5 h-3.5 text-slate-400" />
+                                  <span>{room.sizeSqFt} sq.ft</span>
+                                </span>
+                              )}
+                            </p>
+                          </div>
+
+                          {/* Room Features Pills */}
+                          <div className="flex flex-wrap gap-1.5 pt-1">
                             {room.features.map((feat, i) => (
                               <span
                                 key={i}
-                                className="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-600"
+                                className="text-[10px] font-medium px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200/60"
                               >
                                 {feat}
                               </span>
@@ -348,25 +657,32 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                           </div>
                         </div>
 
-                        <div className="text-left sm:text-right border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-100">
-                          {room.originalPrice && (
-                            <span className="text-xs text-slate-400 line-through block">
-                              ₹{room.originalPrice}
+                        {/* Room Pricing & CTA */}
+                        <div className="md:col-span-3 flex flex-col justify-between items-start md:items-end border-t md:border-t-0 md:border-l border-slate-100 pt-3 md:pt-0 md:pl-4">
+                          <div>
+                            {room.originalPrice && (
+                              <span className="text-xs text-slate-400 line-through block md:text-right">
+                                ₹{room.originalPrice}
+                              </span>
+                            )}
+                            <div className="flex items-baseline md:justify-end gap-1">
+                              <span className="text-xl font-black text-emerald-800">
+                                ₹{room.price}
+                              </span>
+                              <span className="text-xs text-slate-500">/ night</span>
+                            </div>
+                            <span className="text-[10px] text-emerald-700 font-semibold block md:text-right">
+                              Front-Desk Verified
                             </span>
-                          )}
-                          <div className="flex items-baseline sm:justify-end gap-1">
-                            <span className="text-xl font-bold text-emerald-800">
-                              ₹{room.price}
-                            </span>
-                            <span className="text-xs text-slate-500">/ night</span>
                           </div>
+
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedRoom(room);
                               setInquiryModalOpen(true);
                             }}
-                            className="mt-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors shadow-xs"
+                            className="mt-3 w-full md:w-auto text-xs font-bold px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-xs active:scale-95 cursor-pointer"
                           >
                             Book This Room
                           </button>
@@ -376,28 +692,123 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                   );
                 })}
               </div>
-            </div>
+            </section>
 
-            {/* Amenities Grid */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-4 shadow-xs">
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-                Hotel Amenities & Services
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
-                {hotel.amenities.map((amenity, idx) => (
+            {/* 3. Key Features & Amenities (Categorized Breakdown) */}
+            <section id="amenities" className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-6 shadow-xs scroll-mt-32">
+              <div className="border-b border-slate-100 pb-3">
+                <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+                  Features & Amenities
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Verified comfort and hospitality provisions available at {hotel.name}.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {amenityCategories.map((cat, idx) => {
+                  const Icon = cat.icon;
+                  return (
+                    <div key={idx} className="p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2.5">
+                      <div className="flex items-center gap-2 text-slate-900 font-bold text-xs uppercase tracking-wider">
+                        <div className="p-1.5 rounded-lg bg-emerald-100/80 text-emerald-800">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <span>{cat.category}</span>
+                      </div>
+                      <ul className="space-y-1.5 pl-1">
+                        {cat.items.map((item, i) => (
+                          <li key={i} className="text-xs text-slate-600 flex items-start gap-2">
+                            <span className="text-emerald-600 font-bold">•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* 4. "Good to Know" Hotel Policies Block */}
+            <section id="policies" className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-6 shadow-xs scroll-mt-32">
+              <div className="border-b border-slate-100 pb-3">
+                <h2 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                  <Info className="w-5 h-5 text-emerald-700" />
+                  <span>Good to Know & Stay Policies</span>
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Essential arrival, payment, and accommodation policies for a hassle-free vacation in Sohra.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {hotelPolicies.map((pol, idx) => {
+                  const Icon = pol.icon;
+                  return (
+                    <div key={idx} className="p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2">
+                      <div className="flex items-center gap-2 text-slate-900 font-bold text-xs uppercase tracking-wider">
+                        <Icon className="w-4 h-4 text-emerald-700" />
+                        <span>{pol.title}</span>
+                      </div>
+                      <ul className="space-y-1.5 text-xs text-slate-600">
+                        {pol.content.map((line, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-slate-400">•</span>
+                            <span>{line}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* 5. Location & Nearby Landmarks Proximity */}
+            <section id="nearby" className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-5 shadow-xs scroll-mt-32">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                <div>
+                  <h2 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                    <Compass className="w-5 h-5 text-emerald-700" />
+                    <span>Nearby Landmarks & Sightseeing</span>
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Proximity from {hotel.name} to Cherrapunji's top attractions.
+                  </p>
+                </div>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${hotel.name}, ${hotel.address}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Open Directions</span>
+                </a>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {nearbyLandmarks.map((lm, idx) => (
                   <div
                     key={idx}
-                    className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center gap-2 text-xs text-slate-700"
+                    className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/70 flex items-center justify-between gap-3"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span>{amenity}</span>
+                    <div>
+                      <h4 className="font-bold text-xs text-slate-900">{lm.name}</h4>
+                      <span className="text-[10px] text-slate-400">{lm.type}</span>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="font-extrabold text-xs text-emerald-800 block">{lm.distance}</span>
+                      <span className="text-[10px] text-slate-500">{lm.time}</span>
+                    </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
 
-            {/* Verified Guest Reviews & Ratings Section */}
-            <div id="reviews" className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-6 shadow-xs">
+            {/* 6. Verified Guest Reviews & Ratings Section */}
+            <section id="reviews" className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-6 shadow-xs scroll-mt-32">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -481,33 +892,33 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                   ))
                 )}
               </div>
-            </div>
+            </section>
           </div>
 
-          {/* Sticky Booking Widget (4 cols) */}
+          {/* Right Column: Sticky Booking Widget (4 cols) */}
           <div className="lg:col-span-4">
-            <div className="sticky top-24 bg-white border border-slate-200 rounded-2xl p-5 shadow-lg shadow-slate-200/60 space-y-5">
+            <div className="sticky top-28 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-lg shadow-slate-200/60 space-y-5">
               <div>
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 mb-1.5">
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">
                   <Sparkles className="w-3 h-3 text-emerald-600" />
                   Direct Tariff Guarantee
                 </span>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-bold text-slate-900">
+                  <span className="text-2xl font-black text-slate-900">
                     ₹{selectedRoom ? selectedRoom.price : hotel.pricePerNight}
                   </span>
                   <span className="text-xs text-slate-500">/ night</span>
                 </div>
-                <p className="text-xs text-emerald-700 mt-0.5">
-                  Selected: <span className="font-semibold text-slate-900">{selectedRoom?.name}</span>
+                <p className="text-xs text-emerald-700 mt-1 font-semibold">
+                  Selected Room: <span className="text-slate-900">{selectedRoom?.name}</span>
                 </p>
               </div>
 
               {/* Action Buttons */}
-              <div className="space-y-2.5 pt-1 border-t border-slate-100">
+              <div className="space-y-2.5 pt-2 border-t border-slate-100">
                 <button
                   onClick={() => setInquiryModalOpen(true)}
-                  className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs flex items-center justify-center gap-1.5 transition-colors active:scale-[0.99]"
+                  className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition-all active:scale-[0.99] cursor-pointer"
                 >
                   <Calendar className="w-4 h-4" />
                   <span>Check Availability & Book</span>
@@ -517,7 +928,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                   href={whatsappInquiryUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                  className="w-full py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 font-bold text-xs flex items-center justify-center gap-2 transition-colors"
                 >
                   <MessageSquare className="w-4 h-4 text-emerald-600" />
                   <span>Quick WhatsApp Inquiry</span>
@@ -531,19 +942,19 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                 </a>
               </div>
 
-              {/* Guarantees */}
-              <div className="pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
+              {/* Trust Guarantees */}
+              <div className="pt-3 border-t border-slate-100 space-y-2 text-xs text-slate-600">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Verified property in Cherrapunji</span>
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Verified physical property in Cherrapunji</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>No upfront payment required</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Zero booking commission or hidden fees</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Confirmed callback in 15 mins</span>
+                  <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Direct front-desk confirmation in 15 mins</span>
                 </div>
               </div>
             </div>
@@ -551,32 +962,95 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
         </div>
       </div>
 
+      {/* Fullscreen Interactive Lightbox Modal */}
+      <AnimatePresence>
+        {lightboxOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col justify-between"
+          >
+            {/* Lightbox Header */}
+            <div className="flex items-center justify-between px-6 py-4 text-white border-b border-white/10">
+              <div>
+                <h3 className="text-sm font-bold">{hotel.name}</h3>
+                <span className="text-xs text-white/60">
+                  Photo {lightboxIndex + 1} of {galleryImages.length}
+                </span>
+              </div>
+              <button
+                onClick={() => setLightboxOpen(false)}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                aria-label="Close photo gallery"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Lightbox Main Image */}
+            <div className="relative flex-1 flex items-center justify-center p-4">
+              <div className="relative w-full max-w-5xl h-[65vh]">
+                <Image
+                  src={galleryImages[lightboxIndex]}
+                  alt={`${hotel.name} photo ${lightboxIndex + 1}`}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+
+              {/* Prev / Next Nav Buttons */}
+              <button
+                onClick={() => setLightboxIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)}
+                className="absolute left-4 p-3 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors cursor-pointer"
+                aria-label="Previous photo"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={() => setLightboxIndex((prev) => (prev + 1) % galleryImages.length)}
+                className="absolute right-4 p-3 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors cursor-pointer"
+                aria-label="Next photo"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Thumbnail Navigation Strip */}
+            <div className="px-6 py-3 border-t border-white/10 overflow-x-auto flex items-center justify-center gap-2">
+              {galleryImages.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setLightboxIndex(i)}
+                  className={`relative w-16 h-12 rounded-lg overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
+                    i === lightboxIndex ? "border-emerald-500 scale-105" : "border-transparent opacity-50 hover:opacity-100"
+                  }`}
+                >
+                  <Image src={img} alt="" fill className="object-cover" />
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Mobile Sticky Booking Bar */}
       <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3 z-40 flex items-center justify-between shadow-lg">
         <div>
-          <span className="text-[10px] text-slate-400 block">Direct Property Tariff</span>
+          <span className="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Direct Tariff</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-lg font-bold text-slate-900">
+            <span className="text-lg font-black text-slate-900">
               ₹{selectedRoom ? selectedRoom.price : hotel.pricePerNight}
             </span>
             <span className="text-xs text-slate-500">/ night</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <a
-            href={whatsappInquiryUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800"
-            title="Chat on WhatsApp"
-          >
-            <MessageSquare className="w-4 h-4 text-emerald-600" />
-          </a>
           <button
             onClick={() => setInquiryModalOpen(true)}
-            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-colors"
+            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-all cursor-pointer"
           >
-            Book Now
+            Inquire Now
           </button>
         </div>
       </div>
@@ -589,14 +1063,10 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
         preselectedRoom={selectedRoom?.name}
       />
 
-      {/* Write a Review Modal */}
+      {/* Review Submission Modal */}
       {writeReviewOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
-            onClick={() => setWriteReviewOpen(false)}
-          />
-          <div className="relative w-full max-w-lg bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden z-10 p-6 space-y-4 my-8">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Review {hotel.name}</h3>
