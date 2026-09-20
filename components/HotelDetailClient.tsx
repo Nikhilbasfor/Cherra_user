@@ -110,6 +110,32 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       .catch(console.warn);
   }, [hotel.id]);
 
+  // Quick dates & guests state (Reference-grade)
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [guestsCount, setGuestsCount] = useState("2 Adults");
+
+  // Scroll spy to highlight active in-page navigation tab
+  useEffect(() => {
+    const sectionIds = ["overview", "rooms", "amenities", "policies", "nearby", "reviews"];
+    const handleScroll = () => {
+      const scrollPos = window.scrollY + 160;
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            setActiveNavSection(id);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Structured Amenity Categories (Reference-grade)
   const amenityCategories = [
     {
@@ -326,23 +352,27 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
 
       {/* Breadcrumbs & Actions */}
       <div className="pt-20 pb-3 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
-          <div className="flex items-center gap-2">
-            <Link href="/" className="hover:text-emerald-700 transition-colors">Home</Link>
-            <span>/</span>
-            <Link href="/hotels" className="hover:text-emerald-700 transition-colors">Hotels in Cherrapunji</Link>
-            <span>/</span>
-            <span className="text-slate-400">{hotel.area}</span>
-            <span>/</span>
-            <span className="text-slate-900 font-semibold truncate max-w-[220px]">{hotel.name}</span>
+        <div className="flex items-center justify-between gap-3 text-xs text-slate-500">
+          <div className="flex items-center gap-1.5 overflow-hidden">
+            <Link
+              href="/hotels"
+              className="hover:text-emerald-700 transition-colors flex items-center gap-1 font-bold text-emerald-800 shrink-0"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>All Stays</span>
+            </Link>
+            <span className="text-slate-300">/</span>
+            <span className="text-slate-500 truncate hidden sm:inline">{hotel.area}</span>
+            <span className="text-slate-300 hidden sm:inline">/</span>
+            <span className="text-slate-900 font-semibold truncate">{hotel.name}</span>
           </div>
 
           <button
             onClick={handleShare}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors shadow-2xs cursor-pointer text-xs font-medium"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors shadow-2xs cursor-pointer text-xs font-semibold shrink-0 active:scale-95"
           >
             <Share2 className="w-3.5 h-3.5 text-emerald-700" />
-            <span>{copied ? "Link Copied!" : "Share Hotel"}</span>
+            <span>{copied ? "Copied!" : "Share"}</span>
           </button>
         </div>
       </div>
@@ -351,33 +381,33 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-5">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            {/* Badges Row */}
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              <div className="flex items-center gap-0.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 text-xs font-bold border border-amber-200">
+            {/* Badges Row - Clean single row with horizontal scroll on small screens */}
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1 mb-2">
+              <div className="flex items-center gap-0.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 text-xs font-bold border border-amber-200 shrink-0">
                 {Array.from({ length: hotel.starRating }).map((_, i) => (
                   <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
                 ))}
-                <span className="ml-1">{hotel.starRating} Star Property</span>
+                <span className="ml-1">{hotel.starRating} Star</span>
               </div>
 
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-900 text-xs font-semibold border border-emerald-200 flex items-center gap-1">
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-900 text-xs font-semibold border border-emerald-200 flex items-center gap-1 shrink-0">
                 <Award className="w-3 h-3 text-emerald-700" />
-                <span>★ {hotel.rating} Superb ({reviews.length > 0 ? reviews.length : hotel.reviewsCount} reviews)</span>
+                <span>★ {hotel.rating} Superb ({reviews.length > 0 ? reviews.length : hotel.reviewsCount})</span>
               </span>
 
-              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">
-                Verified Stay in Sohra
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200 shrink-0">
+                Verified Stay
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
               {hotel.name}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1.5 max-w-3xl leading-relaxed">
               {hotel.tagline}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 font-medium mt-2.5">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 font-medium mt-2.5">
               <span className="flex items-center gap-1 text-slate-700">
                 <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span>{hotel.address}</span>
@@ -410,10 +440,10 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       </div>
 
       {/* 5-Photo Mosaic Collection ("All Photos in 1 Go") */}
-      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-8">
-        <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 border border-slate-200 shadow-sm">
+      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-7">
+        <div className="relative rounded-2xl sm:rounded-3xl overflow-visible md:overflow-hidden bg-slate-900 border border-slate-200 shadow-sm">
           {/* Desktop 5-Photo Mosaic Grid */}
-          <div className="hidden md:grid grid-cols-12 gap-2 h-[440px] lg:h-[500px] p-2 bg-slate-900">
+          <div className="hidden md:grid grid-cols-12 gap-2 h-[440px] lg:h-[500px] p-2 bg-slate-900 rounded-2xl sm:rounded-3xl overflow-hidden">
             {/* Left Large Photo (7 Cols / ~58%) */}
             <div
               onClick={() => {
@@ -457,10 +487,28 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                 </div>
               ))}
             </div>
+
+            {/* Desktop Floating "View All Photos" Button */}
+            <button
+              onClick={() => {
+                setLightboxIndex(0);
+                setLightboxOpen(true);
+              }}
+              className="absolute bottom-4 right-4 z-10 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/95 hover:bg-white text-slate-900 font-bold text-xs shadow-xl border border-slate-200/90 backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <Grid className="w-4 h-4 text-emerald-700" />
+              <span>Show all {galleryImages.length} photos</span>
+            </button>
           </div>
 
           {/* Mobile Photo Carousel */}
-          <div className="md:hidden relative aspect-[16/11] w-full">
+          <div
+            onClick={() => {
+              setLightboxIndex(activeMobileImageIndex);
+              setLightboxOpen(true);
+            }}
+            className="md:hidden relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-900 cursor-pointer"
+          >
             <Image
               src={galleryImages[activeMobileImageIndex] || galleryImages[0]}
               alt={hotel.name}
@@ -468,60 +516,154 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
               priority
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
 
             {/* Prev / Next Arrows */}
             <button
-              onClick={() => setActiveMobileImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)}
-              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white backdrop-blur-xs"
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveMobileImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+              }}
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white backdrop-blur-xs active:scale-90 transition-transform"
               aria-label="Previous photo"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
-              onClick={() => setActiveMobileImageIndex((prev) => (prev + 1) % galleryImages.length)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white backdrop-blur-xs"
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveMobileImageIndex((prev) => (prev + 1) % galleryImages.length);
+              }}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white backdrop-blur-xs active:scale-90 transition-transform"
               aria-label="Next photo"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
 
-            {/* Mobile Index Pill */}
-            <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-md bg-black/70 backdrop-blur-xs text-white text-[11px] font-medium">
+            {/* Mobile Top Badge */}
+            <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider border border-white/20">
+              Verified Stay
+            </div>
+
+            {/* Mobile Index Counter Badge */}
+            <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-bold border border-white/20">
               {activeMobileImageIndex + 1} / {galleryImages.length}
+            </div>
+
+            {/* Dot Indicators */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 pointer-events-none">
+              {galleryImages.slice(0, 6).map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`rounded-full transition-all ${
+                    idx === activeMobileImageIndex ? "w-4 h-1.5 bg-white shadow-xs" : "w-1.5 h-1.5 bg-white/50"
+                  }`}
+                />
+              ))}
             </div>
           </div>
 
-          {/* Floating "View All Photos" Button */}
+          {/* Mobile Centered "See All Photos" Overlapping Pill Button (Goa Reference Style) */}
           <button
             onClick={() => {
               setLightboxIndex(0);
               setLightboxOpen(true);
             }}
-            className="absolute bottom-4 right-4 z-10 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/95 hover:bg-white text-slate-900 font-bold text-xs shadow-xl border border-slate-200/90 backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            className="md:hidden absolute -bottom-3.5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-slate-900 font-extrabold text-xs shadow-md border border-slate-200 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
           >
-            <Grid className="w-4 h-4 text-emerald-700" />
-            <span>Show all {galleryImages.length} photos</span>
+            <Grid className="w-3.5 h-3.5 text-emerald-700" />
+            <span>See all {galleryImages.length} photos</span>
           </button>
         </div>
       </div>
 
-      {/* In-Page Sticky Navigation Sub-Bar */}
-      <div className="sticky top-16 z-30 bg-white/95 backdrop-blur-md border-y border-slate-200 shadow-2xs mb-8">
+      {/* Quick Dates & Availability Strip (Goa Reference Feature) */}
+      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mt-7 mb-6">
+        <div className="p-3 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 flex-1">
+            {/* Check-In */}
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Check-In</label>
+              <input
+                type="date"
+                value={checkInDate}
+                onChange={(e) => setCheckInDate(e.target.value)}
+                className="w-full bg-transparent text-xs font-bold text-slate-900 outline-none mt-0.5 cursor-pointer"
+              />
+            </div>
+
+            {/* Check-Out */}
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Check-Out</label>
+              <input
+                type="date"
+                value={checkOutDate}
+                onChange={(e) => setCheckOutDate(e.target.value)}
+                className="w-full bg-transparent text-xs font-bold text-slate-900 outline-none mt-0.5 cursor-pointer"
+              />
+            </div>
+
+            {/* Guests */}
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 col-span-2 sm:col-span-1">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Guests</label>
+              <select
+                value={guestsCount}
+                onChange={(e) => setGuestsCount(e.target.value)}
+                className="w-full bg-transparent text-xs font-bold text-slate-900 outline-none mt-0.5 cursor-pointer"
+              >
+                <option value="1 Adult">1 Adult</option>
+                <option value="2 Adults">2 Adults</option>
+                <option value="2 Adults, 1 Child">2 Adults, 1 Child</option>
+                <option value="3 Adults">3 Adults</option>
+                <option value="4+ Group">4+ Family / Group</option>
+              </select>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setInquiryModalOpen(true)}
+            className="sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-sm shadow-emerald-700/20 active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+          >
+            <Calendar className="w-4 h-4" />
+            <span>Check Direct Rates</span>
+          </button>
+        </div>
+      </div>
+
+      {/* In-Page Sticky Navigation Sub-Bar with Scroll-Spy */}
+      <div className="sticky top-16 z-30 bg-white/95 backdrop-blur-md border-y border-slate-200 shadow-2xs mb-6 sm:mb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center gap-6 overflow-x-auto scrollbar-none py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
-            <a href="#overview" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Overview</a>
-            <a href="#rooms" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Room Categories</a>
-            <a href="#amenities" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Key Features</a>
-            <a href="#policies" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Good to Know</a>
-            <a href="#nearby" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Nearby Attractions</a>
-            <a href="#reviews" className="hover:text-emerald-800 pb-0.5 whitespace-nowrap transition-colors">Guest Reviews</a>
+          <nav className="flex items-center gap-2 sm:gap-4 overflow-x-auto scrollbar-none py-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+            {[
+              { id: "overview", label: "Overview" },
+              { id: "rooms", label: "Rooms" },
+              { id: "amenities", label: "Amenities" },
+              { id: "policies", label: "Policies" },
+              { id: "nearby", label: "Nearby" },
+              { id: "reviews", label: "Reviews" },
+            ].map((tab) => {
+              const isActive = activeNavSection === tab.id;
+              return (
+                <a
+                  key={tab.id}
+                  href={`#${tab.id}`}
+                  onClick={() => setActiveNavSection(tab.id)}
+                  className={`px-3 py-1.5 rounded-full whitespace-nowrap transition-all ${
+                    isActive
+                      ? "bg-slate-900 text-white font-extrabold shadow-xs"
+                      : "hover:text-slate-900 hover:bg-slate-100"
+                  }`}
+                >
+                  {tab.label}
+                </a>
+              );
+            })}
           </nav>
         </div>
       </div>
 
       {/* Main Content Split: Details on Left (8 cols) | Sticky Booking on Right (4 cols) */}
-      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-24 lg:pb-16">
+      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-32 lg:pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Main Details (8 cols) */}
           <div className="lg:col-span-8 space-y-8">
@@ -606,27 +748,29 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                           : "bg-white border-slate-200 hover:border-slate-300 shadow-2xs"
                       }`}
                     >
-                      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 sm:p-5">
+                      <div className="flex flex-col md:grid md:grid-cols-12 gap-3.5 sm:gap-4 p-3.5 sm:p-5">
                         {/* Room Thumbnail Photo */}
-                        <div className="md:col-span-4 relative aspect-[16/10] md:h-full min-h-[140px] rounded-xl overflow-hidden bg-slate-100">
+                        <div className="md:col-span-4 relative aspect-[16/10] w-full min-h-[160px] md:min-h-[140px] rounded-xl overflow-hidden bg-slate-100 shrink-0">
                           <Image src={roomImg} alt={room.name} fill className="object-cover" />
-                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold">
+                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold">
                             {room.capacity}
                           </div>
+                          {isSelected && (
+                            <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[10px] font-bold shadow-xs">
+                              Selected
+                            </div>
+                          )}
                         </div>
 
                         {/* Room Info & Specs */}
-                        <div className="md:col-span-5 flex flex-col justify-between space-y-2">
+                        <div className="md:col-span-5 flex flex-col justify-between space-y-2 flex-1">
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">{room.name}</h3>
-                              {isSelected && (
-                                <span className="text-[10px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full">
-                                  Active
-                                </span>
-                              )}
+                              <h3 className="font-extrabold text-slate-900 text-base sm:text-lg leading-snug">
+                                {room.name}
+                              </h3>
                             </div>
-                            <p className="text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-3">
+                            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-1.5">
                               <span className="flex items-center gap-1 font-medium">
                                 <Users className="w-3.5 h-3.5 text-slate-400" />
                                 <span>{room.capacity}</span>
@@ -641,7 +785,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                                   <span>{room.sizeSqFt} sq.ft</span>
                                 </span>
                               )}
-                            </p>
+                            </div>
                           </div>
 
                           {/* Room Features Pills */}
@@ -649,7 +793,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                             {room.features.map((feat, i) => (
                               <span
                                 key={i}
-                                className="text-[10px] font-medium px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200/60"
+                                className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200/60"
                               >
                                 {feat}
                               </span>
@@ -657,8 +801,8 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                           </div>
                         </div>
 
-                        {/* Room Pricing & CTA */}
-                        <div className="md:col-span-3 flex flex-col justify-between items-start md:items-end border-t md:border-t-0 md:border-l border-slate-100 pt-3 md:pt-0 md:pl-4">
+                        {/* Room Pricing & CTA (Split row on mobile, column on desktop) */}
+                        <div className="md:col-span-3 flex items-center justify-between md:flex-col md:items-end md:justify-between border-t md:border-t-0 md:border-l border-slate-100 pt-3 md:pt-0 md:pl-4 mt-1 md:mt-0">
                           <div>
                             {room.originalPrice && (
                               <span className="text-xs text-slate-400 line-through block md:text-right">
@@ -666,13 +810,13 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                               </span>
                             )}
                             <div className="flex items-baseline md:justify-end gap-1">
-                              <span className="text-xl font-black text-emerald-800">
+                              <span className="text-lg sm:text-xl font-black text-slate-900">
                                 ₹{room.price}
                               </span>
                               <span className="text-xs text-slate-500">/ night</span>
                             </div>
                             <span className="text-[10px] text-emerald-700 font-semibold block md:text-right">
-                              Front-Desk Verified
+                              Verified Rate
                             </span>
                           </div>
 
@@ -682,9 +826,9 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                               setSelectedRoom(room);
                               setInquiryModalOpen(true);
                             }}
-                            className="mt-3 w-full md:w-auto text-xs font-bold px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-xs active:scale-95 cursor-pointer"
+                            className="text-xs font-bold px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition-all shadow-xs active:scale-95 cursor-pointer shrink-0"
                           >
-                            Book This Room
+                            Book Room
                           </button>
                         </div>
                       </div>
@@ -695,7 +839,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             </section>
 
             {/* 3. Key Features & Amenities (Categorized Breakdown) */}
-            <section id="amenities" className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 space-y-6 shadow-xs scroll-mt-32">
+            <section id="amenities" className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-7 space-y-5 shadow-xs scroll-mt-32">
               <div className="border-b border-slate-100 pb-3">
                 <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
                   Features & Amenities
@@ -705,11 +849,32 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {/* Quick Key Amenities Strip */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 pb-1">
+                {[
+                  { icon: Wifi, label: "Free Wi-Fi" },
+                  { icon: Car, label: "Free Parking" },
+                  { icon: Bath, label: "24/7 Hot Water" },
+                  { icon: Coffee, label: "Dining / Kitchen" },
+                  { icon: Mountain, label: "Balcony / Views" },
+                ].map((item, idx) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={idx} className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-2">
+                      <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-800 shrink-0">
+                        <Icon className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-800 leading-tight">{item.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-5 pt-1">
                 {amenityCategories.map((cat, idx) => {
                   const Icon = cat.icon;
                   return (
-                    <div key={idx} className="p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2.5">
+                    <div key={idx} className="p-3.5 sm:p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2">
                       <div className="flex items-center gap-2 text-slate-900 font-bold text-xs uppercase tracking-wider">
                         <div className="p-1.5 rounded-lg bg-emerald-100/80 text-emerald-800">
                           <Icon className="w-4 h-4" />
@@ -788,19 +953,21 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                 </a>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 {nearbyLandmarks.map((lm, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/70 flex items-center justify-between gap-3"
+                    className="p-3 sm:p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/70 flex items-center justify-between gap-3"
                   >
-                    <div>
-                      <h4 className="font-bold text-xs text-slate-900">{lm.name}</h4>
-                      <span className="text-[10px] text-slate-400">{lm.type}</span>
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-bold text-xs text-slate-900 truncate">{lm.name}</h4>
+                      <span className="text-[10px] text-slate-400 block truncate">{lm.type}</span>
                     </div>
                     <div className="text-right shrink-0">
-                      <span className="font-extrabold text-xs text-emerald-800 block">{lm.distance}</span>
-                      <span className="text-[10px] text-slate-500">{lm.time}</span>
+                      <span className="font-black text-xs text-emerald-800 block px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-100">
+                        {lm.distance}
+                      </span>
+                      <span className="text-[10px] text-slate-500 block mt-0.5">{lm.time}</span>
                     </div>
                   </div>
                 ))}
@@ -1034,23 +1201,36 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
         )}
       </AnimatePresence>
 
-      {/* Mobile Sticky Booking Bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3 z-40 flex items-center justify-between shadow-lg">
+      {/* Mobile Sticky Booking Bar with Safe-Area insets & WhatsApp Quick Action */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2.5 pb-[max(10px,env(safe-area-inset-bottom))] z-40 flex items-center justify-between shadow-xl">
         <div>
-          <span className="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Direct Tariff</span>
+          <span className="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">
+            Direct Tariff
+          </span>
           <div className="flex items-baseline gap-1">
             <span className="text-lg font-black text-slate-900">
               ₹{selectedRoom ? selectedRoom.price : hotel.pricePerNight}
             </span>
-            <span className="text-xs text-slate-500">/ night</span>
+            <span className="text-xs text-slate-500 font-medium">/ night</span>
           </div>
         </div>
+
         <div className="flex items-center gap-2">
+          <a
+            href={whatsappInquiryUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors shrink-0"
+            title="Chat on WhatsApp"
+          >
+            <MessageSquare className="w-4 h-4" />
+          </a>
+
           <button
             onClick={() => setInquiryModalOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-sm shadow-emerald-700/20 active:scale-95 transition-all cursor-pointer"
           >
-            Inquire Now
+            Book Direct
           </button>
         </div>
       </div>
@@ -1061,6 +1241,8 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
         onClose={() => setInquiryModalOpen(false)}
         preselectedHotel={hotel}
         preselectedRoom={selectedRoom?.name}
+        initialCheckIn={checkInDate}
+        initialCheckOut={checkOutDate}
       />
 
       {/* Review Submission Modal */}
