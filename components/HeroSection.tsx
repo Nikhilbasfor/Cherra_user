@@ -166,15 +166,15 @@ export default function HeroSection() {
   };
 
   return (
-    <div className="relative min-h-[100dvh] flex flex-col justify-between pt-20 sm:pt-24 pb-4 sm:pb-6 overflow-hidden bg-slate-950">
+    <div className="relative min-h-[100dvh] flex flex-col justify-center pt-20 sm:pt-24 pb-8 sm:pb-12 overflow-hidden bg-slate-950">
       {/* Ambient Lighting Gradient */}
       <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-emerald-600/20 via-emerald-950/15 to-transparent pointer-events-none z-0" />
 
-      {/* Main Hero Container - Stretched Full Viewport Height */}
-      <div className="relative z-20 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-between gap-4 sm:gap-6">
+      {/* Main Hero Container */}
+      <div className="relative z-20 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full flex flex-col justify-center">
         
-        {/* Cinematic Video Hero Card - Enlarged & Majestic Scale */}
-        <div className="relative flex-1 min-h-[380px] sm:min-h-[440px] lg:min-h-[480px] rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden border border-white/20 shadow-2xl shadow-black/80 bg-slate-900 flex flex-col justify-between">
+        {/* Cinematic Video Hero Card - Majestic Scale */}
+        <div className="relative rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden border border-white/20 shadow-2xl shadow-black/80 bg-slate-900 min-h-[320px] sm:min-h-[360px] lg:min-h-[400px] flex flex-col justify-between">
           
           {/* Unblurred, High-Definition Video Player */}
           <div className="absolute inset-0 z-0">
@@ -208,7 +208,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.15 }}
-              className="text-2xl sm:text-4xl lg:text-[44px] font-extrabold tracking-tight text-white leading-tight sm:leading-[1.18] max-w-3xl mx-auto drop-shadow-lg"
+              className="text-2xl sm:text-4xl lg:text-[40px] font-extrabold tracking-tight text-white leading-tight sm:leading-[1.18] max-w-3xl mx-auto drop-shadow-lg"
             >
               <span>Tranquil Stays Above the Clouds in </span>
               <span className="text-emerald-400 font-black inline-block">Cherrapunji</span>
@@ -218,22 +218,22 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
-              className="mt-3 sm:mt-4 text-xs sm:text-sm lg:text-base text-white/95 font-medium max-w-xl mx-auto leading-relaxed drop-shadow-md"
+              className="mt-2.5 sm:mt-3 text-xs sm:text-sm lg:text-base text-white/95 font-medium max-w-xl mx-auto leading-relaxed drop-shadow-md"
             >
               Wake up to panoramic waterfall vistas and emerald rainforest valleys with direct local rates.
             </motion.p>
           </div>
 
-          {/* Bottom spacing to accommodate search card overlap */}
-          <div className="h-4 sm:h-8" />
+          {/* Bottom spacing to accommodate uplifted search card overlap */}
+          <div className="h-10 sm:h-14 lg:h-16" />
         </div>
 
-        {/* Floating Pro Search Card - Anchored at the Bottom of First Viewport */}
+        {/* Floating Pro Search Card - Uplifted with Strong Overlap */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="relative z-30 max-w-6xl mx-auto px-2 sm:px-4 w-full mt-auto mb-1 sm:mb-2 -mt-10 sm:-mt-14"
+          className="relative z-30 max-w-6xl mx-auto px-2 sm:px-4 w-full -mt-16 sm:-mt-20 lg:-mt-22"
         >
           {/* Upper curved tab on the left side only */}
           <div className="flex">
