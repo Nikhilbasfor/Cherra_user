@@ -78,21 +78,19 @@ function HotelsContent() {
   }, [hotels]);
 
   const allAmenitiesList = useMemo(() => {
-    const defaults = [
+    return [
       "Free High-Speed Wi-Fi",
-      "Mountain View",
-      "Geyser / 24hr Hot Water",
-      "Bonfire Nights",
-      "Fine Dining Restaurant",
-      "Infinity View Pool",
+      "24/7 Hot Water / Geyser",
+      "Mountain & Valley View",
+      "Multi-Cuisine Restaurant",
+      "Free Private Parking",
       "Private Balcony",
+      "Bonfire & Barbeque",
+      "Room Heater",
+      "Tea / Coffee Maker",
+      "Travel Desk & Cab Services",
     ];
-    const set = new Set<string>(defaults);
-    hotels.forEach((h) => {
-      h.amenities?.forEach((a) => set.add(a));
-    });
-    return Array.from(set);
-  }, [hotels]);
+  }, []);
 
   const starTabs = [
     { id: 0, label: "All", stars: null },
@@ -193,9 +191,58 @@ function HotelsContent() {
 
     if (selectedAmenities.length > 0) {
       list = list.filter((h) =>
-        selectedAmenities.every((required) =>
-          h.amenities.some((a) => a.toLowerCase().includes(required.toLowerCase()))
-        )
+        selectedAmenities.every((required) => {
+          const req = required.toLowerCase();
+          if (req.includes("wi-fi") || req.includes("wifi")) {
+            return h.amenities.some((a) => {
+              const al = a.toLowerCase();
+              return al.includes("wi-fi") || al.includes("wifi") || al.includes("internet");
+            });
+          }
+          if (req.includes("water") || req.includes("geyser")) {
+            return h.amenities.some((a) => {
+              const al = a.toLowerCase();
+              return al.includes("water") || al.includes("geyser") || al.includes("hot");
+            });
+          }
+          if (req.includes("view") || req.includes("mountain") || req.includes("valley")) {
+            return h.amenities.some((a) => {
+              const al = a.toLowerCase();
+              return al.includes("view") || al.includes("valley") || al.includes("cliff") || al.includes("canyon") || al.includes("falls");
+            });
+          }
+          if (req.includes("restaurant") || req.includes("dining")) {
+            return h.amenities.some((a) => {
+              const al = a.toLowerCase();
+              return al.includes("restaurant") || al.includes("dining") || al.includes("food") || al.includes("cafe") || al.includes("kitchen");
+            });
+          }
+          if (req.includes("parking")) {
+            return h.amenities.some((a) => a.toLowerCase().includes("parking"));
+          }
+          if (req.includes("balcony")) {
+            return h.amenities.some((a) => a.toLowerCase().includes("balcony") || a.toLowerCase().includes("terrace"));
+          }
+          if (req.includes("bonfire") || req.includes("barbeque")) {
+            return h.amenities.some((a) => a.toLowerCase().includes("bonfire") || a.toLowerCase().includes("fire") || a.toLowerCase().includes("campfire"));
+          }
+          if (req.includes("heater")) {
+            return h.amenities.some((a) => a.toLowerCase().includes("heater") || a.toLowerCase().includes("fireplace"));
+          }
+          if (req.includes("tea") || req.includes("coffee")) {
+            return h.amenities.some((a) => {
+              const al = a.toLowerCase();
+              return al.includes("tea") || al.includes("coffee") || al.includes("kettle") || al.includes("espresso");
+            });
+          }
+          if (req.includes("travel") || req.includes("cab") || req.includes("services")) {
+            return h.amenities.some((a) => {
+              const al = a.toLowerCase();
+              return al.includes("travel") || al.includes("desk") || al.includes("cab") || al.includes("guide") || al.includes("trek");
+            });
+          }
+          return h.amenities.some((a) => a.toLowerCase().includes(req));
+        })
       );
     }
 

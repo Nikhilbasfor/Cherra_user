@@ -140,6 +140,31 @@ function InquiryModalContent({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (!checkIn) {
+        const savedIn = sessionStorage.getItem("cherra_checkIn");
+        if (savedIn) setCheckIn(savedIn);
+      }
+      if (!checkOut) {
+        const savedOut = sessionStorage.getItem("cherra_checkOut");
+        if (savedOut) setCheckOut(savedOut);
+      }
+      const savedGuests = sessionStorage.getItem("cherra_guests");
+      if (savedGuests) {
+        if (savedGuests.includes("1")) setAdults(1);
+        else if (savedGuests.includes("2")) setAdults(2);
+        else if (savedGuests.includes("3") || savedGuests.includes("4")) setAdults(4);
+        else if (savedGuests.includes("5")) setAdults(6);
+      }
+      const savedArea = sessionStorage.getItem("cherra_search_area");
+      if (!selectedHotelId && savedArea && savedArea !== "All Areas" && hotelsList.length > 0) {
+        const match = hotelsList.find((h) => h.area.toLowerCase().includes(savedArea.toLowerCase()));
+        if (match) setSelectedHotelId(match.id);
+      }
+    }
+  }, [hotelsList, selectedHotelId]);
+
   const handleHotelSelect = (hotelId: string) => {
     setSelectedHotelId(hotelId);
     setSelectedRoomName("");
