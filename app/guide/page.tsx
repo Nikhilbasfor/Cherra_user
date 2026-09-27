@@ -1,8 +1,9 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Compass, MapPin, ArrowRight } from "lucide-react";
+import { MapPin, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InquiryModal from "@/components/InquiryModal";
@@ -28,13 +29,9 @@ export default function GuidePage() {
     <div className="min-h-screen bg-[#f8faf9] text-slate-900">
       <Navbar onOpenInquiry={() => setInquiryModalOpen(true)} />
 
-      {/* Header */}
+      {/* Header (Cleaned up - removed Official Sohra Travel Guide badge) */}
       <div className="pt-24 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-slate-200">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 mb-1">
-            <Compass className="w-4 h-4 text-emerald-600" />
-            <span>Official Sohra Travel Guide</span>
-          </div>
           <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
             Cherrapunji Sightseeing & Attractions
           </h1>
@@ -44,74 +41,80 @@ export default function GuidePage() {
         </div>
       </div>
 
-      {/* Attractions List */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        {attractions.map((att) => (
-          <div
-            key={att.id}
-            id={att.id}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white border border-slate-200/90 rounded-2xl p-5 lg:p-7 items-center shadow-xs hover:border-emerald-200 transition-all"
-          >
-            {/* Image (5 cols) */}
-            <div className="lg:col-span-5 relative aspect-[16/11] rounded-xl overflow-hidden bg-slate-100 shadow-inner">
-              <Image
-                src={att.image}
-                alt={att.name}
-                fill
-                sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-cover"
-              />
-              <div className="absolute top-3 left-3 bg-white/95 text-emerald-800 font-semibold text-xs px-2.5 py-1 rounded-md shadow-xs border border-slate-200">
-                {att.category}
+      {/* Attractions Grid - 3 attraction boxes in 1 row with vertical format */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {attractions.map((att) => (
+            <div
+              key={att.id}
+              id={att.id}
+              className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs hover:border-emerald-300 hover:shadow-md transition-all flex flex-col justify-between"
+            >
+              {/* Image at Top */}
+              <div className="relative aspect-[16/10] w-full bg-slate-100 overflow-hidden">
+                <Image
+                  src={att.image}
+                  alt={att.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-500 hover:scale-105"
+                />
+                <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs text-emerald-800 font-bold text-xs px-2.5 py-1 rounded-md shadow-xs border border-slate-200">
+                  {att.category}
+                </div>
+              </div>
+
+              {/* Vertical Information Body */}
+              <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span className="truncate">{att.distanceFromSohra} from Sohra Town</span>
+                    {att.khasiName && <span className="text-slate-400 truncate">({att.khasiName})</span>}
+                  </div>
+
+                  <h2 className="text-lg font-bold text-slate-900 tracking-tight leading-snug">
+                    {att.name}
+                  </h2>
+
+                  <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
+                    {att.description}
+                  </p>
+                </div>
+
+                <div className="space-y-3 pt-2 border-t border-slate-100">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80">
+                      <span className="text-slate-400 block text-[10px]">Best Season:</span>
+                      <span className="font-semibold text-slate-800 truncate block">{att.bestTime}</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80">
+                      <span className="text-slate-400 block text-[10px]">Visitor Rating:</span>
+                      <span className="font-semibold text-emerald-700 block">★ {att.rating} / 5.0</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-1">
+                    <Link
+                      href="/hotels?area=all"
+                      className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-colors flex items-center justify-center gap-1.5 text-center"
+                    >
+                      <span>Nearby Hotels</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setInquiryModalOpen(true)}
+                      className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+                    >
+                      Plan Trip
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-
-            {/* Info (7 cols) */}
-            <div className="lg:col-span-7 space-y-3">
-              <div>
-                <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium mb-1">
-                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>{att.distanceFromSohra} from Sohra Town</span>
-                  {att.khasiName && <span className="text-slate-400">({att.khasiName})</span>}
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                  {att.name}
-                </h2>
-              </div>
-
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                {att.description}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 text-xs text-slate-600">
-                  <span className="text-slate-400 block text-[10px]">Best Season:</span>
-                  <span className="font-semibold text-slate-800">{att.bestTime}</span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 text-xs text-slate-600">
-                  <span className="text-slate-400 block text-[10px]">Visitor Rating:</span>
-                  <span className="font-semibold text-emerald-700">★ {att.rating} / 5.0</span>
-                </div>
-              </div>
-
-              <div className="pt-2 flex flex-wrap items-center gap-2.5">
-                <Link
-                  href="/hotels?area=all"
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-colors flex items-center gap-1.5"
-                >
-                  <span>Book Hotels Near {att.name}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-                <button
-                  onClick={() => setInquiryModalOpen(true)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors"
-                >
-                  Ask for Travel Plan
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <InquiryModal

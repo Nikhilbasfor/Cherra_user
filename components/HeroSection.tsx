@@ -13,7 +13,6 @@ import {
   Compass,
   ChevronDown,
   Building2,
-  Check,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CHERRAPUNJI_HOTELS } from "@/lib/mockData";
@@ -55,7 +54,6 @@ export default function HeroSection() {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState("2 Adults");
-  const [selectedExperience, setSelectedExperience] = useState<string>("all");
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const currentAngle = VIDEO_ANGLES[0];
@@ -102,9 +100,8 @@ export default function HeroSection() {
       if (checkOut) sessionStorage.setItem("cherra_checkOut", checkOut);
       if (guests) sessionStorage.setItem("cherra_guests", guests);
       if (selectedArea) sessionStorage.setItem("cherra_search_area", selectedArea);
-      if (selectedExperience) sessionStorage.setItem("cherra_collection", selectedExperience);
     }
-  }, [checkIn, checkOut, guests, selectedArea, selectedExperience]);
+  }, [checkIn, checkOut, guests, selectedArea]);
 
   // Derive available unique areas from active hotels with live property counts
   const availableAreasWithCount = React.useMemo(() => {
@@ -163,22 +160,21 @@ export default function HeroSection() {
     if (selectedArea && selectedArea !== "All Areas") params.set("area", selectedArea);
     if (checkIn) params.set("checkIn", checkIn);
     if (checkOut) params.set("checkOut", checkOut);
-    if (selectedExperience && selectedExperience !== "all") params.set("collection", selectedExperience);
     if (guests) params.set("guests", guests);
 
     router.push(`/hotels?${params.toString()}`);
   };
 
   return (
-    <div className="relative pt-16 sm:pt-20 pb-4 sm:pb-6 overflow-hidden bg-slate-950">
+    <div className="relative min-h-[100dvh] flex flex-col justify-between pt-20 sm:pt-24 pb-4 sm:pb-6 overflow-hidden bg-slate-950">
       {/* Ambient Lighting Gradient */}
-      <div className="absolute top-0 inset-x-0 h-80 bg-gradient-to-b from-emerald-600/20 via-emerald-950/15 to-transparent pointer-events-none z-0" />
+      <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-emerald-600/20 via-emerald-950/15 to-transparent pointer-events-none z-0" />
 
-      {/* Main Hero Container */}
-      <div className="relative z-20 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      {/* Main Hero Container - Stretched Full Viewport Height */}
+      <div className="relative z-20 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-between gap-4 sm:gap-6">
         
-        {/* Cinematic Video Hero Card - Viewport-Fitted */}
-        <div className="relative rounded-2xl sm:rounded-3xl lg:rounded-[28px] overflow-hidden border border-white/20 shadow-2xl shadow-black/80 bg-slate-900 min-h-[250px] sm:min-h-[290px] lg:min-h-[320px] flex flex-col justify-between">
+        {/* Cinematic Video Hero Card - Enlarged & Majestic Scale */}
+        <div className="relative flex-1 min-h-[380px] sm:min-h-[440px] lg:min-h-[480px] rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden border border-white/20 shadow-2xl shadow-black/80 bg-slate-900 flex flex-col justify-between">
           
           {/* Unblurred, High-Definition Video Player */}
           <div className="absolute inset-0 z-0">
@@ -199,89 +195,61 @@ export default function HeroSection() {
             </video>
 
             {/* Directional Cinematic Scrim */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/20 to-black/75 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/15 to-black/75 pointer-events-none" />
             <div className="absolute inset-0 bg-radial-at-c from-transparent via-transparent to-black/35 pointer-events-none" />
           </div>
 
           {/* Top spacing inside the Hero Video Card */}
-          <div className="relative z-20 pt-3 sm:pt-5" />
+          <div className="relative z-20 pt-4 sm:pt-6" />
 
-          {/* Center Content: Uplifted, Viewport-Conscious Typography */}
-          <div className="relative z-20 px-4 sm:px-8 lg:px-12 pt-1 sm:pt-2 pb-5 sm:pb-7 max-w-4xl mx-auto text-center">
+          {/* Center Content: Grand Typography */}
+          <div className="relative z-20 px-4 sm:px-8 lg:px-12 pt-2 sm:pt-4 pb-6 sm:pb-10 max-w-4xl mx-auto text-center">
             <motion.h1
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-xl sm:text-3xl lg:text-[34px] font-extrabold tracking-tight text-white leading-tight max-w-3xl mx-auto drop-shadow-md"
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="text-2xl sm:text-4xl lg:text-[44px] font-extrabold tracking-tight text-white leading-tight sm:leading-[1.18] max-w-3xl mx-auto drop-shadow-lg"
             >
               <span>Tranquil Stays Above the Clouds in </span>
               <span className="text-emerald-400 font-black inline-block">Cherrapunji</span>
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-white/95 font-medium max-w-xl mx-auto leading-normal drop-shadow-sm"
+              transition={{ duration: 0.6, delay: 0.25 }}
+              className="mt-3 sm:mt-4 text-xs sm:text-sm lg:text-base text-white/95 font-medium max-w-xl mx-auto leading-relaxed drop-shadow-md"
             >
               Wake up to panoramic waterfall vistas and emerald rainforest valleys with direct local rates.
             </motion.p>
           </div>
 
           {/* Bottom spacing to accommodate search card overlap */}
-          <div className="h-4 sm:h-6" />
+          <div className="h-4 sm:h-8" />
         </div>
 
-        {/* Floating Pro Search Card - Clean Thin Black Boundary & Instant Visibility */}
+        {/* Floating Pro Search Card - Anchored at the Bottom of First Viewport */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25 }}
-          className="relative z-30 -mt-8 sm:-mt-12 max-w-6xl mx-auto px-2 sm:px-4"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="relative z-30 max-w-6xl mx-auto px-2 sm:px-4 w-full mt-auto mb-1 sm:mb-2 -mt-10 sm:-mt-14"
         >
           <form
             onSubmit={handleSearch}
-            className="p-3.5 sm:p-4 bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-black shadow-xl shadow-black/15 text-left"
+            className="p-4 sm:p-5 bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-black shadow-2xl text-left"
           >
-            {/* Top Bar: Check Availability & Experience Filters */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-slate-200">
-              <div className="flex items-center gap-2">
-                <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900 text-white text-xs font-bold shadow-xs">
-                  <CalendarCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Check Availability</span>
-                </span>
-                <span className="text-xs text-slate-500 font-medium hidden sm:inline">
-                  Direct front-desk tariffs • Instant verification
-                </span>
-              </div>
-
-              {/* Quick Experience Pills */}
-              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-                {[
-                  { id: "all", label: "All Stays" },
-                  { id: "cliffside", label: "Waterfall Views" },
-                  { id: "resorts", label: "Luxury Resorts" },
-                  { id: "cottages", label: "Pine Cottages" },
-                ].map((exp) => (
-                  <button
-                    key={exp.id}
-                    type="button"
-                    onClick={() => setSelectedExperience(exp.id)}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all whitespace-nowrap cursor-pointer ${
-                      selectedExperience === exp.id
-                        ? "bg-emerald-600 text-white shadow-xs"
-                        : "bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200/80"
-                    }`}
-                  >
-                    {exp.label}
-                  </button>
-                ))}
-              </div>
+            {/* Header: ONLY 'Check Availability' in larger font, NO black background, NO extra pills */}
+            <div className="pb-3 mb-3 border-b border-slate-200">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                <CalendarCheck className="w-5 h-5 text-emerald-600" />
+                <span>Check Availability</span>
+              </h3>
             </div>
 
             {/* 5 Input Columns with Neat Borders */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 items-stretch">
-              {/* 1. Smart Search Region / Hotel Combobox */}
+              {/* 1. Smart Search Region Combobox (Opens Upward to Prevent Screen Cutoff) */}
               <div ref={areaDropdownRef} className="relative flex flex-col justify-center">
                 <div
                   onClick={() => setIsAreaDropdownOpen((prev) => !prev)}
@@ -305,15 +273,15 @@ export default function HeroSection() {
                   </div>
                 </div>
 
-                {/* Dropdown Combobox Menu */}
+                {/* Dropdown Combobox Menu - Opens UPWARD */}
                 <AnimatePresence>
                   {isAreaDropdownOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 6 }}
+                      initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 6 }}
+                      exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-white rounded-xl border border-slate-300 shadow-2xl p-2 space-y-2 max-h-72 overflow-y-auto"
+                      className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-white rounded-xl border border-slate-300 shadow-2xl p-2 space-y-2 max-h-72 overflow-y-auto"
                     >
                       {/* Search Filter Input */}
                       <div className="relative">
@@ -480,7 +448,7 @@ export default function HeroSection() {
           </form>
 
           {/* Reassuring Trust Signals */}
-          <div className="mt-3 sm:mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5 text-xs text-slate-400 font-medium">
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5 text-xs text-slate-400 font-medium">
             <span className="flex items-center gap-1.5 text-slate-300">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               100% Physically Verified Properties
