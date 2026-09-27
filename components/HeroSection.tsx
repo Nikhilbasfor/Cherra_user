@@ -166,7 +166,7 @@ export default function HeroSection() {
   };
 
   return (
-    <div className="relative min-h-[100dvh] flex flex-col justify-center pt-20 sm:pt-24 pb-8 sm:pb-12 overflow-hidden bg-slate-950">
+    <div className="relative min-h-[100dvh] flex flex-col justify-center pt-16 sm:pt-20 pb-6 sm:pb-8 overflow-hidden bg-slate-950">
       {/* Ambient Lighting Gradient */}
       <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-emerald-600/20 via-emerald-950/15 to-transparent pointer-events-none z-0" />
 
@@ -224,16 +224,16 @@ export default function HeroSection() {
             </motion.p>
           </div>
 
-          {/* Bottom spacing to accommodate uplifted search card overlap */}
-          <div className="h-10 sm:h-14 lg:h-16" />
+          {/* Bottom spacing inside video card */}
+          <div className="h-6 sm:h-8 lg:h-10" />
         </div>
 
-        {/* Floating Pro Search Card - Uplifted with Strong Overlap */}
+        {/* Floating Pro Search Card - Lowered for balanced hero overlap */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="relative z-30 max-w-6xl mx-auto px-2 sm:px-4 w-full -mt-16 sm:-mt-20 lg:-mt-22"
+          className="relative z-30 max-w-6xl mx-auto px-2 sm:px-4 w-full -mt-8 sm:-mt-10 lg:-mt-12"
         >
           {/* Upper curved tab on the left side only */}
           <div className="flex">
