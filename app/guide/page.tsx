@@ -96,7 +96,7 @@ export default function GuidePage() {
 
                   <div className="flex items-center gap-2 pt-1">
                     <Link
-                      href="/hotels?area=all"
+                      href={`/hotels?near=${att.id}`}
                       className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-colors flex items-center justify-center gap-1.5 text-center"
                     >
                       <span>Nearby Hotels</span>

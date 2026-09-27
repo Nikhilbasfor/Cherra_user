@@ -10,21 +10,38 @@ import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_ATTRACTIONS } from "@/lib/mockData";
 interface MapExplorerProps {
   hotels?: Hotel[];
   attractions?: Attraction[];
+  selectedLandmark?: string;
   onEnquire?: (hotel: Hotel) => void;
 }
 
 export default function MapExplorer({
   hotels = CHERRAPUNJI_HOTELS,
   attractions = CHERRAPUNJI_ATTRACTIONS,
+  selectedLandmark,
   onEnquire,
 }: MapExplorerProps) {
   const [activeItem, setActiveItem] = useState<{
     type: "hotel" | "attraction";
     data: Hotel | Attraction;
-  }>({
-    type: "hotel",
-    data: hotels[0],
+  }>(() => {
+    if (selectedLandmark) {
+      const match = attractions.find((a) => a.id === selectedLandmark);
+      if (match) return { type: "attraction", data: match };
+    }
+    return {
+      type: "hotel",
+      data: hotels[0] || CHERRAPUNJI_HOTELS[0],
+    };
   });
+
+  React.useEffect(() => {
+    if (selectedLandmark) {
+      const match = attractions.find((a) => a.id === selectedLandmark);
+      if (match) {
+        setActiveItem({ type: "attraction", data: match });
+      }
+    }
+  }, [selectedLandmark, attractions]);
 
   const [filterType, setFilterType] = useState<"all" | "hotels" | "attractions">("all");
 
@@ -254,7 +271,7 @@ export default function MapExplorer({
                   </div>
 
                   <Link
-                    href="/hotels?area=all"
+                    href={`/hotels?near=${a.id}`}
                     className="w-full py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold text-center block transition-colors shadow-xs"
                   >
                     Find Hotels Near {a.name}

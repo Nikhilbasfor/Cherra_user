@@ -12,6 +12,8 @@ import {
   LayoutGrid,
   Map as MapIcon,
   ArrowUpDown,
+  Navigation,
+  Compass,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -21,6 +23,11 @@ import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_AREAS } from "@/lib/mockData";
 import { getAllHotels } from "@/lib/firebase";
 import { Hotel } from "@/lib/types";
+import {
+  getHotelsNearLandmark,
+  CHERRAPUNJI_LANDMARKS,
+  HotelProximityResult,
+} from "@/lib/geoDistance";
 
 function HotelsContent() {
   const [hotels, setHotels] = useState<Hotel[]>(CHERRAPUNJI_HOTELS);
@@ -46,10 +53,13 @@ function HotelsContent() {
   const initialCheckIn = searchParams.get("checkIn") || "";
   const initialCheckOut = searchParams.get("checkOut") || "";
 
+  const initialNear = searchParams.get("near") || "";
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedArea, setSelectedArea] = useState(initialArea);
   const [selectedCollection, setSelectedCollection] = useState(initialCollection);
   const [selectedStars, setSelectedStars] = useState<number[]>(initialStars);
+  const [selectedLandmark, setSelectedLandmark] = useState<string>(initialNear);
   const [maxPrice, setMaxPrice] = useState<number>(15000);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>("featured");
@@ -58,16 +68,29 @@ function HotelsContent() {
   const [selectedHotelForInquiry, setSelectedHotelForInquiry] = useState<Hotel | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
+  const selectedLandmarkInfo = useMemo(() => {
+    return CHERRAPUNJI_LANDMARKS.find((l) => l.id === selectedLandmark) || null;
+  }, [selectedLandmark]);
+
+  const proximityData = useMemo(() => {
+    if (!selectedLandmark) return null;
+    const results = getHotelsNearLandmark(selectedLandmark, hotels);
+    const map = new Map<string, HotelProximityResult>();
+    results.forEach((r) => map.set(r.hotel.id, r));
+    return { results, map };
+  }, [selectedLandmark, hotels]);
+
   const activeFilterCount = useMemo(() => {
     let count = 0;
     if (selectedArea !== "All Areas") count++;
     if (selectedCollection !== "all") count++;
     if (selectedStars.length > 0) count += selectedStars.length;
     if (selectedAmenities.length > 0) count += selectedAmenities.length;
+    if (selectedLandmark) count++;
     if (maxPrice < 15000) count++;
     if (searchQuery.trim()) count++;
     return count;
-  }, [selectedArea, selectedCollection, selectedStars, selectedAmenities, maxPrice, searchQuery]);
+  }, [selectedArea, selectedCollection, selectedStars, selectedAmenities, selectedLandmark, maxPrice, searchQuery]);
 
   const availableAreas = useMemo(() => {
     const set = new Set<string>();
@@ -128,6 +151,7 @@ function HotelsContent() {
     setSelectedArea("All Areas");
     setSelectedCollection("all");
     setSelectedStars([]);
+    setSelectedLandmark("");
     setMaxPrice(15000);
     setSelectedAmenities([]);
     setSortBy("featured");
@@ -246,7 +270,14 @@ function HotelsContent() {
       );
     }
 
-    if (sortBy === "price_asc") {
+    if (selectedLandmark && proximityData) {
+      // Sort primarily by Dijkstra mountain road distance (closest stays first)
+      list.sort((a, b) => {
+        const distA = proximityData.map.get(a.id)?.distanceKm ?? 999;
+        const distB = proximityData.map.get(b.id)?.distanceKm ?? 999;
+        return distA - distB;
+      });
+    } else if (sortBy === "price_asc") {
       list.sort((a, b) => a.pricePerNight - b.pricePerNight);
     } else if (sortBy === "price_desc") {
       list.sort((a, b) => b.pricePerNight - a.pricePerNight);
@@ -259,7 +290,18 @@ function HotelsContent() {
     }
 
     return list;
-  }, [hotels, searchQuery, selectedArea, selectedCollection, selectedStars, maxPrice, selectedAmenities, sortBy]);
+  }, [
+    hotels,
+    searchQuery,
+    selectedArea,
+    selectedCollection,
+    selectedStars,
+    maxPrice,
+    selectedAmenities,
+    sortBy,
+    selectedLandmark,
+    proximityData,
+  ]);
 
   const handleOpenInquiry = (hotel?: Hotel) => {
     setSelectedHotelForInquiry(hotel || null);
@@ -363,6 +405,7 @@ function HotelsContent() {
           <div className="space-y-6">
             <MapExplorer
               hotels={filteredHotels}
+              selectedLandmark={selectedLandmark}
               onEnquire={(h) => handleOpenInquiry(h)}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-3">
@@ -370,6 +413,7 @@ function HotelsContent() {
                 <HotelCard
                   key={hotel.id}
                   hotel={hotel}
+                  proximity={proximityData?.map.get(hotel.id)}
                   onEnquire={(h) => handleOpenInquiry(h)}
                 />
               ))}
@@ -472,6 +516,32 @@ function HotelsContent() {
                   </select>
                 </div>
 
+                {/* Sightseeing Proximity (Dijkstra Road Distance) */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1 flex items-center gap-1">
+                    <Compass className="w-3.5 h-3.5 text-emerald-600" />
+                    Sightseeing Proximity
+                  </label>
+                  <select
+                    value={selectedLandmark}
+                    onChange={(e) => setSelectedLandmark(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white"
+                  >
+                    <option value="">All Sightseeing Spots</option>
+                    {CHERRAPUNJI_LANDMARKS.map((landmark) => (
+                      <option key={landmark.id} value={landmark.id}>
+                        Near {landmark.name}
+                      </option>
+                    ))}
+                  </select>
+                  {selectedLandmarkInfo && (
+                    <p className="text-[11px] text-emerald-700 font-medium mt-1.5 flex items-center gap-1">
+                      <Navigation className="w-3 h-3 text-emerald-600 shrink-0" />
+                      <span>Road route &amp; drive time active</span>
+                    </p>
+                  )}
+                </div>
+
                 {/* Curated Collection */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1.5">
@@ -572,6 +642,33 @@ function HotelsContent() {
 
             {/* Right Listings Area (9 cols) */}
             <main className="lg:col-span-9 space-y-5">
+              {/* Proximity Callout Banner */}
+              {selectedLandmarkInfo && (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-emerald-50/90 border border-emerald-200 text-xs text-emerald-950 shadow-xs">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                      <Navigation className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-900 text-xs sm:text-sm">
+                        Showing stays closest to {selectedLandmarkInfo.name}
+                      </p>
+                      <p className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                        Filtered &amp; ranked by shortest mountain road distance (Dijkstra algorithm)
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedLandmark("")}
+                    className="self-start sm:self-auto px-3 py-1.5 rounded-xl bg-white border border-emerald-300 text-emerald-800 hover:bg-emerald-100/50 font-semibold text-xs transition-colors shrink-0 flex items-center gap-1 cursor-pointer"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Clear Landmark</span>
+                  </button>
+                </div>
+              )}
+
               {/* Sort Bar */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200/90 shadow-xs">
                 <p className="text-xs text-slate-500">
@@ -604,6 +701,7 @@ function HotelsContent() {
                     <HotelCard
                       key={hotel.id}
                       hotel={hotel}
+                      proximity={proximityData?.map.get(hotel.id)}
                       onEnquire={(h) => handleOpenInquiry(h)}
                     />
                   ))}

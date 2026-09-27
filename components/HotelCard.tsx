@@ -4,16 +4,21 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Star, MapPin, Sparkles, ChevronLeft, ChevronRight, Check, Heart } from "lucide-react";
+import { Star, MapPin, Sparkles, ChevronLeft, ChevronRight, Check, Heart, Navigation } from "lucide-react";
 import { motion } from "framer-motion";
 import { Hotel } from "@/lib/types";
 
 interface HotelCardProps {
   hotel: Hotel;
   onEnquire: (hotel: Hotel) => void;
+  proximity?: {
+    landmarkName: string;
+    distanceKm: number;
+    driveTimeMins: number;
+  };
 }
 
-export default function HotelCard({ hotel, onEnquire }: HotelCardProps) {
+export default function HotelCard({ hotel, onEnquire, proximity }: HotelCardProps) {
   const router = useRouter();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
@@ -131,6 +136,19 @@ export default function HotelCard({ hotel, onEnquire }: HotelCardProps) {
       {/* Card Body */}
       <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3 bg-white">
         <div>
+          {/* Proximity Callout Badge if filtered near a landmark */}
+          {proximity && (
+            <div className="mb-2 p-1.5 px-2.5 rounded-lg bg-emerald-50 border border-emerald-200/90 text-[11px] font-semibold text-emerald-900 flex items-center justify-between shadow-2xs">
+              <span className="flex items-center gap-1.5 truncate">
+                <Navigation className="w-3 h-3 text-emerald-600 shrink-0" />
+                <span className="truncate">{proximity.distanceKm} km from {proximity.landmarkName}</span>
+              </span>
+              <span className="text-emerald-700 font-bold shrink-0 ml-1">
+                ~{proximity.driveTimeMins} min drive
+              </span>
+            </div>
+          )}
+
           {/* Locality Info */}
           <div className="flex items-center justify-between text-xs mb-1.5">
             <span className="flex items-center gap-1 text-slate-500 font-semibold">
