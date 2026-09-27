@@ -31,7 +31,7 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
 
   // Clean, focused navigation tabs
   const navLinks = [
-    { label: "Resorts & Suites", href: "/hotels?collection=resorts" },
+    { label: "Resorts & Suites", href: "/hotels" },
     { label: "Sightseeing Guide", href: "/guide" },
   ];
 

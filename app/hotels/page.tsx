@@ -11,7 +11,6 @@ import {
   RotateCcw,
   LayoutGrid,
   Map as MapIcon,
-  Sparkles,
   ArrowUpDown,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -95,10 +94,29 @@ function HotelsContent() {
     return Array.from(set);
   }, [hotels]);
 
-  const toggleStar = (star: number) => {
-    setSelectedStars((prev) =>
-      prev.includes(star) ? prev.filter((s) => s !== star) : [...prev, star]
-    );
+  const starTabs = [
+    { id: 0, label: "All", stars: null },
+    { id: 5, label: "5 Star", stars: 5 },
+    { id: 4, label: "4 Star", stars: 4 },
+    { id: 3, label: "3 Star", stars: 3 },
+    { id: 2, label: "2 Star", stars: 2 },
+    { id: 1, label: "1 Star", stars: 1 },
+  ];
+
+  const handleStarTabClick = (star: number | null) => {
+    if (star === null) {
+      setSelectedStars([]);
+    } else {
+      setSelectedStars([star]);
+      if (selectedCollection !== "all") {
+        setSelectedCollection("all");
+      }
+    }
+  };
+
+  const isTabActive = (star: number | null) => {
+    if (star === null) return selectedStars.length === 0;
+    return selectedStars.length === 1 && selectedStars[0] === star;
   };
 
   const toggleAmenity = (amenity: string) => {
@@ -206,26 +224,18 @@ function HotelsContent() {
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Header */}
-      <div className="pt-20 pb-5 sm:pt-24 sm:pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-slate-200">
+      <div className="pt-20 pb-4 sm:pt-24 sm:pb-5 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-slate-200">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 mb-0.5">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Verified Cherrapunji Accommodations</span>
-            </div>
-            <h1 className="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-              Hotels & Resorts in Cherrapunji (Sohra)
-            </h1>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Showing {filteredHotels.length} verified stays in Meghalaya
-            </p>
-          </div>
+          <h1 className="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            Hotels and Resorts in Cherrapunji
+          </h1>
 
           {/* Grid ↔ Map View Switcher */}
           <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 self-start md:self-auto">
             <button
+              type="button"
               onClick={() => setViewMode("grid")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                 viewMode === "grid"
                   ? "bg-white text-slate-900 shadow-xs font-semibold"
                   : "text-slate-600 hover:text-slate-900"
@@ -235,8 +245,9 @@ function HotelsContent() {
               <span>Grid View</span>
             </button>
             <button
+              type="button"
               onClick={() => setViewMode("map")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                 viewMode === "map"
                   ? "bg-white text-slate-900 shadow-xs font-semibold"
                   : "text-slate-600 hover:text-slate-900"
@@ -245,6 +256,56 @@ function HotelsContent() {
               <MapIcon className="w-3.5 h-3.5" />
               <span>Map View</span>
             </button>
+          </div>
+        </div>
+
+        {/* Star Rating Top Tab Bar */}
+        <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1">
+            {starTabs.map((tab) => {
+              const isActive = isTabActive(tab.stars);
+              const count =
+                tab.stars === null
+                  ? hotels.length
+                  : hotels.filter((h) => h.starRating === tab.stars).length;
+
+              return (
+                <button
+                  key={tab.label}
+                  type="button"
+                  onClick={() => handleStarTabClick(tab.stars)}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm transition-all whitespace-nowrap cursor-pointer ${
+                    isActive
+                      ? "bg-slate-900 text-white shadow-xs font-bold ring-1 ring-slate-900"
+                      : "bg-white text-slate-700 hover:text-slate-950 hover:bg-slate-50 border border-slate-200/90 shadow-2xs font-medium"
+                  }`}
+                >
+                  {tab.stars !== null && (
+                    <Star
+                      className={`w-3.5 h-3.5 ${
+                        isActive
+                          ? "fill-amber-400 text-amber-400"
+                          : "fill-amber-400 text-amber-400"
+                      }`}
+                    />
+                  )}
+                  <span>{tab.label}</span>
+                  <span
+                    className={`ml-1 text-[11px] font-semibold px-1.5 py-0.5 rounded-full ${
+                      isActive
+                        ? "bg-slate-800 text-slate-200"
+                        : "bg-slate-100 text-slate-500"
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="hidden sm:block text-xs text-slate-500 whitespace-nowrap">
+            Showing <span className="font-semibold text-slate-900">{filteredHotels.length}</span> verified stays
           </div>
         </div>
       </div>
@@ -390,48 +451,6 @@ function HotelsContent() {
                         >
                           <span>{col.label}</span>
                           {isSelected && <Check className="w-3.5 h-3.5 text-emerald-600" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Star Rating */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Property Rating
-                  </label>
-                  <div className="space-y-1">
-                    {[5, 4, 3, 2].map((stars) => {
-                      const isChecked = selectedStars.includes(stars);
-                      return (
-                        <button
-                          key={stars}
-                          onClick={() => toggleStar(stars)}
-                          className={`w-full flex items-center justify-between p-2 rounded-xl text-xs transition-all ${
-                            isChecked
-                              ? "bg-emerald-50 text-emerald-900 border border-emerald-200 font-semibold"
-                              : "bg-slate-50 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent"
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`w-3.5 h-3.5 rounded flex items-center justify-center text-[9px] ${
-                                isChecked ? "bg-emerald-600 text-white" : "border border-slate-300 bg-white"
-                              }`}
-                            >
-                              {isChecked && <Check className="w-2.5 h-2.5" />}
-                            </span>
-                            <span className="flex items-center gap-0.5">
-                              {Array.from({ length: stars }).map((_, i) => (
-                                <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                              ))}
-                              <span className="ml-1">{stars} Star</span>
-                            </span>
-                          </div>
-                          <span className="text-[10px] text-slate-400">
-                            ({hotels.filter((h) => h.starRating === stars).length})
-                          </span>
                         </button>
                       );
                     })}
