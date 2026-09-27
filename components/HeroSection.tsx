@@ -235,18 +235,18 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="relative z-30 max-w-6xl mx-auto px-2 sm:px-4 w-full mt-auto mb-1 sm:mb-2 -mt-10 sm:-mt-14"
         >
+          {/* Upper curved tab on the left side only */}
+          <div className="flex">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 sm:px-6 sm:py-2 bg-white/95 backdrop-blur-xl rounded-t-xl sm:rounded-t-2xl border-t border-x border-black shadow-xs text-slate-900 font-bold text-xs sm:text-sm tracking-tight -mb-[1px] relative z-10">
+              <CalendarCheck className="w-4 h-4 text-emerald-600" />
+              <span>Check Availability</span>
+            </div>
+          </div>
+
           <form
             onSubmit={handleSearch}
-            className="p-4 sm:p-5 bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-black shadow-2xl text-left"
+            className="p-3 sm:p-4 bg-white/95 backdrop-blur-xl rounded-b-2xl sm:rounded-b-3xl rounded-tr-2xl sm:rounded-tr-3xl border border-black shadow-2xl text-left"
           >
-            {/* Header: ONLY 'Check Availability' in larger font, NO black background, NO extra pills */}
-            <div className="pb-3 mb-3 border-b border-slate-200">
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <CalendarCheck className="w-5 h-5 text-emerald-600" />
-                <span>Check Availability</span>
-              </h3>
-            </div>
-
             {/* 5 Input Columns with Neat Borders */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 items-stretch">
               {/* 1. Smart Search Region Combobox (Opens Upward to Prevent Screen Cutoff) */}
