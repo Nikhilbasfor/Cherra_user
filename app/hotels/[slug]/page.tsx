@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getHotelBySlug, getAllHotels } from "@/lib/firebase";
 import HotelDetailClient from "@/components/HotelDetailClient";
+import { CHERRAPUNJI_TRAVEL_CATEGORIES } from "@/lib/categories";
 
 interface PageProps {
   params: Promise<{
@@ -21,23 +22,49 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const title = `${hotel.name} Cherrapunji | Rates from ₹${hotel.pricePerNight} & Direct Booking`;
-  const description = `Book ${hotel.name} in ${hotel.area}, Cherrapunji (Sohra). ${hotel.starRating}★ hotel with verified guest rating of ${hotel.rating}/5. Best tariffs, canyon views & direct booking.`;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cherrapunjistays.com";
+  const hotelCategories = (hotel.categories || [])
+    .map((cSlug) => CHERRAPUNJI_TRAVEL_CATEGORIES.find((tc) => tc.slug === cSlug)?.name)
+    .filter(Boolean);
 
-  return {
-    title,
-    description,
-    keywords: [
+  const categoryPhrase =
+    hotelCategories.length > 0 ? ` | Best ${hotelCategories.slice(0, 2).join(" & ")}` : "";
+  const title = `${hotel.name} Cherrapunji${categoryPhrase} | Rates from ₹${hotel.pricePerNight}`;
+
+  const keywordsList = Array.from(
+    new Set([
       hotel.name,
       `${hotel.name} cherrapunji`,
+      `${hotel.name} sohra`,
       `hotels in ${hotel.area}`,
       "cherrapunji resorts",
       "sohra stays",
       `${hotel.starRating} star hotel cherrapunji`,
-    ],
+      ...(hotel.seoKeywords || []),
+      ...(hotel.categories || []).flatMap((cSlug) => {
+        const tc = CHERRAPUNJI_TRAVEL_CATEGORIES.find((cat) => cat.slug === cSlug);
+        return tc ? tc.targetKeywords : [];
+      }),
+    ])
+  );
+
+  const description = `Book ${hotel.name} in ${hotel.area}, Cherrapunji (Sohra). ${
+    hotelCategories.length > 0 ? `Ideal for ${hotelCategories.join(", ")}. ` : ""
+  }${hotel.starRating}★ hotel with verified guest rating of ${
+    hotel.rating
+  }/5. Best tariffs, canyon views & direct WhatsApp booking.`;
+
+  return {
+    title,
+    description,
+    keywords: keywordsList,
+    alternates: {
+      canonical: `${baseUrl}/hotels/${hotel.slug}`,
+    },
     openGraph: {
       title,
       description,
+      url: `${baseUrl}/hotels/${hotel.slug}`,
       images: [
         {
           url: hotel.images[0],
@@ -73,11 +100,14 @@ export default async function HotelDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cherrapunjistays.com";
+
   // Schema.org Structured Data for Google Rich Snippets
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Hotel",
     name: hotel.name,
+    url: `${baseUrl}/hotels/${hotel.slug}`,
     description: hotel.description,
     image: hotel.images,
     starRating: {
@@ -92,6 +122,8 @@ export default async function HotelDetailPage({ params }: PageProps) {
       worstRating: "1",
     },
     priceRange: `₹${hotel.pricePerNight} - ₹${hotel.rooms[hotel.rooms.length - 1]?.price || hotel.pricePerNight}`,
+    checkinTime: hotel.checkInTime || "14:00",
+    checkoutTime: hotel.checkOutTime || "11:00",
     address: {
       "@type": "PostalAddress",
       streetAddress: hotel.address,
@@ -110,6 +142,11 @@ export default async function HotelDetailPage({ params }: PageProps) {
       name: amenity,
       value: true,
     })),
+    keywords: [
+      hotel.name,
+      ...(hotel.seoKeywords || []),
+      ...(hotel.categories || []).map((c) => c.replace(/-/g, " ")),
+    ].join(", "),
   };
 
   const breadcrumbJsonLd = {

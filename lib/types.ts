@@ -38,6 +38,8 @@ export interface Hotel {
   phone?: string;
   email?: string;
   status?: "active" | "inactive";
+  categories?: string[];
+  seoKeywords?: string[];
 }
 
 export interface FollowUpNote {

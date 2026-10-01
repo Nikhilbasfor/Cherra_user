@@ -43,30 +43,42 @@ export default function Footer() {
           {/* Curated Collections */}
           <div>
             <h4 className="text-slate-900 font-bold text-xs uppercase tracking-wider mb-3">
-              Curated Collections
+              Travel Themes &amp; SEO
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link href="/hotels?collection=resorts" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
-                  <span>Luxury Forest Resorts</span>
+                <Link href="/collection/honeymoon-places-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>Honeymoon &amp; Couples</span>
                   <ArrowUpRight className="w-3 h-3 text-slate-400" />
                 </Link>
               </li>
               <li>
-                <Link href="/hotels?collection=cliffside" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
-                  <span>Cliffside & Waterfall Views</span>
+                <Link href="/collection/family-stays-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>Family &amp; Kid-Friendly</span>
                   <ArrowUpRight className="w-3 h-3 text-slate-400" />
                 </Link>
               </li>
               <li>
-                <Link href="/hotels?collection=cottages" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
-                  <span>Boutique Pine Cottages</span>
+                <Link href="/collection/waterfall-cliff-view-hotels-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>Waterfall &amp; Cliff Views</span>
                   <ArrowUpRight className="w-3 h-3 text-slate-400" />
                 </Link>
               </li>
               <li>
-                <Link href="/hotels?collection=homestays" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
-                  <span>Heritage Tribal Homestays</span>
+                <Link href="/collection/luxury-resorts-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>Luxury 4 &amp; 5-Star Resorts</span>
+                  <ArrowUpRight className="w-3 h-3 text-slate-400" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/collection/budget-homestays-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>Budget Homestays</span>
+                  <ArrowUpRight className="w-3 h-3 text-slate-400" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/collection/living-root-bridge-trek-stays-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>Living Root Bridge Stays</span>
                   <ArrowUpRight className="w-3 h-3 text-slate-400" />
                 </Link>
               </li>

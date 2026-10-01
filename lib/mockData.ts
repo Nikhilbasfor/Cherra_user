@@ -70,6 +70,17 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     distanceToCenter: "3.5 km from Sohra Market",
     phone: "+91 98648 79505",
     email: "bookings@cherrapunjistays.com",
+    categories: [
+      "honeymoon-places-cherrapunji",
+      "waterfall-cliff-view-hotels-cherrapunji",
+      "luxury-resorts-cherrapunji",
+    ],
+    seoKeywords: [
+      "best honeymoon places in cherrapunji",
+      "luxury resort cherrapunji",
+      "hotels with waterfall view cherrapunji",
+      "romantic stays sohra",
+    ],
   },
   {
     id: "jiva-resort",
@@ -138,6 +149,16 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     distanceToCenter: "2.1 km from Sohra Town",
     phone: "+91 98648 79505",
     email: "jiva@cherrapunjistays.com",
+    categories: [
+      "luxury-resorts-cherrapunji",
+      "family-stays-cherrapunji",
+      "nature-pine-cottages-cherrapunji",
+    ],
+    seoKeywords: [
+      "luxury resort in cherrapunji",
+      "family stay in cherrapunji",
+      "best 4 star resort sohra",
+    ],
   },
   {
     id: "cherrapunjee-holiday-resort",
@@ -194,6 +215,17 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     distanceToCenter: "14 km from Sohra Market (Scenic Drive)",
     phone: "+91 98648 79505",
     email: "holidayresort@cherrapunjistays.com",
+    categories: [
+      "living-root-bridge-trek-stays-cherrapunji",
+      "family-stays-cherrapunji",
+      "nature-pine-cottages-cherrapunji",
+    ],
+    seoKeywords: [
+      "stay near double decker living root bridge",
+      "family stay in cherrapunji",
+      "hotels near tyrna trek",
+      "best place to stay in cherrapunji with family",
+    ],
   },
   {
     id: "kutmadan-resort",
@@ -249,6 +281,16 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     distanceToCenter: "4.2 km from Sohra Town",
     phone: "+91 98648 79505",
     email: "kutmadan@cherrapunjistays.com",
+    categories: [
+      "waterfall-cliff-view-hotels-cherrapunji",
+      "honeymoon-places-cherrapunji",
+      "nature-pine-cottages-cherrapunji",
+    ],
+    seoKeywords: [
+      "cliff view resort cherrapunji",
+      "best honeymoon places in cherrapunji",
+      "hotels with waterfall view cherrapunji",
+    ],
   },
   {
     id: "saimika-park-resort",
@@ -304,6 +346,16 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     distanceToCenter: "3.0 km from Sohra Center",
     phone: "+91 98648 79505",
     email: "saimika@cherrapunjistays.com",
+    categories: [
+      "nature-pine-cottages-cherrapunji",
+      "family-stays-cherrapunji",
+      "budget-homestays-cherrapunji",
+    ],
+    seoKeywords: [
+      "pine cottages cherrapunji",
+      "nature cottages sohra",
+      "family stay in cherrapunji",
+    ],
   },
   {
     id: "sohra-plaza-homestay",
@@ -359,6 +411,15 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     distanceToCenter: "300m from Central Sohra Market",
     phone: "+91 98648 79505",
     email: "sohraplaza@cherrapunjistays.com",
+    categories: [
+      "budget-homestays-cherrapunji",
+      "family-stays-cherrapunji",
+    ],
+    seoKeywords: [
+      "budget hotel in cherrapunji",
+      "cheap homestay in cherrapunji",
+      "family stay in cherrapunji",
+    ],
   },
 ];
 

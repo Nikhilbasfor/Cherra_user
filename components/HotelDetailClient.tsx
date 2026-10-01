@@ -45,6 +45,7 @@ import AuthModal from "@/components/AuthModal";
 import { Hotel, Room, HotelReview } from "@/lib/types";
 import { getHotelReviews, submitHotelReview } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
+import { CHERRAPUNJI_TRAVEL_CATEGORIES } from "@/lib/categories";
 
 interface HotelDetailClientProps {
   hotel: Hotel;
@@ -422,6 +423,28 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                 <ExternalLink className="w-3 h-3" />
               </a>
             </div>
+
+            {/* Travel Themes & SEO Category Badges */}
+            {hotel.categories && hotel.categories.length > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5 mt-3">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-1">
+                  Ideal For:
+                </span>
+                {hotel.categories.map((cSlug) => {
+                  const cat = CHERRAPUNJI_TRAVEL_CATEGORIES.find((tc) => tc.slug === cSlug);
+                  return (
+                    <Link
+                      key={cSlug}
+                      href={`/collection/${cSlug}`}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-semibold border border-emerald-200/80 transition-colors shadow-2xs"
+                    >
+                      <Sparkles className="w-3 h-3 text-emerald-600" />
+                      <span>{cat?.name || cSlug}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Quick Price Pledge Card (Desktop) */}
