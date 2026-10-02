@@ -232,6 +232,7 @@ export const CHERRAPUNJI_TRAVEL_CATEGORIES: TravelCategory[] = [
     description:
       "Experience world-class luxury perched on dramatic cliff edges. Enjoy private infinity pools, signature dining with panoramic canyon views, luxury heated log cabins, and five-star Khasi mountain hospitality in Cherrapunji (Sohra).",
     targetKeywords: [
+      "best 5 star hotels in cherrapunji",
       "best 5 star resorts in cherrapunji",
       "5 star hotels in cherra",
       "5 star resort cherrapunji",

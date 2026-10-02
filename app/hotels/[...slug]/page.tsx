@@ -45,8 +45,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         category?.description ||
         `Explore verified ${starRating}-star resorts in Cherrapunji with canyon views, luxury suites, and verified direct tariffs.`;
       const keywords = category?.targetKeywords || [
-        `${starRating} star resorts in cherrapunji`,
+        `best ${starRating} star hotels in cherrapunji`,
+        `best ${starRating} star resorts in cherrapunji`,
         `${starRating} star hotels sohra`,
+        `${starRating} star resorts in cherrapunji`,
         "cherrapunji stays",
       ];
 
