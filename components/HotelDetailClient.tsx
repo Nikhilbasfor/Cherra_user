@@ -384,12 +384,28 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
           <div>
             {/* Badges Row - Clean single row with horizontal scroll on small screens */}
             <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1 mb-2">
-              <div className="flex items-center gap-0.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 text-xs font-bold border border-amber-200 shrink-0">
+              <Link
+                href={`/collection/${
+                  hotel.starRating === 5
+                    ? "5-star-resorts-cherrapunji"
+                    : hotel.starRating === 4
+                    ? "4-star-resorts-cherrapunji"
+                    : hotel.starRating === 3
+                    ? "3-star-resorts-cherrapunji"
+                    : hotel.starRating === 2
+                    ? "2-star-budget-stays-cherrapunji"
+                    : "1-star-backpacker-stays-cherrapunji"
+                }`}
+                title={`Explore all ${hotel.starRating} Star ${hotel.starRating >= 3 ? "Resorts" : "Stays"} in Cherrapunji`}
+                className="flex items-center gap-0.5 px-2.5 py-0.5 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-bold border border-amber-200 shrink-0 transition-colors"
+              >
                 {Array.from({ length: hotel.starRating }).map((_, i) => (
                   <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
                 ))}
-                <span className="ml-1">{hotel.starRating} Star</span>
-              </div>
+                <span className="ml-1">
+                  {hotel.starRating} Star {hotel.starRating >= 3 ? "Resort" : "Stay"}
+                </span>
+              </Link>
 
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-900 text-xs font-semibold border border-emerald-200 flex items-center gap-1 shrink-0">
                 <Award className="w-3 h-3 text-emerald-700" />

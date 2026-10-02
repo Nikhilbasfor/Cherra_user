@@ -9,6 +9,7 @@ export interface TravelCategory {
   heroBadge: string;
   iconName: string;
   faqs: { question: string; answer: string }[];
+  starFilter?: number;
 }
 
 export const CHERRAPUNJI_TRAVEL_CATEGORIES: TravelCategory[] = [
@@ -219,6 +220,157 @@ export const CHERRAPUNJI_TRAVEL_CATEGORIES: TravelCategory[] = [
         question: "How long is the trek to the Double Decker Living Root Bridge?",
         answer:
           "The trek descends approximately 3,500 stone steps from Tyrna to Nongriat, taking 2 to 2.5 hours down and 2.5 to 3.5 hours back up.",
+      },
+    ],
+  },
+  {
+    id: "5-star-resorts-cherrapunji",
+    name: "5 Star Resorts in Cherrapunji",
+    shortName: "5 Star Resorts",
+    slug: "5-star-resorts-cherrapunji",
+    title: "Best 5 Star Resorts in Cherrapunji (2026 Direct Rates)",
+    description:
+      "Experience world-class luxury perched on dramatic cliff edges. Enjoy private infinity pools, signature dining with panoramic canyon views, luxury heated log cabins, and five-star Khasi mountain hospitality in Cherrapunji (Sohra).",
+    targetKeywords: [
+      "best 5 star resorts in cherrapunji",
+      "5 star hotels in cherra",
+      "5 star resort cherrapunji",
+      "luxury 5 star resorts sohra",
+      "5 star hotel cherrapunji",
+      "top luxury stays cherrapunji",
+    ],
+    heroBadge: "5 Star Luxury Resorts",
+    iconName: "Star",
+    starFilter: 5,
+    faqs: [
+      {
+        question: "Are there 5-star luxury resorts in Cherrapunji?",
+        answer:
+          "Yes, Cherrapunji features world-class luxury retreats like Polo Orchid Resort with cliffside heated log cabins, private infinity pools overlooking Seven Sisters Falls, and fine dining.",
+      },
+      {
+        question: "How do I get direct front-desk tariffs for 5-star resorts in Cherra?",
+        answer:
+          "Booking through CherraStays connects you directly to the resort's reservation management with zero middleman commissions and instant WhatsApp booking confirmation.",
+      },
+    ],
+  },
+  {
+    id: "4-star-resorts-cherrapunji",
+    name: "4 Star Resorts in Cherrapunji",
+    shortName: "4 Star Resorts",
+    slug: "4-star-resorts-cherrapunji",
+    title: "Best 4 Star Resorts in Cherrapunji (2026 Direct Rates)",
+    description:
+      "Indulge in premium 4-star comfort amidst whispering pine groves and rolling mountain mist. Features modern soundproof cottages, multi-cuisine dining, landscaped rock gardens, and private forest trails.",
+    targetKeywords: [
+      "best 4 star resorts in cherrapunji",
+      "4 star hotels in cherra",
+      "4 star resort cherrapunji",
+      "premium 4 star stays sohra",
+      "4 star hotel cherrapunji",
+    ],
+    heroBadge: "4 Star Premium Resorts",
+    iconName: "Star",
+    starFilter: 4,
+    faqs: [
+      {
+        question: "What amenities do 4-star resorts in Cherrapunji provide?",
+        answer:
+          "Properties like Jiva Resort feature spacious wooden cottages with heated bathrooms, landscaped rock gardens, 24/7 hot geyser water, multi-cuisine dining, and private forest walks.",
+      },
+      {
+        question: "Is hot breakfast included in 4-star Cherrapunji bookings?",
+        answer:
+          "Yes, our partner 4-star resorts include complimentary hot breakfast spreads with organic Khasi, Indian, and Continental choices.",
+      },
+    ],
+  },
+  {
+    id: "3-star-resorts-cherrapunji",
+    name: "3 Star Resorts & Hotels in Cherrapunji",
+    shortName: "3 Star Resorts",
+    slug: "3-star-resorts-cherrapunji",
+    title: "Best 3 Star Resorts & Hotels in Cherrapunji (2026 Direct Rates)",
+    description:
+      "Highly rated 3-star boutique resorts, edge-of-the-world cliff cottages, and eco-lodges offering breathtaking canyon views, campfire nights, and warm Khasi hospitality at balanced, honest rates.",
+    targetKeywords: [
+      "best 3 star resorts in cherrapunji",
+      "3 star hotels in cherrapunji",
+      "3 star hotels in cherra",
+      "3 star resort sohra",
+      "comfort stays cherrapunji",
+    ],
+    heroBadge: "3 Star Comfort Stays",
+    iconName: "Star",
+    starFilter: 3,
+    faqs: [
+      {
+        question: "Which are the top-rated 3-star resorts in Cherrapunji?",
+        answer:
+          "Kutmadan Resort, Cherrapunjee Holiday Resort, and Sa-I-Mika Park & Cottages are renowned 3-star properties celebrated for their canyon vistas and nature immersion.",
+      },
+      {
+        question: "What is the typical nightly tariff for 3-star hotels in Sohra?",
+        answer:
+          "Direct tariffs typically range between ₹3,500 and ₹5,000 per night, providing great value with 24/7 hot water geysers and private balconies.",
+      },
+    ],
+  },
+  {
+    id: "2-star-budget-stays-cherrapunji",
+    name: "2 Star & Budget Stays in Cherrapunji",
+    shortName: "2 Star Stays",
+    slug: "2-star-budget-stays-cherrapunji",
+    title: "Best 2 Star & Budget Stays in Cherrapunji (2026 Direct Rates)",
+    description:
+      "Spotlessly clean, comfortable, and centrally situated 2-star hotels and family guest houses within easy walking distance of central Sohra markets, cafes, and taxi stands.",
+    targetKeywords: [
+      "2 star hotels in cherrapunji",
+      "2 star stays in cherra",
+      "budget hotels cherrapunji",
+      "clean cheap stays sohra",
+      "sohra town hotels",
+    ],
+    heroBadge: "2 Star Budget Stays",
+    iconName: "Star",
+    starFilter: 2,
+    faqs: [
+      {
+        question: "Are 2-star hotels in Cherrapunji clean and safe for families?",
+        answer:
+          "Yes, every 2-star property listed on CherraStays is physically inspected and features clean attached bathrooms, hot water geysers, and friendly local family management.",
+      },
+      {
+        question: "Can 2-star hotels help arrange shared or private sightseeing cabs?",
+        answer:
+          "Yes, centrally located hotels like Sohra Plaza are steps from the Sohra market taxi stand and can coordinate direct local cab rates for sightseeing.",
+      },
+    ],
+  },
+  {
+    id: "1-star-backpacker-stays-cherrapunji",
+    name: "1 Star & Backpacker Stays in Cherrapunji",
+    shortName: "1 Star Stays",
+    slug: "1-star-backpacker-stays-cherrapunji",
+    title: "Best 1 Star & Backpacker Stays in Cherrapunji (2026 Direct Rates)",
+    description:
+      "Honest, affordable village guest accommodations and backpacker rooms for solo hikers and adventure travelers exploring the canyons and living root bridges of Sohra.",
+    targetKeywords: [
+      "1 star hotels in cherrapunji",
+      "backpacker stays cherra",
+      "cheap rooms sohra",
+      "hostel in cherrapunji",
+      "trekker budget stay sohra",
+    ],
+    heroBadge: "1 Star Backpacker Stays",
+    iconName: "Star",
+    starFilter: 1,
+    faqs: [
+      {
+        question: "Are 1-star stays suitable for solo trekkers in Cherrapunji?",
+        answer:
+          "Yes, they provide clean, secure, quiet lodging with hot water showers, ideal for backpackers spending all day hiking to remote waterfalls.",
       },
     ],
   },

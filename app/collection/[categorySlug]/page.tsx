@@ -104,14 +104,19 @@ export default async function CategoryCollectionPage({ params }: PageProps) {
     console.warn("Falling back to local hotel data:", err);
   }
 
-  // Filter hotels belonging to this travel category (or relevant fallback)
-  let matchedHotels = allHotels.filter(
-    (h) => h.categories && h.categories.includes(category.slug)
-  );
+  // Filter hotels belonging to this travel category or star rating
+  let matchedHotels = allHotels.filter((h) => {
+    if (category.starFilter && h.starRating === category.starFilter) {
+      return true;
+    }
+    return h.categories && h.categories.includes(category.slug);
+  });
 
   // Fallback: If hotel category tags were not set yet, match by sensible criteria
   if (matchedHotels.length === 0) {
-    if (category.slug.includes("honeymoon")) {
+    if (category.starFilter) {
+      matchedHotels = allHotels.filter((h) => h.starRating === category.starFilter);
+    } else if (category.slug.includes("honeymoon")) {
       matchedHotels = allHotels.filter(
         (h) =>
           h.starRating >= 3 ||

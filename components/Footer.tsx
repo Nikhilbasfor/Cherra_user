@@ -47,6 +47,30 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
+                <Link href="/collection/5-star-resorts-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>5 Star Resorts</span>
+                  <ArrowUpRight className="w-3 h-3 text-slate-400" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/collection/4-star-resorts-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>4 Star Resorts</span>
+                  <ArrowUpRight className="w-3 h-3 text-slate-400" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/collection/3-star-resorts-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>3 Star Resorts</span>
+                  <ArrowUpRight className="w-3 h-3 text-slate-400" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/collection/2-star-budget-stays-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
+                  <span>2 Star &amp; Budget Stays</span>
+                  <ArrowUpRight className="w-3 h-3 text-slate-400" />
+                </Link>
+              </li>
+              <li>
                 <Link href="/collection/honeymoon-places-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
                   <span>Honeymoon &amp; Couples</span>
                   <ArrowUpRight className="w-3 h-3 text-slate-400" />
@@ -61,18 +85,6 @@ export default function Footer() {
               <li>
                 <Link href="/collection/waterfall-cliff-view-hotels-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
                   <span>Waterfall &amp; Cliff Views</span>
-                  <ArrowUpRight className="w-3 h-3 text-slate-400" />
-                </Link>
-              </li>
-              <li>
-                <Link href="/collection/luxury-resorts-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
-                  <span>Luxury 4 &amp; 5-Star Resorts</span>
-                  <ArrowUpRight className="w-3 h-3 text-slate-400" />
-                </Link>
-              </li>
-              <li>
-                <Link href="/collection/budget-homestays-cherrapunji" className="hover:text-emerald-700 transition-colors flex items-center justify-between">
-                  <span>Budget Homestays</span>
                   <ArrowUpRight className="w-3 h-3 text-slate-400" />
                 </Link>
               </li>

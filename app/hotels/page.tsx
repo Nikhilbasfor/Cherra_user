@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, Suspense } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   SlidersHorizontal,
@@ -14,6 +15,7 @@ import {
   ArrowUpDown,
   Navigation,
   Compass,
+  ArrowRight,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -116,12 +118,12 @@ function HotelsContent() {
   }, []);
 
   const starTabs = [
-    { id: 0, label: "All", stars: null },
-    { id: 5, label: "5 Star", stars: 5 },
-    { id: 4, label: "4 Star", stars: 4 },
-    { id: 3, label: "3 Star", stars: 3 },
-    { id: 2, label: "2 Star", stars: 2 },
-    { id: 1, label: "1 Star", stars: 1 },
+    { id: 0, label: "All Stays", stars: null, slug: null },
+    { id: 5, label: "5 Star Resorts", stars: 5, slug: "5-star-resorts-cherrapunji" },
+    { id: 4, label: "4 Star Resorts", stars: 4, slug: "4-star-resorts-cherrapunji" },
+    { id: 3, label: "3 Star Resorts", stars: 3, slug: "3-star-resorts-cherrapunji" },
+    { id: 2, label: "2 Star Stays", stars: 2, slug: "2-star-budget-stays-cherrapunji" },
+    { id: 1, label: "1 Star Stays", stars: 1, slug: "1-star-backpacker-stays-cherrapunji" },
   ];
 
   const handleStarTabClick = (star: number | null) => {
@@ -393,8 +395,27 @@ function HotelsContent() {
             })}
           </div>
 
-          <div className="hidden sm:block text-xs text-slate-500 whitespace-nowrap">
-            Showing <span className="font-semibold text-slate-900">{filteredHotels.length}</span> verified stays
+          <div className="hidden sm:flex items-center gap-3 text-xs text-slate-500 whitespace-nowrap">
+            {selectedStars.length === 1 && (
+              (() => {
+                const activeStar = starTabs.find((t) => t.stars === selectedStars[0]);
+                if (activeStar && activeStar.slug) {
+                  return (
+                    <Link
+                      href={`/collection/${activeStar.slug}`}
+                      className="inline-flex items-center gap-1.5 text-emerald-800 hover:text-emerald-950 font-semibold bg-emerald-50 hover:bg-emerald-100/80 px-2.5 py-1 rounded-xl border border-emerald-200/80 transition-colors shadow-2xs"
+                    >
+                      <span>Explore Dedicated {activeStar.label} Page</span>
+                      <ArrowRight className="w-3 h-3 text-emerald-600" />
+                    </Link>
+                  );
+                }
+                return null;
+              })()
+            )}
+            <span>
+              Showing <span className="font-semibold text-slate-900">{filteredHotels.length}</span> verified stays
+            </span>
           </div>
         </div>
       </div>
