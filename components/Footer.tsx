@@ -35,7 +35,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>concierge@cherrapunjistays.com</span>
+                <span>concierge@resortsincherrapunji.com</span>
               </div>
             </div>
           </div>

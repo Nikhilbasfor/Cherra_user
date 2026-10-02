@@ -69,7 +69,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkOutTime: "11:00",
     distanceToCenter: "3.5 km from Sohra Market",
     phone: "+91 98648 79505",
-    email: "bookings@cherrapunjistays.com",
+    email: "bookings@resortsincherrapunji.com",
     categories: [
       "honeymoon-places-cherrapunji",
       "waterfall-cliff-view-hotels-cherrapunji",
@@ -148,7 +148,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkOutTime: "11:00",
     distanceToCenter: "2.1 km from Sohra Town",
     phone: "+91 98648 79505",
-    email: "jiva@cherrapunjistays.com",
+    email: "jiva@resortsincherrapunji.com",
     categories: [
       "luxury-resorts-cherrapunji",
       "family-stays-cherrapunji",
@@ -214,7 +214,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkOutTime: "10:30",
     distanceToCenter: "14 km from Sohra Market (Scenic Drive)",
     phone: "+91 98648 79505",
-    email: "holidayresort@cherrapunjistays.com",
+    email: "holidayresort@resortsincherrapunji.com",
     categories: [
       "living-root-bridge-trek-stays-cherrapunji",
       "family-stays-cherrapunji",
@@ -280,7 +280,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkOutTime: "11:00",
     distanceToCenter: "4.2 km from Sohra Town",
     phone: "+91 98648 79505",
-    email: "kutmadan@cherrapunjistays.com",
+    email: "kutmadan@resortsincherrapunji.com",
     categories: [
       "waterfall-cliff-view-hotels-cherrapunji",
       "honeymoon-places-cherrapunji",
@@ -345,7 +345,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkOutTime: "11:00",
     distanceToCenter: "3.0 km from Sohra Center",
     phone: "+91 98648 79505",
-    email: "saimika@cherrapunjistays.com",
+    email: "saimika@resortsincherrapunji.com",
     categories: [
       "nature-pine-cottages-cherrapunji",
       "family-stays-cherrapunji",
@@ -410,7 +410,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     checkOutTime: "11:00",
     distanceToCenter: "300m from Central Sohra Market",
     phone: "+91 98648 79505",
-    email: "sohraplaza@cherrapunjistays.com",
+    email: "sohraplaza@resortsincherrapunji.com",
     categories: [
       "budget-homestays-cherrapunji",
       "family-stays-cherrapunji",

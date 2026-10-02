@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cherrapunjistays.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://resortsincherrapunji.com";
   const canonicalUrl = `${baseUrl}/collection/${category.slug}`;
 
   return {
@@ -149,7 +149,7 @@ export default async function CategoryCollectionPage({ params }: PageProps) {
     }
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cherrapunjistays.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://resortsincherrapunji.com";
 
   // Google FAQ Schema for Rich Snippets
   const faqJsonLd = {

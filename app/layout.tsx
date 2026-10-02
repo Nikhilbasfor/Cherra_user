@@ -19,7 +19,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://cherrapunjistays.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://resortsincherrapunji.com"),
   title: {
     default: "Hotels in Cherrapunji | Peaceful Nature Resorts & Stays in Sohra",
     template: "%s | CherraStays",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     title: "Hotels in Cherrapunji | Peaceful Nature Resorts & Verified Stays",
     description:
       "Find your tranquil stay amidst the misty green hills of Cherrapunji (Sohra). Verified amenities, transparent rates, and direct booking.",
-    url: "https://cherrapunjistays.com",
+    url: "https://resortsincherrapunji.com",
     siteName: "CherraStays",
     locale: "en_IN",
     type: "website",

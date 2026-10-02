@@ -22,7 +22,7 @@ interface PageProps {
 // Dynamic SEO Metadata Generator for both /hotels/[category] and /hotels/[category]/[slug]
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cherrapunjistays.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://resortsincherrapunji.com";
 
   if (!slug || slug.length === 0 || slug.length > 2) {
     return {
@@ -214,7 +214,7 @@ export async function generateStaticParams() {
 
 export default async function CatchAllHotelsPage({ params }: PageProps) {
   const { slug } = await params;
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cherrapunjistays.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://resortsincherrapunji.com";
 
   if (!slug || slug.length === 0 || slug.length > 2) {
     notFound();

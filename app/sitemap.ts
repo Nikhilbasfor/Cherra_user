@@ -4,7 +4,7 @@ import { CHERRAPUNJI_TRAVEL_CATEGORIES } from "@/lib/categories";
 import { Hotel } from "@/lib/types";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cherrapunjistays.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://resortsincherrapunji.com";
   let hotels: Hotel[] = [];
   try {
     hotels = await getAllHotels();
