@@ -5,8 +5,6 @@ import {
   getDocs,
   doc,
   setDoc,
-  addDoc,
-  serverTimestamp,
   query,
   orderBy,
   onSnapshot,
