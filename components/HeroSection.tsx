@@ -6,42 +6,15 @@ import {
   Search,
   MapPin,
   Calendar,
-  CalendarCheck,
   Users,
-  ShieldCheck,
-  Sparkles,
-  Compass,
   ChevronDown,
-  Building2,
+  ArrowRight,
+  Compass,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CHERRAPUNJI_HOTELS } from "@/lib/mockData";
 import { getAllHotels } from "@/lib/firebase";
 import { Hotel } from "@/lib/types";
-
-interface VideoAngle {
-  id: string;
-  name: string;
-  badge: string;
-  location: string;
-  src: string;
-  type: string;
-  fallbackSrc?: string;
-  fallbackType?: string;
-}
-
-const VIDEO_ANGLES: VideoAngle[] = [
-  {
-    id: "homestays",
-    name: "Homestays Drone",
-    badge: "Village & Homestays Aerial",
-    location: "Sohrarim & Valley Homestays, Sohra",
-    src: "/videos/cherrapunji-homestays-drone.webm",
-    type: "video/webm",
-    fallbackSrc: "/videos/cherrapunji-drone.webm",
-    fallbackType: "video/webm",
-  },
-];
 
 export default function HeroSection() {
   const router = useRouter();
@@ -56,7 +29,6 @@ export default function HeroSection() {
   const [guests, setGuests] = useState("2 Adults");
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const currentAngle = VIDEO_ANGLES[0];
   const areaDropdownRef = useRef<HTMLDivElement>(null);
 
   const todayStr = new Date().toISOString().split("T")[0];
@@ -82,7 +54,6 @@ export default function HeroSection() {
     }
   }, []);
 
-  // Close area combobox on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (areaDropdownRef.current && !areaDropdownRef.current.contains(e.target as Node)) {
@@ -93,7 +64,6 @@ export default function HeroSection() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Sync to sessionStorage so Inquiry Modal gets the exact same details
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (checkIn) sessionStorage.setItem("cherra_checkIn", checkIn);
@@ -103,7 +73,6 @@ export default function HeroSection() {
     }
   }, [checkIn, checkOut, guests, selectedArea]);
 
-  // Derive available unique areas from active hotels with live property counts
   const availableAreasWithCount = React.useMemo(() => {
     const map = new Map<string, number>();
     hotelsList.forEach((h) => {
@@ -114,7 +83,6 @@ export default function HeroSection() {
     return Array.from(map.entries()).map(([area, count]) => ({ area, count }));
   }, [hotelsList]);
 
-  // Filtered dropdown matches for smart combobox
   const filteredDropdownOptions = React.useMemo(() => {
     const q = areaSearchQuery.toLowerCase().trim();
     if (!q) {
@@ -166,114 +134,102 @@ export default function HeroSection() {
   };
 
   return (
-    <div className="relative min-h-[100dvh] flex flex-col justify-center pt-16 sm:pt-20 pb-6 sm:pb-8 overflow-hidden bg-slate-950">
-      {/* Ambient Lighting Gradient */}
-      <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-emerald-600/20 via-emerald-950/15 to-transparent pointer-events-none z-0" />
+    <div className="relative min-h-[92vh] sm:min-h-[96vh] flex flex-col justify-end pt-24 sm:pt-28 pb-10 sm:pb-16 overflow-hidden bg-[#090b0e]">
+      {/* Background Drone Video with Cinematic Contrast Scrim */}
+      <div className="absolute inset-0 z-0">
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="w-full h-full object-cover object-center scale-[1.02] filter brightness-90 transform-gpu"
+        >
+          <source src="/videos/cherrapunji-homestays-drone.webm" type="video/webm" />
+          <source src="/videos/cherrapunji-drone.webm" type="video/webm" />
+        </video>
 
-      {/* Main Hero Container */}
-      <div className="relative z-20 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full flex flex-col justify-center">
-        
-        {/* Cinematic Video Hero Card - Majestic Scale */}
-        <div className="relative rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden border border-white/20 shadow-2xl shadow-black/80 bg-slate-900 min-h-[320px] sm:min-h-[360px] lg:min-h-[400px] flex flex-col justify-between">
-          
-          {/* Unblurred, High-Definition Video Player */}
-          <div className="absolute inset-0 z-0">
-            <video
-              key={currentAngle.src}
-              ref={videoRef}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="w-full h-full object-cover object-center scale-[1.01] transform-gpu will-change-transform"
-            >
-              <source src={currentAngle.src} type={currentAngle.type} />
-              {currentAngle.fallbackSrc && (
-                <source src={currentAngle.fallbackSrc} type={currentAngle.fallbackType} />
-              )}
-            </video>
+        {/* Ambient Film Grain & Cinematic Multi-Layer Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#090b0e] via-[#090b0e]/50 to-black/60 pointer-events-none" />
+        <div className="absolute inset-0 bg-radial-at-c from-transparent via-[#090b0e]/30 to-[#090b0e]/90 pointer-events-none" />
+      </div>
 
-            {/* Directional Cinematic Scrim */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/15 to-black/75 pointer-events-none" />
-            <div className="absolute inset-0 bg-radial-at-c from-transparent via-transparent to-black/35 pointer-events-none" />
-          </div>
+      {/* Main Content Area */}
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col justify-end">
+        {/* Editorial Highlands Typography */}
+        <div className="max-w-4xl mb-8 sm:mb-12 text-left">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/15 text-white/70 font-mono text-[11px] tracking-[0.2em] uppercase mb-4"
+          >
+            <Compass className="w-3.5 h-3.5 text-amber-400" />
+            <span>Sohra Plateau // 25.27° N, 91.73° E // 1,484m</span>
+          </motion.div>
 
-          {/* Top spacing inside the Hero Video Card */}
-          <div className="relative z-20 pt-4 sm:pt-6" />
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="text-3xl sm:text-6xl lg:text-7xl font-black tracking-[-0.03em] text-white leading-[1.05] uppercase"
+          >
+            Sanctuaries <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-white/50">
+              Above the Mist
+            </span>
+          </motion.h1>
 
-          {/* Center Content: Grand Typography */}
-          <div className="relative z-20 px-4 sm:px-8 lg:px-12 pt-2 sm:pt-4 pb-6 sm:pb-10 max-w-4xl mx-auto text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="text-2xl sm:text-4xl lg:text-[40px] font-extrabold tracking-tight text-white leading-tight sm:leading-[1.18] max-w-3xl mx-auto drop-shadow-lg"
-            >
-              <span>Tranquil Stays Above the Clouds in </span>
-              <span className="text-emerald-400 font-black inline-block">Cherrapunji</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-              className="mt-2.5 sm:mt-3 text-xs sm:text-sm lg:text-base text-white/95 font-medium max-w-xl mx-auto leading-relaxed drop-shadow-md"
-            >
-              Wake up to panoramic waterfall vistas and emerald rainforest valleys with direct local rates.
-            </motion.p>
-          </div>
-
-          {/* Bottom spacing inside video card */}
-          <div className="h-6 sm:h-8 lg:h-10" />
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mt-4 text-xs sm:text-base text-white/70 font-normal max-w-2xl leading-relaxed"
+          >
+            Direct front-desk reservation at Cherrapunji’s finest cliffside retreats, canyon sanctuaries, and living root bridge lodges. Zero booking markups.
+          </motion.p>
         </div>
 
-        {/* Floating Pro Search Card - Lowered for balanced hero overlap */}
+        {/* Minimalist Architectural Booking Console */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="relative z-30 max-w-6xl mx-auto px-2 sm:px-4 w-full -mt-8 sm:-mt-10 lg:-mt-12"
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="w-full"
         >
-          {/* Upper curved tab on the left side only */}
-          <div className="flex">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 sm:px-6 sm:py-2 bg-white/95 backdrop-blur-xl rounded-t-xl sm:rounded-t-2xl border-t border-x border-black shadow-xs text-slate-900 font-bold text-xs sm:text-sm tracking-tight -mb-[1px] relative z-10">
-              <CalendarCheck className="w-4 h-4 text-emerald-600" />
-              <span>Check Availability</span>
-            </div>
-          </div>
-
           <form
             onSubmit={handleSearch}
-            className="p-3 sm:p-4 bg-white/95 backdrop-blur-xl rounded-b-2xl sm:rounded-b-3xl rounded-tr-2xl sm:rounded-tr-3xl border border-black shadow-2xl text-left"
+            className="p-3 sm:p-4 bg-black/60 backdrop-blur-2xl rounded-2xl sm:rounded-3xl border border-white/15 shadow-2xl text-left"
           >
-            {/* 5 Input Columns with Neat Borders */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 items-stretch">
-              {/* 1. Smart Search Region Combobox (Opens Upward to Prevent Screen Cutoff) */}
-              <div ref={areaDropdownRef} className="relative flex flex-col justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center">
+              {/* Field 1: Region / Property (5 cols) */}
+              <div ref={areaDropdownRef} className="lg:col-span-4 relative">
                 <div
                   onClick={() => setIsAreaDropdownOpen((prev) => !prev)}
-                  className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-slate-50/90 border border-slate-300 hover:border-slate-800 focus-within:border-black transition-all cursor-pointer"
+                  className="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 transition-all cursor-pointer"
                 >
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5 flex items-center justify-between">
+                  <label className="block text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-1 flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-                      Search Region
+                      <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                      01 / Region or Stay
                     </span>
-                    <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform ${isAreaDropdownOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown
+                      className={`w-3 h-3 text-white/40 transition-transform ${
+                        isAreaDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
                   </label>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs sm:text-sm font-semibold text-slate-900 truncate">
-                      {selectedHotelSlug
-                        ? areaSearchQuery || selectedArea
-                        : selectedArea === "All Areas"
-                        ? "All Cherrapunji (Sohra)"
-                        : selectedArea}
-                    </span>
+                  <div className="text-xs sm:text-sm font-bold text-white truncate">
+                    {selectedHotelSlug
+                      ? areaSearchQuery || selectedArea
+                      : selectedArea === "All Areas"
+                      ? "All Cherrapunji (Sohra)"
+                      : selectedArea}
                   </div>
                 </div>
 
-                {/* Dropdown Combobox Menu - Opens UPWARD */}
+                {/* Combobox Dropdown */}
                 <AnimatePresence>
                   {isAreaDropdownOpen && (
                     <motion.div
@@ -281,46 +237,46 @@ export default function HeroSection() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-white rounded-xl border border-slate-300 shadow-2xl p-2 space-y-2 max-h-72 overflow-y-auto"
+                      className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-[#111418] rounded-2xl border border-white/15 shadow-2xl p-2 space-y-2 max-h-72 overflow-y-auto"
                     >
                       {/* Search Filter Input */}
                       <div className="relative">
-                        <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                        <Search className="w-3.5 h-3.5 text-white/40 absolute left-2.5 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
-                          placeholder="Type locality or hotel name..."
+                          placeholder="Search locality or property..."
                           value={areaSearchQuery}
                           onChange={(e) => setAreaSearchQuery(e.target.value)}
                           onClick={(e) => e.stopPropagation()}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-8 pr-2.5 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-emerald-600"
+                          className="w-full bg-white/[0.05] border border-white/10 rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:border-amber-400/60"
                           autoFocus
                         />
                       </div>
 
-                      {/* Option: All Areas */}
+                      {/* All Areas Option */}
                       <button
                         type="button"
                         onClick={() => handleSelectArea("All Areas")}
-                        className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors text-left ${
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left ${
                           selectedArea === "All Areas" && !selectedHotelSlug
-                            ? "bg-emerald-50 text-emerald-900 font-bold"
-                            : "hover:bg-slate-50 text-slate-700"
+                            ? "bg-white text-black font-black"
+                            : "hover:bg-white/[0.06] text-white/80"
                         }`}
                       >
-                        <span className="flex items-center gap-1.5">
-                          <MapPin className="w-3 h-3 text-emerald-600" />
+                        <span className="flex items-center gap-2">
+                          <MapPin className="w-3.5 h-3.5 text-amber-400" />
                           All Cherrapunji (Sohra)
                         </span>
-                        <span className="text-[10px] text-slate-400">
-                          {hotelsList.length} verified stays
+                        <span className="text-[10px] font-mono text-white/40">
+                          {hotelsList.length} stays
                         </span>
                       </button>
 
                       {/* Region Localities */}
                       {filteredDropdownOptions.areas.length > 0 && (
                         <div>
-                          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-2 py-1">
-                            Available Localities ({filteredDropdownOptions.areas.length})
+                          <div className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-widest px-2 py-1">
+                            Localities ({filteredDropdownOptions.areas.length})
                           </div>
                           <div className="space-y-0.5">
                             {filteredDropdownOptions.areas.map(({ area, count }) => (
@@ -328,14 +284,14 @@ export default function HeroSection() {
                                 key={area}
                                 type="button"
                                 onClick={() => handleSelectArea(area)}
-                                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors text-left ${
+                                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors text-left ${
                                   selectedArea === area && !selectedHotelSlug
-                                    ? "bg-emerald-50 text-emerald-900 font-bold"
-                                    : "hover:bg-slate-50 text-slate-700"
+                                    ? "bg-white text-black font-black"
+                                    : "hover:bg-white/[0.06] text-white/80"
                                 }`}
                               >
                                 <span className="truncate">{area}</span>
-                                <span className="text-[10px] text-slate-400">
+                                <span className="text-[10px] font-mono text-white/40">
                                   {count} stay{count > 1 ? "s" : ""}
                                 </span>
                               </button>
@@ -344,30 +300,30 @@ export default function HeroSection() {
                         </div>
                       )}
 
-                      {/* Specific Properties Matching Query */}
+                      {/* Specific Properties */}
                       {filteredDropdownOptions.hotels.length > 0 && (
-                        <div className="pt-1 border-t border-slate-100">
-                          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-2 py-1">
-                            Direct Properties
+                        <div className="pt-1 border-t border-white/10">
+                          <div className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-widest px-2 py-1">
+                            Individual Stays ({filteredDropdownOptions.hotels.length})
                           </div>
                           <div className="space-y-0.5">
-                            {filteredDropdownOptions.hotels.slice(0, 5).map((hotel) => (
+                            {filteredDropdownOptions.hotels.map((h) => (
                               <button
-                                key={hotel.id}
+                                key={h.id}
                                 type="button"
-                                onClick={() => handleSelectHotel(hotel)}
-                                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors text-left ${
-                                  selectedHotelSlug === hotel.slug
-                                    ? "bg-emerald-50 text-emerald-900 font-bold"
-                                    : "hover:bg-slate-50 text-slate-700"
+                                onClick={() => handleSelectHotel(h)}
+                                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors text-left ${
+                                  selectedHotelSlug === h.slug
+                                    ? "bg-white text-black font-black"
+                                    : "hover:bg-white/[0.06] text-white/80"
                                 }`}
                               >
-                                <span className="flex items-center gap-1.5 truncate">
-                                  <Building2 className="w-3 h-3 text-emerald-600 shrink-0" />
-                                  <span className="truncate">{hotel.name}</span>
-                                </span>
-                                <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap ml-2">
-                                  ₹{hotel.pricePerNight}
+                                <div className="truncate">
+                                  <p className="font-bold truncate">{h.name}</p>
+                                  <p className="text-[10px] font-mono text-white/40">{h.area}, Sohra</p>
+                                </div>
+                                <span className="text-[11px] font-mono font-bold text-amber-400 shrink-0 ml-2">
+                                  ₹{h.pricePerNight}
                                 </span>
                               </button>
                             ))}
@@ -379,91 +335,73 @@ export default function HeroSection() {
                 </AnimatePresence>
               </div>
 
-              {/* 2. Check-in Date */}
-              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-slate-50/90 border border-slate-300 hover:border-slate-800 focus-within:border-black transition-all flex flex-col justify-center">
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5 flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-emerald-600" />
-                  Check-in Date
-                </label>
-                <input
-                  type="date"
-                  min={todayStr}
-                  value={checkIn}
-                  onChange={(e) => {
-                    setCheckIn(e.target.value);
-                    if (checkOut && e.target.value > checkOut) {
-                      setCheckOut(e.target.value);
-                    }
-                  }}
-                  className="bg-transparent text-xs sm:text-sm text-slate-900 font-semibold focus:outline-none w-full cursor-pointer py-0.5"
-                />
+              {/* Field 2: Check-In (2.5 cols) */}
+              <div className="lg:col-span-2">
+                <div className="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition-all">
+                  <label className="block text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                    02 / Check-in
+                  </label>
+                  <input
+                    type="date"
+                    min={todayStr}
+                    value={checkIn}
+                    onChange={(e) => setCheckIn(e.target.value)}
+                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-white focus:outline-none cursor-pointer [color-scheme:dark]"
+                  />
+                </div>
               </div>
 
-              {/* 3. Check-out Date */}
-              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-slate-50/90 border border-slate-300 hover:border-slate-800 focus-within:border-black transition-all flex flex-col justify-center">
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5 flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-emerald-600" />
-                  Check-out Date
-                </label>
-                <input
-                  type="date"
-                  min={checkIn || todayStr}
-                  value={checkOut}
-                  onChange={(e) => setCheckOut(e.target.value)}
-                  className="bg-transparent text-xs sm:text-sm text-slate-900 font-semibold focus:outline-none w-full cursor-pointer py-0.5"
-                />
+              {/* Field 3: Check-Out (2.5 cols) */}
+              <div className="lg:col-span-2">
+                <div className="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition-all">
+                  <label className="block text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                    03 / Check-out
+                  </label>
+                  <input
+                    type="date"
+                    min={checkIn || todayStr}
+                    value={checkOut}
+                    onChange={(e) => setCheckOut(e.target.value)}
+                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-white focus:outline-none cursor-pointer [color-scheme:dark]"
+                  />
+                </div>
               </div>
 
-              {/* 4. Guests & Party */}
-              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-slate-50/90 border border-slate-300 hover:border-slate-800 focus-within:border-black transition-all flex flex-col justify-center">
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5 flex items-center gap-1.5">
-                  <Users className="w-3.5 h-3.5 text-emerald-600" />
-                  Guests & Rooms
-                </label>
-                <select
-                  value={guests}
-                  onChange={(e) => setGuests(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none cursor-pointer py-0.5"
-                >
-                  <option value="1 Adult">1 Solo Traveler</option>
-                  <option value="2 Adults">2 Adults (Couple)</option>
-                  <option value="3-4 Adults">3-4 Guests (Family)</option>
-                  <option value="Group 5+">5+ Group / Retreat</option>
-                </select>
+              {/* Field 4: Guests (2 cols) */}
+              <div className="lg:col-span-2">
+                <div className="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition-all">
+                  <label className="block text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                    <Users className="w-3.5 h-3.5 text-amber-400" />
+                    04 / Guests
+                  </label>
+                  <select
+                    value={guests}
+                    onChange={(e) => setGuests(e.target.value)}
+                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-white focus:outline-none cursor-pointer [color-scheme:dark]"
+                  >
+                    <option value="1 Adult" className="bg-[#111418] text-white">1 Adult</option>
+                    <option value="2 Adults" className="bg-[#111418] text-white">2 Adults</option>
+                    <option value="2 Adults, 1 Child" className="bg-[#111418] text-white">2 Adults + 1 Child</option>
+                    <option value="3+ Guests (Family)" className="bg-[#111418] text-white">3+ Guests (Family)</option>
+                  </select>
+                </div>
               </div>
 
-              {/* 5. Submit CTA Button */}
-              <div className="flex items-center sm:col-span-2 lg:col-span-1">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+              {/* Field 5: Action Button (2 cols) */}
+              <div className="lg:col-span-2 flex items-center h-full">
+                <button
                   type="submit"
-                  className="w-full h-11 sm:h-full min-h-[46px] rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-700/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                  className="w-full h-full py-3.5 px-4 rounded-xl bg-white hover:bg-amber-300 text-black font-black uppercase tracking-wider text-xs transition-all shadow-xl flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
-                  <Search className="w-4 h-4 stroke-[2.5]" />
-                  <span>Search Stays</span>
-                </motion.button>
+                  <span>Explore</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </form>
-
-          {/* Reassuring Trust Signals */}
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5 text-xs text-slate-400 font-medium">
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              100% Physically Verified Properties
-            </span>
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <Compass className="w-4 h-4 text-emerald-400" />
-              Direct Hotel Front-Desk Tariffs
-            </span>
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <Sparkles className="w-4 h-4 text-emerald-400" />
-              Zero Commission Markups
-            </span>
-          </div>
         </motion.div>
-
       </div>
     </div>
   );

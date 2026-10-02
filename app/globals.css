@@ -2,118 +2,69 @@
 
 @layer base {
   :root {
-    --background: #f8faf9;
-    --foreground: #0f172a;
-    --card: #ffffff;
-    --card-foreground: #0f172a;
-    --primary: #059669;
-    --primary-light: #ecfdf5;
-    --mint-border: #d1fae5;
-    --border: #e2e8f0;
+    --background: #090b0e;
+    --foreground: #f8fafc;
+    --card: #111418;
+    --card-foreground: #f8fafc;
+    --border: rgba(255, 255, 255, 0.1);
   }
 
   html {
     scroll-behavior: smooth;
+    background-color: #090b0e;
+    color: #f8fafc;
   }
 
   body {
-    background-color: #f8faf9;
-    color: #0f172a;
+    background-color: #090b0e;
+    color: #f8fafc;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Minimal clean scrollbar */
+  /* Minimal clean dark scrollbar */
   ::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #f1f5f3;
+    background: #090b0e;
   }
   ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
+    background: #272d36;
+    border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #059669;
+    background: #3f4754;
   }
 }
 
-/* Subtle Film Grain / Editorial Texture */
+/* 3D Perspective & Spatial Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.perspective-1200 {
+  perspective: 1200px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Subtle Film Grain / Highlands Atmosphere */
 .bg-grain {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
 }
 
-/* Ambient Botanical Mist Background */
-.bg-rainforest-mist {
-  background-color: #f7faf8;
-  background-image: 
-    radial-gradient(ellipse 60% 40% at 8% 25%, rgba(5, 150, 105, 0.05), transparent 70%),
-    radial-gradient(ellipse 50% 50% at 92% 65%, rgba(13, 148, 136, 0.045), transparent 70%),
-    radial-gradient(ellipse 70% 50% at 50% 90%, rgba(16, 185, 129, 0.04), transparent 70%);
+/* Subtle Ambient Vignette & Glowing Lighting */
+.bg-canyon-radial {
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.04) 0%, transparent 65%);
 }
 
-/* High-Legibility Text Strokes (With paint-order to preserve font anatomy) */
-.text-stroke-black-lg {
-  -webkit-text-stroke: 1.8px rgba(0, 0, 0, 0.95);
-  paint-order: stroke fill;
-  text-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.9),
-    0 8px 30px rgba(0, 0, 0, 0.85);
+.hairline-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
-
-.text-stroke-black-md {
-  -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.9);
-  paint-order: stroke fill;
-  text-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.85),
-    0 6px 20px rgba(0, 0, 0, 0.7);
-}
-
-.text-stroke-black-sm {
-  -webkit-text-stroke: 0.75px rgba(0, 0, 0, 0.85);
-  paint-order: stroke fill;
-  text-shadow: 
-    0 1px 3px rgba(0, 0, 0, 0.8),
-    0 3px 10px rgba(0, 0, 0, 0.6);
-}
-
-.text-stroke-white-lg {
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9);
-  paint-order: stroke fill;
-  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
-.text-stroke-white-sm {
-  -webkit-text-stroke: 0.8px rgba(255, 255, 255, 0.85);
-  paint-order: stroke fill;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* Luxury Card Utilities */
-.mint-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-}
-
-.mint-card:hover {
-  border-color: #a7f3d0;
-  box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.08), 0 8px 10px -6px rgba(5, 150, 105, 0.04);
-}
-
-.mint-badge {
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #a7f3d0;
-}
-
-.mint-gradient-text {
-  background: linear-gradient(135deg, #047857 0%, #059669 50%, #0d9488 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Mountain, Phone, Sparkles, Menu, X, User as UserIcon, LogOut } from "lucide-react";
+import { Phone, Menu, X, User as UserIcon, LogOut, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import AuthModal from "@/components/AuthModal";
@@ -29,10 +29,9 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Clean, focused navigation tabs
   const navLinks = [
     { label: "Resorts & Suites", href: "/hotels" },
-    { label: "Sightseeing Guide", href: "/guide" },
+    { label: "Expedition Guide", href: "/guide" },
   ];
 
   return (
@@ -40,8 +39,8 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? "bg-emerald-600/95 backdrop-blur-md shadow-lg shadow-emerald-950/15 border-b border-emerald-500/30 py-2.5"
-            : "bg-emerald-600/90 backdrop-blur-sm border-b border-emerald-500/25 py-3.5"
+            ? "bg-[#090b0e]/90 backdrop-blur-2xl shadow-2xl shadow-black/80 border-b border-white/10 py-3"
+            : "bg-[#090b0e]/70 backdrop-blur-xl border-b border-white/10 py-4"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,30 +50,30 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="relative h-10 sm:h-12 w-52 sm:w-64"
+                className="relative h-9 sm:h-11 w-48 sm:w-60"
               >
                 <Image
                   src="/images/cherrapunji-hotels-logo.png"
-                  alt="Cherrapunji Hotels Web - Hotels, Living Bridges & Waterfalls"
+                  alt="Cherrapunji Hotels - Stays Above the Clouds"
                   fill
                   priority
-                  className="object-contain object-left drop-shadow-xs"
+                  className="object-contain object-left drop-shadow-md brightness-110"
                 />
               </motion.div>
             </Link>
 
-            {/* Desktop Navigation with Motion Primitives Spring Indicator */}
-            <nav className="hidden md:flex items-center gap-1 bg-emerald-700/40 p-1 rounded-2xl border border-emerald-500/20 backdrop-blur-xs">
+            {/* Desktop Navigation with Minimalist Architectural Pill */}
+            <nav className="hidden md:flex items-center gap-1 bg-white/[0.04] p-1.5 rounded-full border border-white/10 backdrop-blur-md">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <Link
                     key={link.label}
                     href={link.href}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all relative select-none ${
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all relative select-none ${
                       isActive
-                        ? "text-emerald-950 font-bold"
-                        : "text-white/85 hover:text-white hover:bg-white/10"
+                        ? "text-black font-extrabold"
+                        : "text-white/70 hover:text-white hover:bg-white/[0.06]"
                     }`}
                   >
                     {isActive && (
@@ -86,7 +85,7 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
                           damping: 32,
                           mass: 0.8,
                         }}
-                        className="absolute inset-0 bg-white rounded-xl shadow-xs"
+                        className="absolute inset-0 bg-white rounded-full shadow-md"
                         style={{ zIndex: 0 }}
                       />
                     )}
@@ -97,13 +96,13 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
             </nav>
 
             {/* Action CTAs */}
-            <div className="hidden sm:flex items-center gap-2.5">
+            <div className="hidden sm:flex items-center gap-3">
               <a
                 href="tel:+919864879505"
-                className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-white/20 text-white bg-white/10 hover:bg-white/20 transition-all backdrop-blur-xs shadow-xs"
+                className="flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-full border border-white/10 text-white/80 bg-white/[0.03] hover:bg-white/[0.08] hover:text-white hover:border-white/20 transition-all backdrop-blur-md"
               >
-                <Phone className="w-3.5 h-3.5 text-emerald-200" />
-                <span>+91 98648 79505</span>
+                <Phone className="w-3.5 h-3.5 text-amber-400" />
+                <span className="font-mono text-[11px] tracking-wide">+91 98648 79505</span>
               </a>
 
               {/* User Authentication Trigger */}
@@ -112,12 +111,12 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
                   <button
                     type="button"
                     onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-white text-xs font-semibold transition-all cursor-pointer"
+                    className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/[0.06] hover:bg-white/10 border border-white/15 text-white text-xs font-semibold transition-all cursor-pointer"
                   >
-                    <div className="w-5 h-5 rounded-full bg-emerald-300 text-emerald-950 font-bold flex items-center justify-center text-[10px]">
+                    <div className="w-5 h-5 rounded-full bg-amber-400 text-black font-black flex items-center justify-center text-[10px]">
                       {user.displayName.charAt(0).toUpperCase()}
                     </div>
-                    <span className="max-w-[90px] truncate">{user.displayName}</span>
+                    <span className="max-w-[85px] truncate font-medium">{user.displayName}</span>
                   </button>
 
                   <AnimatePresence>
@@ -126,11 +125,11 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
-                        className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 text-slate-800"
+                        className="absolute right-0 mt-2 w-48 bg-[#111418] rounded-2xl shadow-2xl border border-white/15 py-1.5 z-50 text-white"
                       >
-                        <div className="px-3 py-2 border-b border-slate-100">
+                        <div className="px-3 py-2 border-b border-white/10">
                           <p className="text-xs font-bold truncate">{user.displayName}</p>
-                          <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
+                          <p className="text-[10px] text-white/40 truncate">{user.email}</p>
                         </div>
                         <button
                           type="button"
@@ -138,7 +137,7 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
                             logout();
                             setUserDropdownOpen(false);
                           }}
-                          className="w-full px-3 py-2 text-left text-xs font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-2 transition-colors cursor-pointer"
+                          className="w-full px-3 py-2 text-left text-xs font-semibold text-rose-400 hover:bg-white/[0.06] flex items-center gap-2 transition-colors cursor-pointer"
                         >
                           <LogOut className="w-3.5 h-3.5" />
                           <span>Sign Out</span>
@@ -151,9 +150,9 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
                 <button
                   type="button"
                   onClick={() => setAuthModalOpen(true)}
-                  className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-white transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-3.5 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-white/90 hover:text-white transition-all cursor-pointer"
                 >
-                  <UserIcon className="w-3.5 h-3.5" />
+                  <UserIcon className="w-3.5 h-3.5 text-white/60" />
                   <span>Sign In</span>
                 </button>
               )}
@@ -162,10 +161,10 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={onOpenInquiry}
-                className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-xl bg-white hover:bg-emerald-50 text-emerald-900 shadow-md transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider px-4 py-2 rounded-full bg-white hover:bg-slate-200 text-black shadow-lg transition-all cursor-pointer"
               >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Instant Inquiry</span>
+                <span>Reserve Direct</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </motion.button>
             </div>
 
@@ -173,13 +172,13 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
             <div className="flex sm:hidden items-center gap-2">
               <button
                 onClick={onOpenInquiry}
-                className="text-xs font-bold px-3 py-1.5 rounded-lg bg-white text-emerald-800 shadow-xs cursor-pointer"
+                className="text-xs font-extrabold uppercase px-3 py-1.5 rounded-full bg-white text-black shadow-xs cursor-pointer"
               >
-                Enquire
+                Reserve
               </button>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-lg text-white hover:bg-white/15 transition-colors cursor-pointer"
+                className="p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                 aria-label="Toggle Menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -196,25 +195,25 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="sm:hidden bg-emerald-700/95 backdrop-blur-xl border-b border-emerald-500/30 px-4 py-4 space-y-1 shadow-2xl"
+              className="sm:hidden bg-[#090b0e]/95 backdrop-blur-2xl border-b border-white/10 px-4 py-5 space-y-2 shadow-2xl"
             >
               {navLinks.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-white hover:bg-white/15 transition-colors"
+                  className="block px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white hover:bg-white/[0.06] transition-colors"
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="pt-3 border-t border-emerald-600/50 flex flex-col gap-2">
+              <div className="pt-3 border-t border-white/10 flex flex-col gap-2.5">
                 {user ? (
-                  <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-white/10 text-white text-xs">
+                  <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-white/[0.05] text-white text-xs">
                     <span className="font-bold truncate">{user.displayName}</span>
                     <button
                       onClick={() => logout()}
-                      className="text-rose-200 hover:text-white text-xs font-semibold"
+                      className="text-rose-400 hover:text-rose-300 text-xs font-semibold"
                     >
                       Sign Out
                     </button>
@@ -225,7 +224,7 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
                       setMobileMenuOpen(false);
                       setAuthModalOpen(true);
                     }}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/25 text-white text-xs font-semibold bg-white/15"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-white/15 text-white text-xs font-bold uppercase tracking-wider bg-white/[0.06]"
                   >
                     <UserIcon className="w-3.5 h-3.5" />
                     <span>Sign In / Create Account</span>
@@ -234,20 +233,20 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
 
                 <a
                   href="tel:+919864879505"
-                  className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/20 text-white text-xs font-semibold bg-white/10"
+                  className="flex items-center justify-center gap-2 py-3 rounded-xl border border-white/10 text-white/80 text-xs font-medium bg-white/[0.03]"
                 >
-                  <Phone className="w-3.5 h-3.5 text-emerald-200" />
-                  Helpline: +91 98648 79505
+                  <Phone className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="font-mono">Concierge: +91 98648 79505</span>
                 </a>
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
                     onOpenInquiry?.();
                   }}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white text-emerald-900 font-bold text-xs shadow-md"
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-black font-extrabold uppercase tracking-wider text-xs shadow-xl"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                  Request Custom Hotel Quote
+                  <span>Direct Booking Inquiry</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </motion.div>
@@ -263,4 +262,3 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
     </>
   );
 }
-
