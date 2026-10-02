@@ -16,19 +16,24 @@ interface HotelCardProps {
     distanceKm: number;
     driveTimeMins: number;
   };
+  linkPrefix?: string;
 }
 
-export default function HotelCard({ hotel, onEnquire, proximity }: HotelCardProps) {
+export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: HotelCardProps) {
   const router = useRouter();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
 
+  const targetUrl = linkPrefix
+    ? `${linkPrefix.replace(/\/$/, "")}/${hotel.slug}`
+    : `/hotels/${hotel.slug}`;
+
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.metaKey || e.ctrlKey) {
-      window.open(`/hotels/${hotel.slug}`, "_blank");
+      window.open(targetUrl, "_blank");
       return;
     }
-    router.push(`/hotels/${hotel.slug}`);
+    router.push(targetUrl);
   };
 
   const nextImage = (e: React.MouseEvent) => {
@@ -162,7 +167,7 @@ export default function HotelCard({ hotel, onEnquire, proximity }: HotelCardProp
 
           {/* Hotel Name */}
           <Link
-            href={`/hotels/${hotel.slug}`}
+            href={targetUrl}
             onClick={(e) => e.stopPropagation()}
             className="block group-hover:text-emerald-700 transition-colors"
           >

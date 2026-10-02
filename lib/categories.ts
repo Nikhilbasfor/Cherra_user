@@ -376,6 +376,47 @@ export const CHERRAPUNJI_TRAVEL_CATEGORIES: TravelCategory[] = [
   },
 ];
 
+export interface StarTabInfo {
+  id: number;
+  label: string;
+  stars: number | null;
+  slug: string | null;
+}
+
+export const STAR_TABS: StarTabInfo[] = [
+  { id: 0, label: "All Stays", stars: null, slug: null },
+  { id: 5, label: "5 Star Resorts", stars: 5, slug: "5-star-resorts" },
+  { id: 4, label: "4 Star Resorts", stars: 4, slug: "4-star-resorts" },
+  { id: 3, label: "3 Star Resorts", stars: 3, slug: "3-star-resorts" },
+  { id: 2, label: "2 Star Stays", stars: 2, slug: "2-star-stays" },
+  { id: 1, label: "1 Star Stays", stars: 1, slug: "1-star-stays" },
+];
+
+export function getStarRatingFromSlug(slug: string): number | null {
+  const normalized = slug.toLowerCase();
+  if (normalized === "5-star-resorts" || normalized === "5-star-resorts-cherrapunji" || normalized === "5-star" || normalized === "5-star-hotels") return 5;
+  if (normalized === "4-star-resorts" || normalized === "4-star-resorts-cherrapunji" || normalized === "4-star" || normalized === "4-star-hotels") return 4;
+  if (normalized === "3-star-resorts" || normalized === "3-star-resorts-cherrapunji" || normalized === "3-star" || normalized === "3-star-hotels") return 3;
+  if (normalized === "2-star-stays" || normalized === "2-star-budget-stays-cherrapunji" || normalized === "2-star" || normalized === "2-star-hotels") return 2;
+  if (normalized === "1-star-stays" || normalized === "1-star-backpacker-stays-cherrapunji" || normalized === "1-star" || normalized === "1-star-hotels") return 1;
+  return null;
+}
+
+export function getStarSlugFromRating(rating: number): string {
+  if (rating === 5) return "5-star-resorts";
+  if (rating === 4) return "4-star-resorts";
+  if (rating === 3) return "3-star-resorts";
+  if (rating === 2) return "2-star-stays";
+  if (rating === 1) return "1-star-stays";
+  return "5-star-resorts";
+}
+
 export function getCategoryBySlug(slug: string): TravelCategory | undefined {
-  return CHERRAPUNJI_TRAVEL_CATEGORIES.find((c) => c.slug === slug);
+  const direct = CHERRAPUNJI_TRAVEL_CATEGORIES.find((c) => c.slug === slug);
+  if (direct) return direct;
+  const star = getStarRatingFromSlug(slug);
+  if (star !== null) {
+    return CHERRAPUNJI_TRAVEL_CATEGORIES.find((c) => c.starFilter === star);
+  }
+  return undefined;
 }

@@ -49,9 +49,13 @@ import { CHERRAPUNJI_TRAVEL_CATEGORIES } from "@/lib/categories";
 
 interface HotelDetailClientProps {
   hotel: Hotel;
+  parentCategory?: {
+    slug: string;
+    name: string;
+  };
 }
 
-export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
+export default function HotelDetailClient({ hotel, parentCategory }: HotelDetailClientProps) {
   // Photo Lightbox & Gallery state
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -357,11 +361,22 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
           <div className="flex items-center gap-1.5 overflow-hidden">
             <Link
               href="/hotels"
-              className="hover:text-emerald-700 transition-colors flex items-center gap-1 font-bold text-emerald-800 shrink-0"
+              className="hover:text-emerald-700 transition-colors flex items-center gap-1 font-semibold text-slate-600 shrink-0"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>All Stays</span>
             </Link>
+            {parentCategory && (
+              <>
+                <span className="text-slate-300">/</span>
+                <Link
+                  href={`/hotels/${parentCategory.slug}`}
+                  className="hover:text-emerald-700 font-bold text-emerald-800 transition-colors truncate"
+                >
+                  {parentCategory.name}
+                </Link>
+              </>
+            )}
             <span className="text-slate-300">/</span>
             <span className="text-slate-500 truncate hidden sm:inline">{hotel.area}</span>
             <span className="text-slate-300 hidden sm:inline">/</span>
@@ -385,16 +400,16 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             {/* Badges Row - Clean single row with horizontal scroll on small screens */}
             <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1 mb-2">
               <Link
-                href={`/collection/${
+                href={`/hotels/${
                   hotel.starRating === 5
-                    ? "5-star-resorts-cherrapunji"
+                    ? "5-star-resorts"
                     : hotel.starRating === 4
-                    ? "4-star-resorts-cherrapunji"
+                    ? "4-star-resorts"
                     : hotel.starRating === 3
-                    ? "3-star-resorts-cherrapunji"
+                    ? "3-star-resorts"
                     : hotel.starRating === 2
-                    ? "2-star-budget-stays-cherrapunji"
-                    : "1-star-backpacker-stays-cherrapunji"
+                    ? "2-star-stays"
+                    : "1-star-stays"
                 }`}
                 title={`Explore all ${hotel.starRating} Star ${hotel.starRating >= 3 ? "Resorts" : "Stays"} in Cherrapunji`}
                 className="flex items-center gap-0.5 px-2.5 py-0.5 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-bold border border-amber-200 shrink-0 transition-colors"
