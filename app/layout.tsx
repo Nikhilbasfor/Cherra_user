@@ -77,8 +77,6 @@ export const metadata: Metadata = {
   },
 };
 
-import { AuthProvider } from "@/context/AuthContext";
-
 export default function RootLayout({
   children,
 }: {
@@ -89,8 +87,8 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#090b0e] text-slate-100 selection:bg-amber-400 selection:text-black">
-        <AuthProvider>{children}</AuthProvider>
+      <body className="min-h-full flex flex-col bg-[#edf7f2] text-slate-900 selection:bg-amber-400 selection:text-black">
+        {children}
       </body>
     </html>
   );

@@ -3,25 +3,14 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import {
-  Compass,
   Sparkles,
-  ChevronLeft,
-  ChevronRight,
   ShieldCheck,
   CheckCircle2,
-  CalendarCheck,
   MapPin,
-  Heart,
-  Users,
-  Mountain,
-  Wallet,
-  Trees,
   ArrowRight,
-  Star,
-  SlidersHorizontal,
   ChevronDown,
   ArrowUpDown,
-  Search,
+  Compass,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -82,56 +71,53 @@ export default function CollectionClient({
   }, [allCategories, category.slug]);
 
   return (
-    <div className="min-h-screen bg-[#090b0e] text-slate-100 selection:bg-amber-400 selection:text-black relative">
+    <div className="min-h-screen bg-[#edf7f2] text-slate-900 selection:bg-amber-400 selection:text-black relative">
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Breadcrumb Navigation */}
-      <div className="pt-24 pb-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-white/10">
-        <div className="flex items-center gap-2 text-xs font-mono text-white/40 overflow-hidden uppercase tracking-wider">
-          <Link href="/" className="hover:text-white transition-colors shrink-0">
+      <div className="pt-20 sm:pt-24 pb-3 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-emerald-900/10">
+        <div className="flex items-center gap-2 text-xs font-mono text-slate-500 overflow-hidden uppercase tracking-wider">
+          <Link href="/" className="hover:text-slate-900 transition-colors shrink-0">
             Home
           </Link>
-          <span className="text-white/20">/</span>
-          <Link href="/hotels" className="hover:text-white transition-colors shrink-0">
+          <span>/</span>
+          <Link href="/hotels" className="hover:text-slate-900 transition-colors shrink-0">
             All Stays
           </Link>
-          <span className="text-white/20">/</span>
-          <span className="text-white font-bold truncate">{category.name}</span>
+          <span>/</span>
+          <span className="text-slate-900 font-bold truncate">{category.name}</span>
         </div>
       </div>
 
       {/* Hero Header */}
-      <header className="bg-[#0c0e12] text-white relative overflow-hidden py-12 sm:py-16 border-b border-white/10">
-        {/* Subtle Ambient Radial Light */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <header className="py-8 sm:py-12 border-b border-emerald-900/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] text-amber-400 text-xs font-mono font-bold uppercase tracking-widest border border-white/10 mb-4">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-800/10 text-emerald-800 text-xs font-mono font-bold uppercase tracking-wider border border-emerald-800/20 mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               <span>{category.heroBadge}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-tight">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-slate-900 leading-tight">
               {category.title}
             </h1>
 
-            <p className="mt-3 text-xs sm:text-sm lg:text-base text-white/60 font-mono leading-relaxed">
+            <p className="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
               {category.description}
             </p>
 
             {/* Direct Booking Guarantees */}
-            <div className="mt-6 flex flex-wrap items-center gap-4 text-xs font-mono text-white/50 pt-4 border-t border-white/10">
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-mono text-slate-500 pt-3 border-t border-emerald-900/10">
               <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-amber-400" />
+                <ShieldCheck className="w-4 h-4 text-emerald-700" />
                 100% Physically Verified
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-amber-400" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-700" />
                 Direct Front-Desk Tariffs
               </span>
               <span className="flex items-center gap-1.5">
-                <Compass className="w-4 h-4 text-amber-400" />
+                <Compass className="w-4 h-4 text-emerald-700" />
                 Zero Booking Commission
               </span>
             </div>
@@ -140,23 +126,23 @@ export default function CollectionClient({
       </header>
 
       {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         {/* Controls Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#111418] p-4 rounded-2xl border border-white/10 shadow-2xl mb-8">
-          <p className="text-xs font-mono text-white/50">
-            Showing <span className="font-bold text-white">{filteredHotels.length}</span> curated stays for{" "}
-            <span className="text-amber-400 font-bold uppercase">{category.shortName}</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-emerald-900/10 shadow-xs mb-6">
+          <p className="text-xs font-mono text-slate-600">
+            Showing <span className="font-bold text-slate-900">{filteredHotels.length}</span> curated stays for{" "}
+            <span className="text-emerald-800 font-bold uppercase">{category.shortName}</span>
           </p>
 
           <div className="flex flex-wrap items-center gap-3">
             {/* Locality Filter */}
             {areasList.length > 2 && (
-              <div className="flex items-center gap-1.5 text-xs font-mono text-white/50">
-                <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <div className="flex items-center gap-1.5 text-xs font-mono text-slate-600">
+                <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
                 <select
                   value={selectedArea}
                   onChange={(e) => setSelectedArea(e.target.value)}
-                  className="bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400 cursor-pointer [&>option]:bg-[#111418] [&>option]:text-white"
+                  className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 focus:outline-none focus:border-emerald-700 cursor-pointer"
                 >
                   {areasList.map((area) => (
                     <option key={area} value={area}>
@@ -168,12 +154,12 @@ export default function CollectionClient({
             )}
 
             {/* Sort Filter */}
-            <div className="flex items-center gap-1.5 text-xs font-mono text-white/50">
-              <ArrowUpDown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <div className="flex items-center gap-1.5 text-xs font-mono text-slate-600">
+              <ArrowUpDown className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400 cursor-pointer [&>option]:bg-[#111418] [&>option]:text-white"
+                className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 focus:outline-none focus:border-emerald-700 cursor-pointer"
               >
                 <option value="featured">Featured Stays</option>
                 <option value="price_asc">Price: Low to High</option>
@@ -186,7 +172,7 @@ export default function CollectionClient({
 
         {/* Hotels Grid */}
         {filteredHotels.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredHotels.map((hotel) => (
               <HotelCard
                 key={hotel.id}
@@ -196,15 +182,15 @@ export default function CollectionClient({
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 bg-[#111418] rounded-3xl border border-white/10 p-8 space-y-4">
-            <MapPin className="w-8 h-8 text-white/30 mx-auto" />
-            <h3 className="text-base font-black uppercase tracking-tight text-white">No matching stays in {selectedArea}</h3>
-            <p className="text-xs font-mono text-white/50">
+          <div className="text-center py-12 bg-white rounded-2xl border border-emerald-900/10 p-6 space-y-3">
+            <MapPin className="w-8 h-8 text-slate-300 mx-auto" />
+            <h3 className="text-base font-black uppercase tracking-tight text-slate-900">No matching stays in {selectedArea}</h3>
+            <p className="text-xs font-mono text-slate-500">
               Try switching back to &quot;All Areas&quot; to view all verified options in Cherrapunji.
             </p>
             <button
               onClick={() => setSelectedArea("All Areas")}
-              className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-mono font-bold uppercase tracking-wider text-xs shadow-md transition-all cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-mono font-bold uppercase tracking-wider text-xs shadow-md transition-all cursor-pointer"
             >
               Reset Locality Filter
             </button>
@@ -213,42 +199,39 @@ export default function CollectionClient({
 
         {/* Frequently Asked Questions */}
         {category.faqs && category.faqs.length > 0 && (
-          <section className="mt-20 pt-12 border-t border-white/10">
+          <section className="mt-14 pt-10 border-t border-emerald-900/10">
             <div className="max-w-3xl mx-auto">
-              <div className="text-center mb-10">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-400 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/25">
+              <div className="text-left mb-6">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 block mb-1">
                   Knowledge Base
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white mt-3">
+                <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
                   Questions About {category.shortName} in Cherrapunji
                 </h2>
-                <p className="text-xs sm:text-sm text-white/50 font-mono mt-1.5">
-                  Essential arrival and accommodation insights before finalizing your stay.
-                </p>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {category.faqs.map((faq, idx) => {
                   const isOpen = openFaqIndex === idx;
                   return (
                     <div
                       key={idx}
-                      className="bg-[#111418] rounded-2xl border border-white/10 overflow-hidden shadow-lg transition-all"
+                      className="bg-white rounded-xl border border-emerald-900/10 overflow-hidden shadow-xs"
                     >
                       <button
                         type="button"
                         onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
-                        className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-white text-sm sm:text-base hover:text-amber-400 transition-colors cursor-pointer"
+                        className="w-full p-4 text-left flex items-center justify-between gap-4 font-bold text-slate-900 text-xs sm:text-sm hover:text-emerald-800 transition-colors cursor-pointer"
                       >
                         <span>{faq.question}</span>
                         <ChevronDown
-                          className={`w-4 h-4 text-white/40 shrink-0 transition-transform ${
-                            isOpen ? "rotate-180 text-amber-400" : ""
+                          className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${
+                            isOpen ? "rotate-180 text-emerald-700" : ""
                           }`}
                         />
                       </button>
                       {isOpen && (
-                        <div className="px-5 pb-5 text-xs sm:text-sm text-white/70 font-mono leading-relaxed border-t border-white/10 pt-3">
+                        <div className="px-4 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-2">
                           {faq.answer}
                         </div>
                       )}
@@ -261,13 +244,13 @@ export default function CollectionClient({
         )}
 
         {/* Explore Other Curated Collections Cross-Links */}
-        <section className="mt-20 pt-12 border-t border-white/10">
-          <div className="text-center mb-10">
-            <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white">
+        <section className="mt-14 pt-10 border-t border-emerald-900/10">
+          <div className="text-left mb-6">
+            <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight text-slate-900">
               Explore More Cherrapunji Stay Collections
             </h3>
-            <p className="text-xs font-mono text-white/50 mt-1.5">
-              Curated architectural selections for every travel style.
+            <p className="text-xs font-mono text-slate-500 mt-0.5">
+              Curated selections for every travel preference.
             </p>
           </div>
 
@@ -276,20 +259,20 @@ export default function CollectionClient({
               <Link
                 key={other.slug}
                 href={`/collection/${other.slug}`}
-                className="group p-5 bg-[#111418] rounded-2xl border border-white/10 hover:border-amber-400/40 hover:bg-[#15191f] transition-all flex flex-col justify-between"
+                className="group p-5 bg-white rounded-xl border border-emerald-900/10 hover:border-emerald-700/30 hover:shadow-md transition-all flex flex-col justify-between"
               >
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 block mb-1.5">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-amber-700 block mb-1">
                     {other.heroBadge}
                   </span>
-                  <h4 className="font-black uppercase tracking-tight text-white text-base group-hover:text-amber-400 transition-colors">
+                  <h4 className="font-black uppercase tracking-tight text-slate-900 text-sm group-hover:text-emerald-800 transition-colors">
                     {other.name}
                   </h4>
-                  <p className="text-xs text-white/50 font-mono mt-2 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-slate-600 mt-1 line-clamp-2 leading-relaxed">
                     {other.description}
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono uppercase tracking-wider text-amber-400 font-bold">
+                <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs font-mono uppercase tracking-wider text-emerald-700 font-bold">
                   <span>View Verified Stays</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>

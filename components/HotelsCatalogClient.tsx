@@ -6,20 +6,17 @@ import { useSearchParams } from "next/navigation";
 import {
   SlidersHorizontal,
   Search,
-  MapPin,
-  Star,
   Check,
   RotateCcw,
-  LayoutGrid,
-  Map as MapIcon,
   ArrowUpDown,
   Navigation,
   Compass,
+  Plus,
+  X,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HotelCard from "@/components/HotelCard";
-import MapExplorer from "@/components/MapExplorer";
 import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_HOTELS } from "@/lib/mockData";
 import { getAllHotels } from "@/lib/firebase";
@@ -41,6 +38,22 @@ export interface HotelsCatalogClientProps {
   initialStarSlug?: string | null;
   category?: TravelCategory | null;
 }
+
+const TOP_5_AMENITIES = [
+  "Free High-Speed Wi-Fi",
+  "24/7 Hot Water / Geyser",
+  "Mountain & Valley View",
+  "Multi-Cuisine Restaurant",
+  "Free Private Parking",
+];
+
+const ADDITIONAL_AMENITIES = [
+  "Private Balcony",
+  "Bonfire & Barbeque",
+  "Room Heater",
+  "Tea / Coffee Maker",
+  "Travel Desk & Cab Services",
+];
 
 export default function HotelsCatalogClient({
   initialStarRating = null,
@@ -64,7 +77,7 @@ export default function HotelsCatalogClient({
   const rawArea = searchParams.get("area");
   const initialArea =
     !rawArea || rawArea.toLowerCase() === "all" || rawArea === "All Areas"
-      ? "All Areas"
+      ? ""
       : rawArea;
 
   const urlStars = searchParams.get("stars")
@@ -82,8 +95,7 @@ export default function HotelsCatalogClient({
   const initialCheckOut = searchParams.get("checkOut") || "";
   const initialNear = searchParams.get("near") || "";
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedArea, setSelectedArea] = useState(initialArea);
+  const [searchQuery, setSearchQuery] = useState(initialArea);
   const [selectedCollection, setSelectedCollection] = useState(initialCollection);
   const [selectedStars, setSelectedStars] = useState<number[]>(defaultStars);
   const [activeStarSlug, setActiveStarSlug] = useState<string | null>(
@@ -93,10 +105,10 @@ export default function HotelsCatalogClient({
   const [maxPrice, setMaxPrice] = useState<number>(15000);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>("featured");
-  const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [selectedHotelForInquiry, setSelectedHotelForInquiry] = useState<Hotel | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [amenitiesModalOpen, setAmenitiesModalOpen] = useState(false);
 
   useEffect(() => {
     if (initialStarRating) {
@@ -140,7 +152,6 @@ export default function HotelsCatalogClient({
 
   const activeFilterCount = useMemo(() => {
     let count = 0;
-    if (selectedArea !== "All Areas") count++;
     if (selectedCollection !== "all" && !category) count++;
     if (selectedStars.length > 0 && !initialStarRating) count += selectedStars.length;
     if (selectedAmenities.length > 0) count += selectedAmenities.length;
@@ -149,7 +160,6 @@ export default function HotelsCatalogClient({
     if (searchQuery.trim()) count++;
     return count;
   }, [
-    selectedArea,
     selectedCollection,
     selectedStars,
     selectedAmenities,
@@ -159,29 +169,6 @@ export default function HotelsCatalogClient({
     initialStarRating,
     category,
   ]);
-
-  const availableAreas = useMemo(() => {
-    const set = new Set<string>();
-    hotels.forEach((h) => {
-      if (h.area) set.add(h.area);
-    });
-    return ["All Areas", ...Array.from(set)];
-  }, [hotels]);
-
-  const allAmenitiesList = useMemo(() => {
-    return [
-      "Free High-Speed Wi-Fi",
-      "24/7 Hot Water / Geyser",
-      "Mountain & Valley View",
-      "Multi-Cuisine Restaurant",
-      "Free Private Parking",
-      "Private Balcony",
-      "Bonfire & Barbeque",
-      "Room Heater",
-      "Tea / Coffee Maker",
-      "Travel Desk & Cab Services",
-    ];
-  }, []);
 
   const handleStarTabClick = (star: number | null, slug: string | null) => {
     if (star === null || !slug) {
@@ -215,7 +202,6 @@ export default function HotelsCatalogClient({
 
   const resetFilters = () => {
     setSearchQuery("");
-    setSelectedArea("All Areas");
     setSelectedCollection("all");
     setSelectedStars([]);
     setActiveStarSlug(null);
@@ -237,12 +223,9 @@ export default function HotelsCatalogClient({
         (h) =>
           h.name.toLowerCase().includes(q) ||
           h.area.toLowerCase().includes(q) ||
+          h.address.toLowerCase().includes(q) ||
           h.description.toLowerCase().includes(q)
       );
-    }
-
-    if (selectedArea && selectedArea !== "All Areas") {
-      list = list.filter((h) => h.area.toLowerCase().includes(selectedArea.toLowerCase()));
     }
 
     if (selectedCollection && selectedCollection !== "all") {
@@ -401,7 +384,6 @@ export default function HotelsCatalogClient({
   }, [
     hotels,
     searchQuery,
-    selectedArea,
     selectedCollection,
     selectedStars,
     maxPrice,
@@ -424,397 +406,382 @@ export default function HotelsCatalogClient({
     : "Resorts & Suites in Cherrapunji";
 
   const pageSubtitle = activeStarTab
-    ? `Explore certified ${activeStarTab.label.toLowerCase()} with canyon views, luxury amenities, and verified direct tariffs.`
+    ? `Explore certified ${activeStarTab.label.toLowerCase()} with canyon views and verified direct tariffs.`
     : category
     ? category.description
-    : "Discover handpicked cliffside sanctuaries, valley-facing cottages, and peaceful village homestays.";
+    : "Discover handpicked cliffside sanctuaries, valley cottages, and peaceful village homestays.";
 
   const currentLinkPrefix = activeStarSlug ? `/hotels/${activeStarSlug}` : "/hotels";
 
   return (
-    <div className="min-h-screen bg-[#090b0e] text-slate-100 selection:bg-amber-400 selection:text-black">
+    <div className="min-h-screen bg-[#edf7f2] text-slate-900 selection:bg-amber-400 selection:text-black">
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
-      {/* Header */}
-      <div className="pt-24 pb-6 sm:pt-28 sm:pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-white/10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
-            {activeStarTab && (
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.05] border border-white/15 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider mb-2">
-                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                <span>Verified {activeStarTab.label} Tier</span>
-              </div>
-            )}
-            <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-[-0.03em] text-white">
-              {pageTitle}
-            </h1>
-            <p className="text-xs sm:text-sm text-white/50 mt-2 max-w-2xl leading-relaxed">
-              {pageSubtitle}
-            </p>
-          </div>
-
-          {/* Grid ↔ Map View Switcher */}
-          <div className="flex items-center gap-1 bg-white/[0.04] p-1.5 rounded-full border border-white/10 self-start md:self-auto shrink-0 backdrop-blur-md">
-            <button
-              type="button"
-              onClick={() => setViewMode("grid")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                viewMode === "grid"
-                  ? "bg-white text-black font-extrabold shadow-md"
-                  : "text-white/60 hover:text-white"
-              }`}
-            >
-              <LayoutGrid className="w-3.5 h-3.5" />
-              <span>Grid</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode("map")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                viewMode === "map"
-                  ? "bg-white text-black font-extrabold shadow-md"
-                  : "text-white/60 hover:text-white"
-              }`}
-            >
-              <MapIcon className="w-3.5 h-3.5" />
-              <span>Map Guide</span>
-            </button>
-          </div>
+      {/* Header - Uplifted with reduced padding and compact title */}
+      <div className="pt-20 sm:pt-24 pb-3 sm:pb-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-emerald-900/10">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-slate-900">
+            {pageTitle}
+          </h1>
+          <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed">
+            {pageSubtitle}
+          </p>
         </div>
 
-        {/* Star Rating Top Tab Bar */}
-        <div className="mt-8 pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 -mx-1 px-1">
-            {STAR_TABS.map((tab) => {
-              const isActive = isTabActive(tab.stars);
-              const count =
-                tab.stars === null
-                  ? hotels.length
-                  : hotels.filter((h) => h.starRating === tab.stars).length;
+        {/* Rectangular Tabs with Slight Curve, No Star Emojis/Icons, No Scrollbar Stretched Text */}
+        <div className="mt-4 pt-3 border-t border-emerald-900/10 flex flex-wrap gap-2 items-center">
+          {STAR_TABS.map((tab) => {
+            const isActive = isTabActive(tab.stars);
+            const count =
+              tab.stars === null
+                ? hotels.length
+                : hotels.filter((h) => h.starRating === tab.stars).length;
 
-              return (
-                <button
-                  key={tab.label}
-                  type="button"
-                  onClick={() => handleStarTabClick(tab.stars, tab.slug)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
+            return (
+              <button
+                key={tab.label}
+                type="button"
+                onClick={() => handleStarTabClick(tab.stars, tab.slug)}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-emerald-700 text-white shadow-sm font-extrabold"
+                    : "bg-white/80 hover:bg-white text-slate-700 border border-emerald-900/10"
+                }`}
+              >
+                <span>{tab.label}</span>
+                <span
+                  className={`text-[10px] font-mono px-1.5 py-0.2 rounded-md ${
                     isActive
-                      ? "bg-white text-black font-extrabold shadow-md"
-                      : "bg-white/[0.03] text-white/60 hover:text-white hover:bg-white/[0.08] border border-white/10"
+                      ? "bg-white/20 text-white"
+                      : "bg-slate-100 text-slate-500"
                   }`}
                 >
-                  {tab.stars !== null && (
-                    <Star
-                      className={`w-3.5 h-3.5 ${
-                        isActive
-                          ? "fill-black text-black"
-                          : "fill-amber-400 text-amber-400"
-                      }`}
-                    />
-                  )}
-                  <span>{tab.label}</span>
-                  <span
-                    className={`ml-1 text-[10px] font-mono px-2 py-0.5 rounded-full ${
-                      isActive
-                        ? "bg-black/15 text-black font-black"
-                        : "bg-white/[0.06] text-white/40"
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="hidden sm:flex items-center gap-3 text-xs font-mono text-white/40 whitespace-nowrap">
-            <span>
-              Showing <span className="font-bold text-white">{filteredHotels.length}</span> verified stays
-            </span>
-          </div>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Content Area */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {viewMode === "map" ? (
-          <div className="space-y-8">
-            <MapExplorer
-              hotels={filteredHotels}
-              selectedLandmark={selectedLandmark}
-              onEnquire={(h) => handleOpenInquiry(h)}
+      {/* Main Content Area - Uplifted with Three Hotels in View Immediately */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
+        {/* Mobile Quick Filter */}
+        <div className="lg:hidden flex items-center gap-2 mb-4">
+          <div className="relative flex-1">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search Hotel / area..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white border border-emerald-900/10 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-700"
             />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pt-4">
-              {filteredHotels.map((hotel) => (
-                <HotelCard
-                  key={hotel.id}
-                  hotel={hotel}
-                  proximity={proximityData?.map.get(hotel.id)}
-                  linkPrefix={currentLinkPrefix}
-                  onEnquire={(h) => handleOpenInquiry(h)}
-                />
-              ))}
-            </div>
           </div>
-        ) : (
-          <div>
-            {/* Mobile Quick Filter */}
-            <div className="lg:hidden flex items-center gap-2 mb-6">
-              <div className="relative flex-1">
-                <Search className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
+          <button
+            type="button"
+            onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-emerald-900/10 bg-white text-slate-800 text-xs font-bold uppercase tracking-wider shrink-0"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            <span>Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="w-4 h-4 rounded-full text-[10px] bg-emerald-700 text-white flex items-center justify-center font-bold">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Layout Grid: 3 cols Sidebar + 9 cols Hotel Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Left Filters Sidebar */}
+          <aside
+            className={`lg:col-span-3 bg-white p-4 sm:p-5 rounded-2xl border border-emerald-900/10 shadow-sm space-y-5 ${
+              mobileFilterOpen ? "block" : "hidden lg:block"
+            }`}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <SlidersHorizontal className="w-4 h-4 text-emerald-700" />
+                <span className="font-black text-xs uppercase tracking-wider text-slate-900">Filter Stays</span>
+              </div>
+              {activeFilterCount > 0 && (
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="text-[11px] font-mono font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  Reset
+                </button>
+              )}
+            </div>
+
+            {/* Search Hotel / Area Input (faint placeholder inside) */}
+            <div>
+              <label className="block text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                Search Hotel / Area
+              </label>
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Search stay or area..."
+                  placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-white/[0.04] border border-white/10 rounded-xl pl-9 pr-3 py-2.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-amber-400"
+                  className="w-full bg-slate-50 border border-emerald-900/10 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400/80 focus:outline-none focus:border-emerald-700 focus:bg-white"
                 />
               </div>
+            </div>
+
+            {/* Sightseeing Spot Proximity */}
+            <div>
+              <label className="block text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                Proximity to Spot
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedLandmark}
+                  onChange={(e) => setSelectedLandmark(e.target.value)}
+                  className="w-full bg-slate-50 border border-emerald-900/10 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-emerald-700 appearance-none cursor-pointer"
+                >
+                  <option value="">All Cherrapunji Sights...</option>
+                  {CHERRAPUNJI_LANDMARKS.map((lm) => (
+                    <option key={lm.id} value={lm.id}>
+                      {lm.name} ({lm.category})
+                    </option>
+                  ))}
+                </select>
+                <Compass className="w-3.5 h-3.5 text-emerald-700 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+            </div>
+
+            {/* Price Range Slider */}
+            <div>
+              <div className="flex items-center justify-between text-xs font-mono font-bold mb-1.5">
+                <span className="text-slate-500 uppercase text-[10px] tracking-wider">Max Nightly Tariff</span>
+                <span className="text-slate-900">Up to ₹{maxPrice.toLocaleString()}</span>
+              </div>
+              <input
+                type="range"
+                min={2000}
+                max={15000}
+                step={500}
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value))}
+                className="w-full accent-emerald-700 cursor-pointer"
+              />
+              <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 mt-1">
+                <span>₹2,000</span>
+                <span>₹15,000+</span>
+              </div>
+            </div>
+
+            {/* Top 5 Key Amenities + Add More Button */}
+            <div>
+              <label className="block text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mb-2">
+                Key Amenities
+              </label>
+              <div className="space-y-1.5">
+                {TOP_5_AMENITIES.map((amenity) => {
+                  const isChecked = selectedAmenities.includes(amenity);
+                  return (
+                    <button
+                      key={amenity}
+                      type="button"
+                      onClick={() => toggleAmenity(amenity)}
+                      className={`w-full flex items-center gap-2 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                        isChecked
+                          ? "bg-emerald-50 text-emerald-950 font-bold border border-emerald-200"
+                          : "bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100"
+                      }`}
+                    >
+                      <span
+                        className={`w-3.5 h-3.5 rounded flex items-center justify-center text-[9px] shrink-0 ${
+                          isChecked ? "bg-emerald-700 text-white" : "border border-slate-300 bg-white"
+                        }`}
+                      >
+                        {isChecked && <Check className="w-2.5 h-2.5" />}
+                      </span>
+                      <span className="truncate">{amenity}</span>
+                    </button>
+                  );
+                })}
+
+                {/* Selected items from additional list */}
+                {selectedAmenities
+                  .filter((a) => !TOP_5_AMENITIES.includes(a))
+                  .map((amenity) => (
+                    <button
+                      key={amenity}
+                      type="button"
+                      onClick={() => toggleAmenity(amenity)}
+                      className="w-full flex items-center gap-2 p-2 rounded-xl text-left text-xs bg-emerald-50 text-emerald-950 font-bold border border-emerald-200 cursor-pointer"
+                    >
+                      <span className="w-3.5 h-3.5 rounded flex items-center justify-center text-[9px] shrink-0 bg-emerald-700 text-white">
+                        <Check className="w-2.5 h-2.5" />
+                      </span>
+                      <span className="truncate">{amenity}</span>
+                    </button>
+                  ))}
+
+                {/* + More Amenities Button */}
+                <button
+                  type="button"
+                  onClick={() => setAmenitiesModalOpen(true)}
+                  className="w-full mt-2 py-2 px-3 rounded-xl border border-dashed border-emerald-700/40 text-emerald-800 hover:bg-emerald-50 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>+ More Amenities</span>
+                </button>
+              </div>
+            </div>
+          </aside>
+
+          {/* Right Listings Area (9 cols) */}
+          <main className="lg:col-span-9 space-y-4">
+            {/* Proximity Callout Banner */}
+            {selectedLandmarkInfo && (
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-white border border-emerald-900/10 text-xs text-slate-900 shadow-xs">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                    <Navigation className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-xs text-slate-900">
+                      Showing stays closest to {selectedLandmarkInfo.name}
+                    </p>
+                    <p className="text-[11px] text-slate-500 font-mono">
+                      Ranked by shortest mountain road distance
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedLandmark("")}
+                  className="self-start sm:self-auto px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-xs uppercase tracking-wider transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Clear</span>
+                </button>
+              </div>
+            )}
+
+            {/* Sort Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-white px-4 py-2.5 rounded-xl border border-emerald-900/10">
+              <p className="text-xs font-mono text-slate-600">
+                Verified: <span className="text-slate-900 font-bold">{filteredHotels.length} properties</span>
+              </p>
+
+              <div className="flex items-center gap-2 text-xs">
+                <span className="text-slate-500 flex items-center gap-1 font-mono uppercase text-[10px] tracking-wider">
+                  <ArrowUpDown className="w-3.5 h-3.5 text-emerald-700" />
+                  Sort:
+                </span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 focus:outline-none focus:border-emerald-700 cursor-pointer"
+                >
+                  <option value="featured">Featured Sanctuaries</option>
+                  <option value="price_asc">Tariff: Low to High</option>
+                  <option value="price_desc">Tariff: High to Low</option>
+                  <option value="rating">Highest Guest Rating</option>
+                  <option value="stars">Star Tier</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Cards Grid */}
+            {filteredHotels.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {filteredHotels.map((hotel) => (
+                  <HotelCard
+                    key={hotel.id}
+                    hotel={hotel}
+                    proximity={proximityData?.map.get(hotel.id)}
+                    linkPrefix={currentLinkPrefix}
+                    onEnquire={(h) => handleOpenInquiry(h)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="p-10 text-center bg-white rounded-2xl border border-emerald-900/10 space-y-3">
+                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
+                  <Search className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-bold text-slate-900 uppercase tracking-wider">No Sanctuaries Match Filters</h3>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  Adjust your search terms or reset the nightly tariff and star rating.
+                </p>
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold uppercase tracking-wider text-xs shadow-md"
+                >
+                  Reset All Filters
+                </button>
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+
+      {/* Additional Amenities Popup Modal */}
+      {amenitiesModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm">
+          <div className="relative w-full max-w-md bg-white rounded-2xl p-6 border border-emerald-900/10 shadow-2xl text-slate-900 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <h3 className="text-base font-black uppercase text-slate-900 tracking-tight">
+                Additional Amenities
+              </h3>
               <button
                 type="button"
-                onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-white/15 bg-white/[0.06] text-white text-xs font-bold uppercase tracking-wider shrink-0"
+                onClick={() => setAmenitiesModalOpen(false)}
+                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-500"
               >
-                <SlidersHorizontal className="w-3.5 h-3.5" />
-                <span>Filters</span>
-                {activeFilterCount > 0 && (
-                  <span className="w-4 h-4 rounded-full text-[10px] bg-amber-400 text-black flex items-center justify-center font-black">
-                    {activeFilterCount}
-                  </span>
-                )}
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Layout Grid: 3 cols Sidebar + 9 cols Hotel Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              {/* Left Filters Sidebar */}
-              <aside
-                className={`lg:col-span-3 bg-[#111418] p-5 rounded-2xl border border-white/10 shadow-2xl space-y-6 ${
-                  mobileFilterOpen ? "block" : "hidden lg:block"
-                }`}
-              >
-                <div className="flex items-center justify-between pb-3.5 border-b border-white/10">
-                  <div className="flex items-center gap-2">
-                    <SlidersHorizontal className="w-4 h-4 text-amber-400" />
-                    <span className="font-black text-xs uppercase tracking-widest text-white">Filter Stays</span>
-                  </div>
-                  {activeFilterCount > 0 && (
-                    <button
-                      type="button"
-                      onClick={resetFilters}
-                      className="text-[11px] font-mono font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer"
+            <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+              {ADDITIONAL_AMENITIES.map((amenity) => {
+                const isChecked = selectedAmenities.includes(amenity);
+                return (
+                  <button
+                    key={amenity}
+                    type="button"
+                    onClick={() => toggleAmenity(amenity)}
+                    className={`w-full flex items-center gap-2.5 p-2.5 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                      isChecked
+                        ? "bg-emerald-50 text-emerald-950 font-bold border border-emerald-200"
+                        : "bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100"
+                    }`}
+                  >
+                    <span
+                      className={`w-4 h-4 rounded flex items-center justify-center text-[10px] shrink-0 ${
+                        isChecked ? "bg-emerald-700 text-white" : "border border-slate-300 bg-white"
+                      }`}
                     >
-                      <RotateCcw className="w-3 h-3" />
-                      Reset
-                    </button>
-                  )}
-                </div>
-
-                {/* Desktop Search input */}
-                <div className="hidden lg:block">
-                  <label className="block text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-1.5">
-                    Search Name / Area
-                  </label>
-                  <div className="relative">
-                    <Search className="w-3.5 h-3.5 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      placeholder="e.g. Polo, Nohsngithiang..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-white/[0.04] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:border-amber-400"
-                    />
-                  </div>
-                </div>
-
-                {/* Landmark Proximity Selector */}
-                <div>
-                  <label className="block text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-1.5">
-                    Proximity to Sightseeing
-                  </label>
-                  <div className="relative">
-                    <select
-                      value={selectedLandmark}
-                      onChange={(e) => setSelectedLandmark(e.target.value)}
-                      className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400 appearance-none cursor-pointer [color-scheme:dark]"
-                    >
-                      <option value="" className="bg-[#111418] text-white">Select Sightseeing Spot...</option>
-                      {CHERRAPUNJI_LANDMARKS.map((lm) => (
-                        <option key={lm.id} value={lm.id} className="bg-[#111418] text-white">
-                          {lm.name} ({lm.category})
-                        </option>
-                      ))}
-                    </select>
-                    <Compass className="w-3.5 h-3.5 text-amber-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  </div>
-                </div>
-
-                {/* Locality Selector */}
-                <div>
-                  <label className="block text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-1.5">
-                    Locality / Region
-                  </label>
-                  <div className="relative">
-                    <select
-                      value={selectedArea}
-                      onChange={(e) => setSelectedArea(e.target.value)}
-                      className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400 appearance-none cursor-pointer [color-scheme:dark]"
-                    >
-                      {availableAreas.map((area) => (
-                        <option key={area} value={area} className="bg-[#111418] text-white">
-                          {area}
-                        </option>
-                      ))}
-                    </select>
-                    <MapPin className="w-3.5 h-3.5 text-white/40 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  </div>
-                </div>
-
-                {/* Price Range Slider */}
-                <div>
-                  <div className="flex items-center justify-between text-xs font-mono font-bold mb-1.5">
-                    <span className="text-white/40 uppercase text-[10px] tracking-widest">Max Nightly Tariff</span>
-                    <span className="text-white">Up to ₹{maxPrice.toLocaleString()}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min={2000}
-                    max={15000}
-                    step={500}
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(Number(e.target.value))}
-                    className="w-full accent-amber-400 cursor-pointer"
-                  />
-                  <div className="flex items-center justify-between text-[10px] font-mono text-white/40 mt-1">
-                    <span>₹2,000</span>
-                    <span>₹15,000+</span>
-                  </div>
-                </div>
-
-                {/* Amenities */}
-                <div>
-                  <label className="block text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-2">
-                    Key Amenities
-                  </label>
-                  <div className="space-y-1.5">
-                    {allAmenitiesList.map((amenity) => {
-                      const isChecked = selectedAmenities.includes(amenity);
-                      return (
-                        <button
-                          key={amenity}
-                          type="button"
-                          onClick={() => toggleAmenity(amenity)}
-                          className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
-                            isChecked
-                              ? "bg-white text-black font-bold"
-                              : "bg-white/[0.03] text-white/60 hover:text-white hover:bg-white/[0.06] border border-white/5"
-                          }`}
-                        >
-                          <span
-                            className={`w-3.5 h-3.5 rounded flex items-center justify-center text-[9px] shrink-0 ${
-                              isChecked ? "bg-black text-white" : "border border-white/20 bg-transparent"
-                            }`}
-                          >
-                            {isChecked && <Check className="w-2.5 h-2.5" />}
-                          </span>
-                          <span className="truncate">{amenity}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </aside>
-
-              {/* Right Listings Area (9 cols) */}
-              <main className="lg:col-span-9 space-y-6">
-                {/* Proximity Callout Banner */}
-                {selectedLandmarkInfo && (
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-[#111418] border border-white/15 text-xs text-white shadow-xl">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-amber-400 text-black flex items-center justify-center shrink-0">
-                        <Navigation className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-sm text-white">
-                          Showing stays closest to {selectedLandmarkInfo.name}
-                        </p>
-                        <p className="text-xs text-white/50 mt-0.5 font-mono">
-                          Ranked by shortest mountain road distance (Dijkstra algorithm)
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedLandmark("")}
-                      className="self-start sm:self-auto px-4 py-2 rounded-full bg-white/[0.06] border border-white/15 text-white hover:bg-white/10 font-bold text-xs uppercase tracking-wider transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <RotateCcw className="w-3 h-3" />
-                      <span>Clear</span>
-                    </button>
-                  </div>
-                )}
-
-                {/* Sort Bar */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#111418] p-3 sm:p-4 rounded-xl border border-white/10">
-                  <p className="text-xs font-mono text-white/50">
-                    Showing <span className="text-white font-bold">{filteredHotels.length}</span> verified properties
-                  </p>
-
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="text-white/40 flex items-center gap-1 font-mono uppercase text-[10px] tracking-widest">
-                      <ArrowUpDown className="w-3.5 h-3.5 text-amber-400" />
-                      Sort:
+                      {isChecked && <Check className="w-3 h-3" />}
                     </span>
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400 cursor-pointer [color-scheme:dark]"
-                    >
-                      <option value="featured" className="bg-[#111418] text-white">Featured Sanctuaries</option>
-                      <option value="price_asc" className="bg-[#111418] text-white">Tariff: Low to High</option>
-                      <option value="price_desc" className="bg-[#111418] text-white">Tariff: High to Low</option>
-                      <option value="rating" className="bg-[#111418] text-white">Highest Guest Rating</option>
-                      <option value="stars" className="bg-[#111418] text-white">Star Tier</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Cards Grid */}
-                {filteredHotels.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                    {filteredHotels.map((hotel) => (
-                      <HotelCard
-                        key={hotel.id}
-                        hotel={hotel}
-                        proximity={proximityData?.map.get(hotel.id)}
-                        linkPrefix={currentLinkPrefix}
-                        onEnquire={(h) => handleOpenInquiry(h)}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-14 text-center bg-[#111418] rounded-2xl border border-white/10 space-y-4">
-                    <div className="w-12 h-12 rounded-full bg-white/[0.05] flex items-center justify-center mx-auto text-white/40">
-                      <Search className="w-5 h-5" />
-                    </div>
-                    <h3 className="text-base font-bold text-white uppercase tracking-wider">No Sanctuaries Match Filters</h3>
-                    <p className="text-xs text-white/50 max-w-sm mx-auto">
-                      Adjust your filters or reset maximum tariff and star rating.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={resetFilters}
-                      className="px-5 py-2.5 rounded-full bg-white text-black font-extrabold uppercase tracking-wider text-xs shadow-lg"
-                    >
-                      Reset All Filters
-                    </button>
-                  </div>
-                )}
-              </main>
+                    <span>{amenity}</span>
+                  </button>
+                );
+              })}
             </div>
+
+            <button
+              type="button"
+              onClick={() => setAmenitiesModalOpen(false)}
+              className="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs uppercase tracking-wider transition-all"
+            >
+              Done
+            </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <InquiryModal
         isOpen={inquiryModalOpen}
