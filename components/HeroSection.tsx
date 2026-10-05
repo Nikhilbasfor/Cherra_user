@@ -151,7 +151,7 @@ export default function HeroSection() {
         </video>
 
         {/* Ambient Nature Fade to lower section */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-emerald-950/30 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#042f24]/90 via-black/30 to-emerald-950/20 pointer-events-none" />
       </div>
 
       {/* Main Content Area */}
@@ -199,14 +199,14 @@ export default function HeroSection() {
         >
           <form
             onSubmit={handleSearch}
-            className="p-3 sm:p-4 bg-white/95 backdrop-blur-2xl rounded-2xl sm:rounded-3xl border border-emerald-100 shadow-2xl text-left"
+            className="p-3 sm:p-4 bg-white rounded-2xl sm:rounded-3xl border border-[#bfe5d4] shadow-lg shadow-emerald-950/10 text-left"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center">
               {/* Field 1: Region / Property (4 cols) */}
               <div ref={areaDropdownRef} className="lg:col-span-4 relative">
                 <div
                   onClick={() => setIsAreaDropdownOpen((prev) => !prev)}
-                  className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e3f2ea] border border-emerald-200/80 hover:border-emerald-400/60 transition-all cursor-pointer"
+                  className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all cursor-pointer"
                 >
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center justify-between cursor-pointer">
                     <span className="flex items-center gap-1.5">
@@ -236,7 +236,7 @@ export default function HeroSection() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-white rounded-2xl border border-emerald-200 shadow-2xl p-2.5 space-y-2 max-h-72 overflow-y-auto text-slate-900"
+                      className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-white rounded-2xl border border-[#bfe5d4] shadow-xl shadow-emerald-950/15 p-2.5 space-y-2 max-h-72 overflow-y-auto text-slate-900"
                     >
                       {/* Search Filter Input */}
                       <div className="relative">
@@ -247,7 +247,7 @@ export default function HeroSection() {
                           value={areaSearchQuery}
                           onChange={(e) => setAreaSearchQuery(e.target.value)}
                           onClick={(e) => e.stopPropagation()}
-                          className="w-full bg-[#edf7f2] border border-emerald-200 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-700"
+                          className="w-full bg-[#edf7f2] border border-[#bfe5d4] rounded-xl pl-8 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-700"
                           autoFocus
                         />
                       </div>
@@ -336,7 +336,7 @@ export default function HeroSection() {
 
               {/* Field 2: Check-In (2.5 cols) */}
               <div className="lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e3f2ea] border border-emerald-200/80 hover:border-emerald-400/60 transition-all">
+                <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all">
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-amber-600" />
                     Check-in
@@ -346,14 +346,14 @@ export default function HeroSection() {
                     min={todayStr}
                     value={checkIn}
                     onChange={(e) => setCheckIn(e.target.value)}
-                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-900 focus:outline-none cursor-pointer [color-scheme:light]"
+                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-900 border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none cursor-pointer [color-scheme:light]"
                   />
                 </div>
               </div>
 
               {/* Field 3: Check-Out (2.5 cols) */}
               <div className="lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e3f2ea] border border-emerald-200/80 hover:border-emerald-400/60 transition-all">
+                <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all">
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-amber-600" />
                     Check-out
@@ -363,14 +363,14 @@ export default function HeroSection() {
                     min={checkIn || todayStr}
                     value={checkOut}
                     onChange={(e) => setCheckOut(e.target.value)}
-                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-900 focus:outline-none cursor-pointer [color-scheme:light]"
+                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-900 border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none cursor-pointer [color-scheme:light]"
                   />
                 </div>
               </div>
 
               {/* Field 4: Guests (2 cols) */}
               <div className="lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e3f2ea] border border-emerald-200/80 hover:border-emerald-400/60 transition-all">
+                <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all">
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Users className="w-3.5 h-3.5 text-amber-600" />
                     Guests
@@ -378,7 +378,7 @@ export default function HeroSection() {
                   <select
                     value={guests}
                     onChange={(e) => setGuests(e.target.value)}
-                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-900 focus:outline-none cursor-pointer [color-scheme:light]"
+                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-900 border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none cursor-pointer [color-scheme:light]"
                   >
                     <option value="1 Adult" className="bg-white text-slate-900">1 Adult</option>
                     <option value="2 Adults" className="bg-white text-slate-900">2 Adults</option>
@@ -392,7 +392,7 @@ export default function HeroSection() {
               <div className="lg:col-span-2 flex items-center h-full">
                 <button
                   type="submit"
-                  className="w-full h-full py-3.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-black uppercase tracking-wider text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                  className="w-full h-full py-3.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-black uppercase tracking-wider text-xs transition-all shadow-md shadow-emerald-900/10 flex items-center justify-center gap-2 cursor-pointer active:scale-95 border-0"
                 >
                   <span>Explore</span>
                   <ArrowRight className="w-4 h-4 text-white" />
