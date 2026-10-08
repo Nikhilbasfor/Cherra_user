@@ -34,12 +34,87 @@ export default async function HomePage() {
     verifiedStays: liveVerifiedStays,
   };
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://resortsincherrapunji.com";
+
+  // Google WebSite & Sitelinks Searchbox Schema
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "CherraStays - Resorts in Cherrapunji",
+    alternateName: ["Resorts in Cherrapunji", "Hotels in Cherrapunji", "CherraStays"],
+    url: baseUrl,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${baseUrl}/hotels?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
+  // Google TravelAgency / Organization Schema
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    name: "CherraStays",
+    url: baseUrl,
+    logo: `${baseUrl}/images/logo.png`,
+    description: "Verified nature retreats, luxury cliffside resorts, and authentic homestays in Cherrapunji (Sohra), Meghalaya.",
+    telephone: "+91-9366767512",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Cherrapunji",
+      addressRegion: "Meghalaya",
+      postalCode: "793108",
+      addressCountry: "IN",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: "25.2986",
+      longitude: "91.7378",
+    },
+    priceRange: "₹₹ - ₹₹₹₹",
+    areaServed: {
+      "@type": "AdministrativeArea",
+      name: "Cherrapunji, Sohra, Meghalaya",
+    },
+  };
+
+  // Google FAQ Schema for Homepage Rich Snippets
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: f.answer,
+      },
+    })),
+  };
+
   return (
-    <HomePageClient
-      initialStats={stats}
-      initialHotels={hotels}
-      initialAttractions={attractions}
-      initialFaqs={faqs}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <HomePageClient
+        initialStats={stats}
+        initialHotels={hotels}
+        initialAttractions={attractions}
+        initialFaqs={faqs}
+      />
+    </>
   );
 }

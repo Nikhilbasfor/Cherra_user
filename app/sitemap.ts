@@ -50,5 +50,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  return [...staticUrls, ...categoryUrls, ...hotelUrls];
+  // 4. Star Rating Landing Pages
+  const starCategoryUrls: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/hotels/5-star-resorts`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/hotels/4-star-resorts`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/hotels/3-star-resorts`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/hotels/2-star-stays`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+  ];
+
+  return [...staticUrls, ...starCategoryUrls, ...categoryUrls, ...hotelUrls];
 }
