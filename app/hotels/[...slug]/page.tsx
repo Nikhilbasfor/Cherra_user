@@ -96,7 +96,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ? `${starRating} Star Resorts`
       : category?.shortName || category?.name || slug[0];
 
-    const targetUrl = `${baseUrl}/hotels/${slug[0]}/${hotel.slug}`;
+    const targetUrl = `${baseUrl}/hotels/${hotel.slug}`;
     const hotelMeta = createHotelMetadata(hotel, targetUrl);
 
     return {

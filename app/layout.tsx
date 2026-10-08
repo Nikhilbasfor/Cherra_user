@@ -64,6 +64,9 @@ export const metadata: Metadata = {
       "Explore peaceful nature resorts and homestays in Cherrapunji (Sohra). Direct booking and instant quotes.",
     images: ["https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&h=630&q=80"],
   },
+  alternates: {
+    canonical: "https://resortsincherrapunji.com",
+  },
   robots: {
     index: true,
     follow: true,

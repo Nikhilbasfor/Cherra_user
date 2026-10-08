@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     "4 star resorts cherrapunji",
     "waterfall view hotels cherrapunji",
   ],
+  alternates: {
+    canonical: "https://resortsincherrapunji.com/hotels",
+  },
 };
 
 export default function HotelsPage() {
