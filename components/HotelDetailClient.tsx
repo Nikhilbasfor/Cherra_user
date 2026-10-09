@@ -333,31 +333,31 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       <Navbar onOpenInquiry={() => setInquiryModalOpen(true)} />
 
       {/* Uplifted Header: Hotel name, golden star icons, resort contact, uncrowded area */}
-      <div className="pt-20 sm:pt-24 pb-3 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-          <div className="space-y-2">
+      <div className="pt-16 sm:pt-18 pb-1.5 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-3">
+          <div className="space-y-1.5">
             {/* 1. Hotel Name on Top */}
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-slate-900 leading-tight">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black uppercase tracking-tight text-slate-900 leading-tight">
               {hotel.name}
             </h1>
 
             {/* 2. Star icons row + Solid info line just below hotel name */}
-            <div className="flex flex-wrap items-center gap-2.5 text-xs sm:text-sm font-sans text-slate-700">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-sans text-slate-700">
               {/* Star icons as per 3/4/5 star hotel with rich gold fill (no dull emojis) */}
-              <div className="flex items-center gap-1 bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-lg">
+              <div className="flex items-center gap-1 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-lg">
                 <div className="flex items-center gap-0.5">
                   {Array.from({ length: hotel.starRating || 3 }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-500" />
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
                   ))}
                 </div>
-                <span className="font-bold text-amber-900 text-xs sm:text-sm ml-1">
+                <span className="font-bold text-amber-900 text-xs ml-1">
                   {hotel.starRating} Star {hotel.starRating >= 3 ? "Resort" : "Stay"}
                 </span>
               </div>
 
               <span className="text-slate-300">|</span>
 
-              <span className="font-bold text-slate-800 flex items-center gap-1 text-xs sm:text-sm">
+              <span className="font-bold text-slate-800 flex items-center gap-1 text-xs">
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
                 <span>{hotel.rating} Superb</span>
                 <span className="text-slate-500 font-normal">({reviews.length > 0 ? reviews.length : hotel.reviewsCount} reviews)</span>
@@ -367,7 +367,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
 
               <a
                 href={`tel:${hotel.phone || "+919864879505"}`}
-                className="inline-flex items-center gap-1.5 text-emerald-800 hover:text-emerald-950 font-semibold text-xs sm:text-sm bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-0.5 rounded-md transition-colors"
+                className="inline-flex items-center gap-1.5 text-emerald-800 hover:text-emerald-950 font-semibold text-xs bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-0.5 rounded-md transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
                 <span>Resort Contact: {hotel.phone || "+91 98648 79505"}</span>
@@ -375,9 +375,9 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             </div>
 
             {/* 3. Locality & Map Link */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-600 font-sans">
-                <MapPin className="w-4 h-4 text-amber-600 shrink-0" />
+            <div className="flex flex-wrap items-center gap-3 pt-0.5">
+              <div className="flex items-center gap-2 text-xs text-slate-600 font-sans">
+                <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                 <span className="font-semibold text-slate-800">{hotel.area}, Sohra</span>
                 <span className="text-slate-300">•</span>
                 <span className="text-slate-500 hidden sm:inline">{hotel.address}</span>
@@ -396,18 +396,18 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
           </div>
 
           {/* Quick Rate & Share Header Badges */}
-          <div className="flex items-center gap-3 self-start md:self-auto shrink-0 pt-1">
+          <div className="flex items-center gap-3 self-start md:self-auto shrink-0 pt-0.5">
             <div className="text-right">
-              <span className="text-xs text-slate-500 uppercase font-mono font-bold block">Verified Direct Tariff</span>
+              <span className="text-[11px] text-slate-500 uppercase font-mono font-bold block">Verified Direct Tariff</span>
               <div className="flex items-baseline gap-1">
-                <span className="font-serif text-2xl sm:text-3xl font-bold text-slate-900">₹{hotel.pricePerNight}</span>
+                <span className="font-serif text-xl sm:text-2xl font-bold text-slate-900">₹{hotel.pricePerNight}</span>
                 <span className="text-xs text-slate-500 font-sans">/ night</span>
               </div>
             </div>
             <button
               type="button"
               onClick={handleShare}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-emerald-900/10 transition-colors text-xs font-mono shadow-xs cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-emerald-900/10 transition-colors text-xs font-mono shadow-xs cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5 text-emerald-700" />
               <span>{copied ? "Copied" : "Share"}</span>
@@ -416,11 +416,11 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
         </div>
       </div>
 
-      {/* Photos Aligned in First View - Compact Height so First View is Not Cut Off */}
-      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto my-3">
+      {/* Photos Aligned in First View - Compact Height so Check-In Bar is Visible on First Look */}
+      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mt-1 mb-2">
         <div className="relative rounded-2xl overflow-hidden bg-slate-100 border border-emerald-900/10 shadow-sm">
-          {/* Desktop 5-Photo Mosaic Grid (Compact 300px - 340px) */}
-          <div className="hidden md:grid grid-cols-12 gap-1.5 h-[290px] lg:h-[330px] p-1.5 bg-slate-100 rounded-2xl overflow-hidden">
+          {/* Desktop 5-Photo Mosaic Grid (Compact 220px - 260px) */}
+          <div className="hidden md:grid grid-cols-12 gap-1.5 h-[210px] sm:h-[230px] lg:h-[250px] p-1.5 bg-slate-100 rounded-2xl overflow-hidden">
             {/* Left Large Photo */}
             <div
               onClick={() => {
@@ -520,7 +520,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       </div>
 
       {/* Pinned Sticky Check-In & Availability Bar (Keeps Pinned When Scrolled) */}
-      <div className="sticky top-[58px] sm:top-[66px] z-30 bg-[#edf7f2]/95 backdrop-blur-md border-y border-emerald-900/15 shadow-sm py-2.5 mb-6">
+      <div className="sticky top-[58px] sm:top-[66px] z-30 bg-[#edf7f2]/95 backdrop-blur-md border-y border-emerald-900/15 shadow-sm py-2 mb-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="p-2.5 sm:p-3 rounded-2xl bg-white border border-emerald-200/80 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 flex-1">
