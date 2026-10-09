@@ -6,7 +6,6 @@ import {
   Star,
   MapPin,
   CheckCircle2,
-  Calendar,
   Clock,
   MessageSquare,
   ChevronLeft,
@@ -126,14 +125,14 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
         checkIn: checkInDate || todayStr,
         checkOut: checkOutDate || "",
         guests: {
-          adults: 2,
-          children: 0,
+          adults: guestsCount.includes("1 Adult") ? 1 : guestsCount.includes("3") ? 3 : guestsCount.includes("4") ? 4 : 2,
+          children: guestsCount.includes("Child") ? 1 : 0,
         },
         specialRequests: directRequests.trim() || undefined,
       });
       setDirectSubmitted(true);
       const targetPhone = "919864879505";
-      const msg = `Hello! I requested direct booking for *${hotel.name}* (${selectedRoom?.name || "Standard Room"}) in Cherrapunji.\n\nName: ${directName}\nPhone: ${directPhone}\nDates: ${checkInDate || "Flexible"} to ${checkOutDate || "Flexible"}\nRequests: ${directRequests || "Best direct rate"}`;
+      const msg = `Hello! I requested direct booking for *${hotel.name}* (${selectedRoom?.name || "Standard Room"}) in Cherrapunji.\n\nName: ${directName}\nPhone: ${directPhone}\nDates: ${checkInDate || "Flexible"} to ${checkOutDate || "Flexible"}\nGuests: ${guestsCount}\nRequests: ${directRequests || "Best direct rate"}`;
       window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, "_blank");
     } catch (err) {
       console.warn("Direct inquiry submit:", err);
@@ -333,31 +332,31 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       <Navbar onOpenInquiry={() => setInquiryModalOpen(true)} />
 
       {/* Uplifted Header: Hotel name, golden star icons, resort contact, uncrowded area */}
-      <div className="pt-16 sm:pt-18 pb-1.5 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-3">
-          <div className="space-y-1.5">
+      <div className="pt-20 sm:pt-22 pb-3.5 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div className="space-y-2.5">
             {/* 1. Hotel Name on Top */}
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black uppercase tracking-tight text-slate-900 leading-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight text-slate-900 leading-tight">
               {hotel.name}
             </h1>
 
             {/* 2. Star icons row + Solid info line just below hotel name */}
-            <div className="flex flex-wrap items-center gap-2 text-xs font-sans text-slate-700">
-              {/* Star icons as per 3/4/5 star hotel with rich gold fill (no dull emojis) */}
-              <div className="flex items-center gap-1 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-lg">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 text-xs sm:text-sm font-sans text-slate-700">
+              {/* Star icons as per 3/4/5 star hotel with rich gold fill */}
+              <div className="flex items-center gap-1 bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-md">
                 <div className="flex items-center gap-0.5">
                   {Array.from({ length: hotel.starRating || 3 }).map((_, i) => (
                     <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
                   ))}
                 </div>
-                <span className="font-bold text-amber-900 text-xs ml-1">
+                <span className="font-bold text-amber-900 text-xs sm:text-sm ml-1">
                   {hotel.starRating} Star {hotel.starRating >= 3 ? "Resort" : "Stay"}
                 </span>
               </div>
 
               <span className="text-slate-300">|</span>
 
-              <span className="font-bold text-slate-800 flex items-center gap-1 text-xs">
+              <span className="font-bold text-slate-800 flex items-center gap-1 text-xs sm:text-sm">
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
                 <span>{hotel.rating} Superb</span>
                 <span className="text-slate-500 font-normal">({reviews.length > 0 ? reviews.length : hotel.reviewsCount} reviews)</span>
@@ -367,7 +366,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
 
               <a
                 href={`tel:${hotel.phone || "+919864879505"}`}
-                className="inline-flex items-center gap-1.5 text-emerald-800 hover:text-emerald-950 font-semibold text-xs bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-0.5 rounded-md transition-colors"
+                className="inline-flex items-center gap-1.5 text-emerald-800 hover:text-emerald-950 font-semibold text-xs sm:text-sm bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-md transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
                 <span>Resort Contact: {hotel.phone || "+91 98648 79505"}</span>
@@ -375,9 +374,9 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             </div>
 
             {/* 3. Locality & Map Link */}
-            <div className="flex flex-wrap items-center gap-3 pt-0.5">
-              <div className="flex items-center gap-2 text-xs text-slate-600 font-sans">
-                <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-600 font-sans">
+                <MapPin className="w-4 h-4 text-amber-600 shrink-0" />
                 <span className="font-semibold text-slate-800">{hotel.area}, Sohra</span>
                 <span className="text-slate-300">•</span>
                 <span className="text-slate-500 hidden sm:inline">{hotel.address}</span>
@@ -396,18 +395,18 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
           </div>
 
           {/* Quick Rate & Share Header Badges */}
-          <div className="flex items-center gap-3 self-start md:self-auto shrink-0 pt-0.5">
+          <div className="flex items-center gap-3 self-start md:self-auto shrink-0 pt-1">
             <div className="text-right">
-              <span className="text-[11px] text-slate-500 uppercase font-mono font-bold block">Verified Direct Tariff</span>
+              <span className="text-xs text-slate-500 uppercase font-mono font-bold block">Verified Direct Tariff</span>
               <div className="flex items-baseline gap-1">
-                <span className="font-serif text-xl sm:text-2xl font-bold text-slate-900">₹{hotel.pricePerNight}</span>
+                <span className="font-serif text-2xl sm:text-3xl font-bold text-slate-900">₹{hotel.pricePerNight}</span>
                 <span className="text-xs text-slate-500 font-sans">/ night</span>
               </div>
             </div>
             <button
               type="button"
               onClick={handleShare}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-emerald-900/10 transition-colors text-xs font-mono shadow-xs cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-emerald-900/10 transition-colors text-xs font-mono shadow-xs cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5 text-emerald-700" />
               <span>{copied ? "Copied" : "Share"}</span>
@@ -416,11 +415,11 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
         </div>
       </div>
 
-      {/* Photos Aligned in First View - Compact Height so Check-In Bar is Visible on First Look */}
-      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mt-1 mb-2">
+      {/* Photos Gallery - Restored Generous Luxurious Height */}
+      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto my-4 sm:my-5">
         <div className="relative rounded-2xl overflow-hidden bg-slate-100 border border-emerald-900/10 shadow-sm">
-          {/* Desktop 5-Photo Mosaic Grid (Compact 220px - 260px) */}
-          <div className="hidden md:grid grid-cols-12 gap-1.5 h-[210px] sm:h-[230px] lg:h-[250px] p-1.5 bg-slate-100 rounded-2xl overflow-hidden">
+          {/* Desktop 5-Photo Mosaic Grid (Generous 320px - 390px) */}
+          <div className="hidden md:grid grid-cols-12 gap-2 h-[320px] sm:h-[360px] lg:h-[390px] p-2 bg-slate-100 rounded-2xl overflow-hidden">
             {/* Left Large Photo */}
             <div
               onClick={() => {
@@ -514,80 +513,6 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
 
             <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-xs font-mono">
               {activeMobileImageIndex + 1} / {galleryImages.length}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Pinned Sticky Check-In & Availability Bar (Keeps Pinned When Scrolled) */}
-      <div className="sticky top-[58px] sm:top-[66px] z-30 bg-[#edf7f2]/95 backdrop-blur-md border-y border-emerald-900/15 shadow-sm py-2 mb-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-2.5 sm:p-3 rounded-2xl bg-white border border-emerald-200/80 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 flex-1">
-              {/* Check-In */}
-              <div className="p-2.5 rounded-xl bg-[#f4f7f5] border border-[#d6e4dc]">
-                <label className="text-xs font-sans font-bold text-slate-700 block mb-0.5">Check-In</label>
-                <input
-                  type="date"
-                  min={todayStr}
-                  value={checkInDate}
-                  onChange={(e) => setCheckInDate(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-semibold text-slate-900 outline-none cursor-pointer [color-scheme:light]"
-                />
-              </div>
-
-              {/* Check-Out */}
-              <div className="p-2.5 rounded-xl bg-[#f4f7f5] border border-[#d6e4dc]">
-                <label className="text-xs font-sans font-bold text-slate-700 block mb-0.5">Check-Out</label>
-                <input
-                  type="date"
-                  min={checkInDate || todayStr}
-                  value={checkOutDate}
-                  onChange={(e) => setCheckOutDate(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-semibold text-slate-900 outline-none cursor-pointer [color-scheme:light]"
-                />
-              </div>
-
-              {/* Guests */}
-              <div className="p-2.5 rounded-xl bg-[#f4f7f5] border border-[#d6e4dc] col-span-2 sm:col-span-1">
-                <label className="text-xs font-sans font-bold text-slate-700 block mb-0.5">Guests</label>
-                <select
-                  value={guestsCount}
-                  onChange={(e) => setGuestsCount(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-semibold text-slate-900 outline-none cursor-pointer [color-scheme:light]"
-                >
-                  <option value="1 Adult">1 Adult</option>
-                  <option value="2 Adults">2 Adults</option>
-                  <option value="2 Adults, 1 Child">2 Adults, 1 Child</option>
-                  <option value="3 Adults">3 Adults</option>
-                  <option value="4+ Group">4+ Group</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="hidden lg:block text-right pr-2">
-                <span className="text-xs text-slate-500 uppercase font-mono font-bold block">Verified Direct Tariff</span>
-                <span className="font-serif text-xl sm:text-2xl font-bold text-slate-900">
-                  ₹{selectedRoom ? selectedRoom.price : hotel.pricePerNight}
-                </span>
-                <span className="text-xs text-slate-500 font-sans">/nt</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  const el = document.getElementById("reserve-card");
-                  if (el) {
-                    el.scrollIntoView({ behavior: "smooth" });
-                  } else {
-                    setInquiryModalOpen(true);
-                  }
-                }}
-                className="px-6 py-3.5 rounded-full bg-[#d99b38] hover:bg-[#c6892a] text-slate-950 font-bold text-xs sm:text-sm tracking-wide shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
-              >
-                <Calendar className="w-4 h-4" />
-                <span>Reserve Direct</span>
-              </button>
             </div>
           </div>
         </div>
@@ -886,7 +811,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             </section>
           </div>
 
-          {/* Right Sticky Booking Widget (4 cols) - Compact & Fit-in-One-Screen */}
+          {/* Right Sticky Booking Widget (4 cols) - Complete Self-Contained Direct Reservation */}
           <div className="lg:col-span-4">
             <div id="reserve-card" className="sticky top-20 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
               <div className="border-b border-slate-100 pb-2.5">
@@ -907,6 +832,17 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                       {selectedRoom.name}
                     </span>
                   )}
+                </div>
+
+                {/* Direct Booking Trust & Perks */}
+                <div className="flex items-center gap-2 mt-2 text-[11px] font-medium text-emerald-800">
+                  <span className="inline-flex items-center gap-1">
+                    <Check className="w-3 h-3 text-emerald-700" /> Best Direct Tariff
+                  </span>
+                  <span className="text-slate-300">•</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Check className="w-3 h-3 text-emerald-700" /> Instant Front-Desk Reply
+                  </span>
                 </div>
               </div>
 
@@ -966,11 +902,27 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                   </div>
                 </div>
 
+                {/* Guests & Room Selection */}
+                <div>
+                  <label className="text-[10px] font-bold text-slate-600 block mb-0.5">Guests & Rooms</label>
+                  <select
+                    value={guestsCount}
+                    onChange={(e) => setGuestsCount(e.target.value)}
+                    className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#df9e38] focus:border-[#df9e38] cursor-pointer"
+                  >
+                    <option value="1 Adult">1 Adult</option>
+                    <option value="2 Adults">2 Adults</option>
+                    <option value="2 Adults, 1 Child">2 Adults, 1 Child</option>
+                    <option value="3 Adults">3 Adults</option>
+                    <option value="4+ Group">4+ Group Stays</option>
+                  </select>
+                </div>
+
                 {/* Compact Requests Input */}
                 <div>
                   <input
                     type="text"
-                    placeholder="Guests count, requests (optional)"
+                    placeholder="Special requests or preferences (optional)"
                     value={directRequests}
                     onChange={(e) => setDirectRequests(e.target.value)}
                     className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-lg px-2.5 py-1.5 text-xs text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-[#df9e38] focus:border-[#df9e38] transition-all"
@@ -994,7 +946,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                       <span>Request Sent • Check WhatsApp</span>
                     </span>
                   ) : (
-                    <span>Request Best Price</span>
+                    <span>Request Best Direct Rate</span>
                   )}
                 </button>
               </form>
