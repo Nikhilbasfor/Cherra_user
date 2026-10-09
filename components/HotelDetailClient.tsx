@@ -48,6 +48,9 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [activeMobileImageIndex, setActiveMobileImageIndex] = useState(0);
 
+  // Active in-page navigation section
+  const [activeNavSection, setActiveNavSection] = useState("overview");
+
   // Selected room for inquiry
   const [selectedRoom, setSelectedRoom] = useState<Room>(hotel.rooms[0] || null);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
@@ -140,6 +143,27 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       setIsDirectSubmitting(false);
     }
   };
+
+  // Scroll spy to highlight active in-page navigation tab
+  useEffect(() => {
+    const sectionIds = ["overview", "rooms", "amenities", "policies", "nearby", "reviews"];
+    const handleScroll = () => {
+      const scrollPos = window.scrollY + 140;
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            setActiveNavSection(id);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Evocative, Enticing Luxury Amenities
   const amenityCategories = [
@@ -515,6 +539,38 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
               {activeMobileImageIndex + 1} / {galleryImages.length}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* In-Page Section Navigation Tab Bar (Sticky on Scroll) */}
+      <div className="sticky top-[58px] sm:top-[66px] z-30 bg-[#edf7f2]/95 backdrop-blur-md border-y border-emerald-900/10 shadow-xs py-2 mb-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center gap-2 overflow-x-auto scrollbar-none py-0.5 text-xs sm:text-sm font-sans font-bold text-slate-600">
+            {[
+              { id: "overview", label: "Overview" },
+              { id: "rooms", label: "Rooms & Tariffs" },
+              { id: "amenities", label: "Features & Amenities" },
+              { id: "policies", label: "Good To Know" },
+              { id: "nearby", label: "Nearby Spots" },
+              { id: "reviews", label: "Guest Reviews" },
+            ].map((tab) => {
+              const isActive = activeNavSection === tab.id;
+              return (
+                <a
+                  key={tab.id}
+                  href={`#${tab.id}`}
+                  onClick={() => setActiveNavSection(tab.id)}
+                  className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+                    isActive
+                      ? "bg-emerald-700 text-white font-bold shadow-xs"
+                      : "hover:text-slate-900 hover:bg-white/70"
+                  }`}
+                >
+                  {tab.label}
+                </a>
+              );
+            })}
+          </nav>
         </div>
       </div>
 
