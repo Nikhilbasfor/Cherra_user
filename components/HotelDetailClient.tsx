@@ -9,7 +9,6 @@ import {
   Calendar,
   Clock,
   MessageSquare,
-  ShieldCheck,
   ChevronLeft,
   ChevronRight,
   Share2,
@@ -49,9 +48,6 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [activeMobileImageIndex, setActiveMobileImageIndex] = useState(0);
-
-  // Active in-page navigation section
-  const [activeNavSection, setActiveNavSection] = useState("overview");
 
   // Selected room for inquiry
   const [selectedRoom, setSelectedRoom] = useState<Room>(hotel.rooms[0] || null);
@@ -110,7 +106,6 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
   // Direct Inquiry Card State matching user design
   const [directName, setDirectName] = useState("");
   const [directPhone, setDirectPhone] = useState("");
-  const [directEmail, setDirectEmail] = useState("");
   const [directRequests, setDirectRequests] = useState("");
   const [isDirectSubmitting, setIsDirectSubmitting] = useState(false);
   const [directSubmitted, setDirectSubmitted] = useState(false);
@@ -124,7 +119,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       await submitInquiry({
         customerName: directName.trim(),
         customerPhone: directPhone.trim(),
-        customerEmail: directEmail.trim() || "",
+        customerEmail: "",
         hotelId: hotel.id,
         hotelName: hotel.name,
         roomType: selectedRoom ? selectedRoom.name : "Direct Front-Desk Rate",
@@ -146,27 +141,6 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       setIsDirectSubmitting(false);
     }
   };
-
-  // Scroll spy to highlight active in-page navigation tab
-  useEffect(() => {
-    const sectionIds = ["overview", "rooms", "amenities", "policies", "nearby", "reviews"];
-    const handleScroll = () => {
-      const scrollPos = window.scrollY + 160;
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveNavSection(id);
-            break;
-          }
-        }
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Evocative, Enticing Luxury Amenities
   const amenityCategories = [
@@ -391,21 +365,17 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
 
               <span className="text-slate-300">|</span>
 
-              <span className="text-emerald-800 font-semibold text-xs sm:text-sm bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-md">
-                Verified Direct Tariff
-              </span>
-            </div>
-
-            {/* 3. Resort Contact Number & Locality with generous, uncrowded spacing */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
               <a
                 href={`tel:${hotel.phone || "+919864879505"}`}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/70 hover:bg-emerald-200/70 text-emerald-900 border border-emerald-300/80 text-xs sm:text-sm font-bold font-mono transition-colors shadow-xs"
+                className="inline-flex items-center gap-1.5 text-emerald-800 hover:text-emerald-950 font-semibold text-xs sm:text-sm bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-0.5 rounded-md transition-colors"
               >
-                <Phone className="w-3.5 h-3.5 text-emerald-700" />
+                <Phone className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
                 <span>Resort Contact: {hotel.phone || "+91 98648 79505"}</span>
               </a>
+            </div>
 
+            {/* 3. Locality & Map Link */}
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-600 font-sans">
                 <MapPin className="w-4 h-4 text-amber-600 shrink-0" />
                 <span className="font-semibold text-slate-800">{hotel.area}, Sohra</span>
@@ -428,7 +398,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
           {/* Quick Rate & Share Header Badges */}
           <div className="flex items-center gap-3 self-start md:self-auto shrink-0 pt-1">
             <div className="text-right">
-              <span className="text-xs text-slate-500 uppercase font-mono font-bold block">Direct Tariff</span>
+              <span className="text-xs text-slate-500 uppercase font-mono font-bold block">Verified Direct Tariff</span>
               <div className="flex items-baseline gap-1">
                 <span className="font-serif text-2xl sm:text-3xl font-bold text-slate-900">₹{hotel.pricePerNight}</span>
                 <span className="text-xs text-slate-500 font-sans">/ night</span>
@@ -551,7 +521,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
 
       {/* Pinned Sticky Check-In & Availability Bar (Keeps Pinned When Scrolled) */}
       <div className="sticky top-[58px] sm:top-[66px] z-30 bg-[#edf7f2]/95 backdrop-blur-md border-y border-emerald-900/15 shadow-sm py-2.5 mb-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="p-2.5 sm:p-3 rounded-2xl bg-white border border-emerald-200/80 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 flex-1">
               {/* Check-In */}
@@ -597,7 +567,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
 
             <div className="flex items-center gap-3 shrink-0">
               <div className="hidden lg:block text-right pr-2">
-                <span className="text-xs text-slate-500 uppercase font-mono font-bold block">Direct Tariff</span>
+                <span className="text-xs text-slate-500 uppercase font-mono font-bold block">Verified Direct Tariff</span>
                 <span className="font-serif text-xl sm:text-2xl font-bold text-slate-900">
                   ₹{selectedRoom ? selectedRoom.price : hotel.pricePerNight}
                 </span>
@@ -620,34 +590,6 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
               </button>
             </div>
           </div>
-
-          {/* In-Page Navigation Bar */}
-          <nav className="flex items-center gap-2 overflow-x-auto scrollbar-none py-1 text-xs sm:text-sm font-sans font-bold text-slate-600">
-            {[
-              { id: "overview", label: "Overview" },
-              { id: "rooms", label: "Rooms & Tariffs" },
-              { id: "amenities", label: "Features & Amenities" },
-              { id: "policies", label: "Good To Know" },
-              { id: "nearby", label: "Nearby Spots" },
-              { id: "reviews", label: "Guest Reviews" },
-            ].map((tab) => {
-              const isActive = activeNavSection === tab.id;
-              return (
-                <a
-                  key={tab.id}
-                  href={`#${tab.id}`}
-                  onClick={() => setActiveNavSection(tab.id)}
-                  className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
-                    isActive
-                      ? "bg-emerald-700 text-white font-bold shadow-xs"
-                      : "hover:text-slate-900 hover:bg-white/70"
-                  }`}
-                >
-                  {tab.label}
-                </a>
-              );
-            })}
-          </nav>
         </div>
       </div>
 
@@ -683,23 +625,23 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
               </div>
             </section>
 
-            {/* 2. Rooms & Direct Tariffs - Elevated Luxury Presentation */}
-            <section id="rooms" className="bg-white border border-emerald-900/10 rounded-2xl p-6 sm:p-7 space-y-6 shadow-sm scroll-mt-28">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+            {/* 2. Rooms & Direct Tariffs */}
+            <section id="rooms" className="bg-white border border-emerald-900/10 rounded-2xl p-4 sm:p-5 space-y-4 shadow-sm scroll-mt-28">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
+                  <h2 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-slate-900">
                     Room Options &amp; Tariffs
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-500 font-sans mt-0.5">
+                  <p className="text-xs text-slate-500 font-sans mt-0.5">
                     Verified property tariffs • Direct front-desk billing with zero agency markup
                   </p>
                 </div>
-                <span className="self-start sm:self-auto text-xs font-bold text-emerald-900 bg-emerald-100/70 px-3 py-1 rounded-full border border-emerald-300/60">
+                <span className="self-start sm:self-auto text-[11px] font-bold text-emerald-900 bg-emerald-100/70 px-2.5 py-0.5 rounded-full border border-emerald-300/60">
                   ⚡ Best Direct Rate Guaranteed
                 </span>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {hotel.rooms.map((room) => {
                   const isSelected = selectedRoom?.id === room.id;
                   const rackPrice = Math.round(room.price * 1.25);
@@ -707,46 +649,46 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                   return (
                     <div
                       key={room.id}
-                      className={`p-5 rounded-2xl border transition-all duration-300 ${
+                      className={`p-3.5 sm:p-4 rounded-xl border transition-all duration-200 ${
                         isSelected
-                          ? "border-emerald-700 bg-emerald-50/50 shadow-md ring-1 ring-emerald-700/20"
-                          : "border-slate-200 bg-gradient-to-br from-white to-[#fbfdfc] hover:border-emerald-600/40 hover:shadow-md"
+                          ? "border-emerald-700 bg-emerald-50/50 shadow-sm ring-1 ring-emerald-700/20"
+                          : "border-slate-200/90 bg-white hover:border-emerald-600/40 hover:shadow-xs"
                       }`}
                     >
-                      <div className="flex flex-col md:flex-row justify-between gap-4">
-                        <div className="space-y-2 flex-1">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div className="space-y-1.5 flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="text-base sm:text-lg font-black uppercase text-slate-900 tracking-tight">
+                            <h3 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
                               {room.name}
                             </h3>
-                            <span className="px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold font-mono">
+                            <span className="px-1.5 py-0.5 rounded bg-amber-50 border border-amber-200 text-amber-900 text-[10px] sm:text-[11px] font-bold font-mono">
                               Save ₹{saving} Direct
                             </span>
                           </div>
 
-                          <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-600 font-sans">
-                            <span className="flex items-center gap-1">
+                          <div className="flex flex-wrap items-center gap-2.5 text-xs text-slate-600 font-sans">
+                            <span className="flex items-center gap-1 font-medium">
                               <Users className="w-3.5 h-3.5 text-emerald-700" />
                               <span>{room.capacity}</span>
                             </span>
                             <span className="text-slate-300">•</span>
-                            <span className="flex items-center gap-1">
+                            <span className="flex items-center gap-1 font-medium">
                               <BedDouble className="w-3.5 h-3.5 text-emerald-700" />
                               <span>{room.beds}</span>
                             </span>
                             {room.sizeSqFt && (
                               <>
                                 <span className="text-slate-300">•</span>
-                                <span>{room.sizeSqFt} sq.ft</span>
+                                <span className="font-medium">{room.sizeSqFt} sq.ft</span>
                               </>
                             )}
                           </div>
 
-                          <div className="flex flex-wrap gap-2 pt-1.5">
+                          <div className="flex flex-wrap gap-1.5 pt-0.5">
                             {room.features.map((feat, i) => (
                               <span
                                 key={i}
-                                className="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200/70 text-xs font-medium flex items-center gap-1"
+                                className="px-2 py-0.5 rounded-md bg-emerald-50/80 text-emerald-900 border border-emerald-200/60 text-[11px] font-medium flex items-center gap-1"
                               >
                                 <Check className="w-3 h-3 text-emerald-700 shrink-0" />
                                 <span>{feat}</span>
@@ -755,11 +697,11 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                           </div>
                         </div>
 
-                        <div className="flex md:flex-col items-end justify-between md:justify-center gap-3 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+                        <div className="flex md:flex-col items-end justify-between md:justify-center gap-2 shrink-0 pt-2.5 md:pt-0 border-t md:border-t-0 border-slate-100">
                           <div className="text-left md:text-right">
-                            <span className="text-xs text-slate-400 line-through font-mono">₹{rackPrice}</span>
+                            <span className="text-[11px] text-slate-400 line-through font-mono">₹{rackPrice}</span>
                             <div className="flex items-baseline gap-1">
-                              <span className="font-serif text-2xl sm:text-3xl font-bold text-slate-900">
+                              <span className="font-serif text-xl sm:text-2xl font-bold text-slate-900">
                                 ₹{room.price.toLocaleString("en-IN")}
                               </span>
                               <span className="text-xs text-slate-500 font-sans"> / night</span>
@@ -777,7 +719,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                                 setInquiryModalOpen(true);
                               }
                             }}
-                            className={`px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider transition-all cursor-pointer shadow-xs ${
+                            className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-xs ${
                               isSelected
                                 ? "bg-emerald-800 text-white shadow-sm ring-2 ring-emerald-600/30"
                                 : "bg-emerald-700 hover:bg-emerald-800 text-white active:scale-95"
@@ -944,63 +886,61 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             </section>
           </div>
 
-          {/* Right Sticky Booking Widget (4 cols) - Matched to Reference Image */}
+          {/* Right Sticky Booking Widget (4 cols) - Compact & Fit-in-One-Screen */}
           <div className="lg:col-span-4">
-            <div id="reserve-card" className="sticky top-28 bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
-              <div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest font-sans">
-                    FROM
-                  </span>
-                  <span className="text-3xl sm:text-4xl font-serif text-slate-900 font-normal">
-                    ₹{(selectedRoom ? selectedRoom.price : hotel.pricePerNight).toLocaleString("en-IN")}
-                  </span>
+            <div id="reserve-card" className="sticky top-20 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
+              <div className="border-b border-slate-100 pb-2.5">
+                <div className="flex items-baseline justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">
+                      FROM
+                    </span>
+                    <div className="flex items-baseline gap-1 mt-0.5">
+                      <span className="text-2xl sm:text-3xl font-serif text-slate-900 font-bold">
+                        ₹{(selectedRoom ? selectedRoom.price : hotel.pricePerNight).toLocaleString("en-IN")}
+                      </span>
+                      <span className="text-xs text-slate-500 font-sans">/ night</span>
+                    </div>
+                  </div>
+                  {selectedRoom && (
+                    <span className="text-[11px] font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60 max-w-[140px] truncate">
+                      {selectedRoom.name}
+                    </span>
+                  )}
                 </div>
-                <div className="text-xs text-slate-500 font-sans mt-0.5">
-                  per night
-                </div>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2.5">
-                  Send a request and our Cherrapunji team will confirm availability and the best direct rate, usually within the hour.
-                </p>
               </div>
 
               {/* Direct Booking Form */}
-              <form onSubmit={handleDirectInquirySubmit} className="space-y-3">
-                <div>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Your name"
-                    value={directName}
-                    onChange={(e) => setDirectName(e.target.value)}
-                    className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#df9e38]/30 focus:border-[#df9e38] transition-all"
-                  />
-                </div>
-
-                <div>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="Mobile number"
-                    value={directPhone}
-                    onChange={(e) => setDirectPhone(e.target.value)}
-                    className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#df9e38]/30 focus:border-[#df9e38] transition-all"
-                  />
-                </div>
-
-                <div>
-                  <input
-                    type="email"
-                    placeholder="Email (optional)"
-                    value={directEmail}
-                    onChange={(e) => setDirectEmail(e.target.value)}
-                    className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#df9e38]/30 focus:border-[#df9e38] transition-all"
-                  />
+              <form onSubmit={handleDirectInquirySubmit} className="space-y-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-600 block mb-0.5">Your Name</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Your name"
+                      value={directName}
+                      onChange={(e) => setDirectName(e.target.value)}
+                      className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-[#df9e38] focus:border-[#df9e38] transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-600 block mb-0.5">Mobile Number</label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="Phone number"
+                      value={directPhone}
+                      onChange={(e) => setDirectPhone(e.target.value)}
+                      className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-[#df9e38] focus:border-[#df9e38] transition-all"
+                    />
+                  </div>
                 </div>
 
                 {/* Side-by-side Check-In and Check-Out Dates */}
-                <div className="grid grid-cols-2 gap-2.5">
-                  <div className="relative">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-600 block mb-0.5">Check-In</label>
                     <input
                       type="date"
                       min={todayStr}
@@ -1011,28 +951,29 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                           setCheckOutDate(e.target.value);
                         }
                       }}
-                      className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-xl px-3 py-2.5 text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#df9e38]/30 focus:border-[#df9e38] [color-scheme:light]"
+                      className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-lg px-2 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#df9e38] focus:border-[#df9e38] [color-scheme:light]"
                     />
                   </div>
-                  <div className="relative">
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-600 block mb-0.5">Check-Out</label>
                     <input
                       type="date"
                       min={checkInDate || todayStr}
                       value={checkOutDate}
                       onChange={(e) => setCheckOutDate(e.target.value)}
-                      className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-xl px-3 py-2.5 text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#df9e38]/30 focus:border-[#df9e38] [color-scheme:light]"
+                      className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-lg px-2 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#df9e38] focus:border-[#df9e38] [color-scheme:light]"
                     />
                   </div>
                 </div>
 
-                {/* Multiline Requests */}
+                {/* Compact Requests Input */}
                 <div>
-                  <textarea
-                    rows={3}
-                    placeholder="Guests, dates, any requests"
+                  <input
+                    type="text"
+                    placeholder="Guests count, requests (optional)"
                     value={directRequests}
                     onChange={(e) => setDirectRequests(e.target.value)}
-                    className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#df9e38]/30 focus:border-[#df9e38] transition-all resize-none"
+                    className="w-full bg-[#f3f4f1] border border-[#e2e4df] rounded-lg px-2.5 py-1.5 text-xs text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-[#df9e38] focus:border-[#df9e38] transition-all"
                   />
                 </div>
 
@@ -1040,11 +981,11 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                 <button
                   type="submit"
                   disabled={isDirectSubmitting}
-                  className="w-full py-3.5 px-6 rounded-full bg-[#df9e38] hover:bg-[#cf8e28] text-slate-950 font-bold text-sm sm:text-base tracking-wide shadow-sm hover:shadow transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98"
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#df9e38] hover:bg-[#cf8e28] text-slate-950 font-bold text-xs sm:text-sm tracking-wide shadow-xs hover:shadow transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-98"
                 >
                   {isDirectSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      <span className="w-4 h-4 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-3.5 h-3.5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
                       <span>Sending request...</span>
                     </span>
                   ) : directSubmitted ? (
@@ -1053,44 +994,28 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                       <span>Request Sent • Check WhatsApp</span>
                     </span>
                   ) : (
-                    <span>Request best price</span>
+                    <span>Request Best Price</span>
                   )}
                 </button>
               </form>
 
               {/* Direct WhatsApp & Helpline Links */}
-              <div className="pt-2 text-center space-y-2 border-t border-slate-100">
+              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
                 <a
                   href={whatsappInquiryUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-emerald-800 hover:text-emerald-950 transition-colors"
+                  className="inline-flex items-center gap-1 font-bold text-emerald-800 hover:text-emerald-950 transition-colors"
                 >
-                  <MessageSquare className="w-4 h-4 text-emerald-700" />
-                  <span>Or Chat Direct on WhatsApp</span>
+                  <MessageSquare className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>WhatsApp Desk</span>
                 </a>
-                <p className="text-xs text-slate-500 font-sans">
-                  Concierge Helpline:{" "}
+                <span className="text-[11px] text-slate-500 font-sans">
+                  Helpline:{" "}
                   <a href="tel:+919864879505" className="text-slate-800 font-bold hover:underline">
                     +91 98648 79505
                   </a>
-                </p>
-              </div>
-
-              {/* Verified Trust Badges */}
-              <div className="pt-2 border-t border-slate-100 space-y-2 text-xs text-slate-600 font-sans">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
-                  <span>Physically verified retreat in Sohra</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
-                  <span>Zero booking commission markups</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-emerald-700 shrink-0" />
-                  <span>Direct WhatsApp front-desk confirmation</span>
-                </div>
+                </span>
               </div>
             </div>
           </div>
