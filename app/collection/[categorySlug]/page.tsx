@@ -1,35 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import {
-  Compass,
-  Sparkles,
-  ChevronLeft,
-  ChevronRight,
-  ShieldCheck,
-  CheckCircle2,
-  CalendarCheck,
-  MapPin,
-  Heart,
-  Users,
-  Mountain,
-  Wallet,
-  Trees,
-  ArrowRight,
-  Star,
-  ExternalLink,
-} from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import HotelCard from "@/components/HotelCard";
-import InquiryModal from "@/components/InquiryModal";
 import CollectionClient from "./CollectionClient";
 import { getAllHotels } from "@/lib/firebase";
 import { CHERRAPUNJI_HOTELS } from "@/lib/mockData";
 import {
   CHERRAPUNJI_TRAVEL_CATEGORIES,
   getCategoryBySlug,
-  TravelCategory,
 } from "@/lib/categories";
 import { Hotel } from "@/lib/types";
 

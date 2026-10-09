@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   SlidersHorizontal,

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import {
   Star,
   MapPin,
@@ -26,10 +25,8 @@ import {
   ExternalLink,
   CreditCard,
   Ban,
-  ArrowRight,
   Phone,
   Check,
-  Sparkles,
   BedDouble,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";

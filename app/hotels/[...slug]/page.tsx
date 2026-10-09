@@ -10,6 +10,7 @@ import {
   getStarRatingFromSlug,
   getStarSlugFromRating,
 } from "@/lib/categories";
+import { Hotel } from "@/lib/types";
 
 export const dynamicParams = true;
 
@@ -110,7 +111,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-function createHotelMetadata(hotel: any, canonicalUrl: string): Metadata {
+function createHotelMetadata(hotel: Hotel, canonicalUrl: string): Metadata {
   const hotelCategories = (hotel.categories || [])
     .map((cSlug: string) => CHERRAPUNJI_TRAVEL_CATEGORIES.find((tc) => tc.slug === cSlug)?.name)
     .filter(Boolean);
@@ -315,7 +316,7 @@ export default async function CatchAllHotelsPage({ params }: PageProps) {
 }
 
 function renderHotelDetail(
-  hotel: any,
+  hotel: Hotel,
   baseUrl: string,
   pagePath: string,
   parentCategory?: { slug: string; name: string }

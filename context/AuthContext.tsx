@@ -80,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { success: true };
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : "Failed to sign in";
+        console.warn("Auth fallback sign in:", msg);
         // Fallback for seamless demo
         const profile: UserProfile = {
           uid: "usr-" + Date.now(),

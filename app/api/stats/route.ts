@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { dbGetStats, dbSaveStats, dbGetHotels, dbGetReviews } from "@/lib/db";
+import { dbGetStats, dbSaveStats, dbGetHotels } from "@/lib/db";
 import { SiteStats } from "@/lib/types";
 
 const corsHeaders = {

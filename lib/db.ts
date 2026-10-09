@@ -210,12 +210,12 @@ export async function dbDeleteHotel(hotelId: string): Promise<boolean> {
 
 // ----------------- INQUIRIES / LEADS -----------------
 
-function formatInquiryTimestamp(ts: any): string {
+function formatInquiryTimestamp(ts: unknown): string {
   if (!ts) return "Recently";
   if (typeof ts === "string") return ts;
-  if (typeof ts.toDate === "function") {
+  if (typeof ts === "object" && ts !== null && "toDate" in ts && typeof (ts as { toDate: () => Date }).toDate === "function") {
     try {
-      return ts.toDate().toLocaleString("en-US", {
+      return (ts as { toDate: () => Date }).toDate().toLocaleString("en-US", {
         month: "short",
         day: "numeric",
         year: "numeric",
@@ -227,9 +227,9 @@ function formatInquiryTimestamp(ts: any): string {
       return "Recently";
     }
   }
-  if (ts.seconds) {
+  if (typeof ts === "object" && ts !== null && "seconds" in ts) {
     try {
-      return new Date(ts.seconds * 1000).toLocaleString("en-US", {
+      return new Date(Number((ts as { seconds: number }).seconds) * 1000).toLocaleString("en-US", {
         month: "short",
         day: "numeric",
         year: "numeric",
