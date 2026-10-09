@@ -544,41 +544,43 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
 
       {/* Main Details (8 cols) | Sticky Booking Widget (4 cols) - Uplifted directly under photos */}
       <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-28 lg:pb-16 mt-2 sm:mt-3">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start lg:items-stretch">
           {/* Main Left Details (8 cols) */}
           <div className="lg:col-span-8 space-y-6">
-            {/* In-Page Section Navigation Tab Bar - Enclosed in rectangular bar with slight rounded corners */}
-            <div className="sticky top-[68px] z-20 bg-white/95 backdrop-blur-md rounded-xl border border-slate-200/90 shadow-xs p-1.5 mb-2">
-              <nav className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5 text-xs sm:text-sm font-sans font-bold">
-                {[
-                  { id: "overview", label: "Overview" },
-                  { id: "rooms", label: "Rooms & Tariffs" },
-                  { id: "amenities", label: "Features & Amenities" },
-                  { id: "policies", label: "Good To Know" },
-                  { id: "nearby", label: "Nearby Spots" },
-                  { id: "reviews", label: "Guest Reviews" },
-                ].map((tab) => {
-                  const isActive = activeNavSection === tab.id;
-                  return (
-                    <a
-                      key={tab.id}
-                      href={`#${tab.id}`}
-                      onClick={() => setActiveNavSection(tab.id)}
-                      className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${
-                        isActive
-                          ? "bg-emerald-800 text-white font-bold shadow-xs"
-                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                      }`}
-                    >
-                      {tab.label}
-                    </a>
-                  );
-                })}
-              </nav>
+            {/* In-Page Section Navigation Tab Bar - Roomy, un-squeezed sticky container with top breathing room */}
+            <div className="sticky top-[64px] z-20 pt-3 pb-2.5 bg-[#edf7f2]/95 backdrop-blur-md">
+              <div className="bg-white rounded-xl border border-slate-200/90 shadow-sm p-2 sm:p-2.5">
+                <nav className="flex items-center gap-2 overflow-x-auto scrollbar-none py-0.5 text-xs sm:text-sm font-sans">
+                  {[
+                    { id: "overview", label: "Overview" },
+                    { id: "rooms", label: "Rooms & Tariffs" },
+                    { id: "amenities", label: "Features & Amenities" },
+                    { id: "policies", label: "Good To Know" },
+                    { id: "nearby", label: "Nearby Spots" },
+                    { id: "reviews", label: "Guest Reviews" },
+                  ].map((tab) => {
+                    const isActive = activeNavSection === tab.id;
+                    return (
+                      <a
+                        key={tab.id}
+                        href={`#${tab.id}`}
+                        onClick={() => setActiveNavSection(tab.id)}
+                        className={`px-3.5 sm:px-4 py-2 rounded-lg whitespace-nowrap text-xs sm:text-sm font-semibold transition-all ${
+                          isActive
+                            ? "bg-emerald-800 text-white font-bold shadow-xs"
+                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                        }`}
+                      >
+                        {tab.label}
+                      </a>
+                    );
+                  })}
+                </nav>
+              </div>
             </div>
 
             {/* 1. Overview Section */}
-            <section id="overview" className="bg-white border border-emerald-900/10 rounded-2xl p-6 space-y-4 shadow-sm scroll-mt-28">
+            <section id="overview" className="bg-white border border-emerald-900/10 rounded-2xl p-6 space-y-4 shadow-sm scroll-mt-36">
               <div>
                 <h2 className="text-lg sm:text-xl font-black uppercase tracking-tight text-slate-900">
                   About {hotel.name}
@@ -605,7 +607,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             </section>
 
             {/* 2. Rooms & Direct Tariffs */}
-            <section id="rooms" className="bg-white border border-emerald-900/10 rounded-2xl p-4 sm:p-5 space-y-4 shadow-sm scroll-mt-28">
+            <section id="rooms" className="bg-white border border-emerald-900/10 rounded-2xl p-4 sm:p-5 space-y-4 shadow-sm scroll-mt-36">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                 <div>
                   <h2 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-slate-900">
@@ -693,7 +695,10 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                               setSelectedRoom(room);
                               const el = document.getElementById("reserve-card");
                               if (el && window.innerWidth >= 1024) {
-                                el.scrollIntoView({ behavior: "smooth" });
+                                const rect = el.getBoundingClientRect();
+                                if (rect.top < 60 || rect.bottom > window.innerHeight) {
+                                  el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                                }
                               } else {
                                 setInquiryModalOpen(true);
                               }
@@ -715,7 +720,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             </section>
 
             {/* 3. Features & Amenities - Evocative Luxury Presentation */}
-            <section id="amenities" className="bg-white border border-emerald-900/10 rounded-2xl p-6 sm:p-7 space-y-5 shadow-sm scroll-mt-28">
+            <section id="amenities" className="bg-white border border-emerald-900/10 rounded-2xl p-6 sm:p-7 space-y-5 shadow-sm scroll-mt-36">
               <div>
                 <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
                   Features &amp; Amenities
@@ -756,7 +761,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             </section>
 
             {/* 4. Good to Know Policies - Reassuring Guest Peace of Mind */}
-            <section id="policies" className="bg-white border border-emerald-900/10 rounded-2xl p-6 sm:p-7 space-y-5 shadow-sm scroll-mt-28">
+            <section id="policies" className="bg-white border border-emerald-900/10 rounded-2xl p-6 sm:p-7 space-y-5 shadow-sm scroll-mt-36">
               <div>
                 <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
                   Good to Know • Guest Peace of Mind
@@ -797,7 +802,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             </section>
 
             {/* 5. Proximity to Nearby Spots */}
-            <section id="nearby" className="bg-white border border-emerald-900/10 rounded-2xl p-6 sm:p-7 space-y-5 shadow-sm scroll-mt-28">
+            <section id="nearby" className="bg-white border border-emerald-900/10 rounded-2xl p-6 sm:p-7 space-y-5 shadow-sm scroll-mt-36">
               <div>
                 <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
                   Nearby Sightseeing Spots
@@ -823,7 +828,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             </section>
 
             {/* 6. Reviews Section */}
-            <section id="reviews" className="bg-white border border-emerald-900/10 rounded-2xl p-6 sm:p-7 space-y-5 shadow-sm scroll-mt-28">
+            <section id="reviews" className="bg-white border border-emerald-900/10 rounded-2xl p-6 sm:p-7 space-y-5 shadow-sm scroll-mt-36">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
                   Guest Reviews ({reviews.length > 0 ? reviews.length : hotel.reviewsCount})
@@ -866,8 +871,8 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
           </div>
 
           {/* Right Sticky Booking Widget (4 cols) - Complete Self-Contained Direct Reservation */}
-          <div className="lg:col-span-4">
-            <div id="reserve-card" className="sticky top-20 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
+          <div className="lg:col-span-4 self-stretch">
+            <div id="reserve-card" className="sticky top-[76px] bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
               <div className="border-b border-slate-100 pb-2.5">
                 <div className="flex items-baseline justify-between">
                   <div>
