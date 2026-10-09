@@ -393,7 +393,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                 className="inline-flex items-center gap-1.5 text-emerald-800 hover:text-emerald-950 font-semibold text-xs sm:text-sm bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-md transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                <span>Resort Contact: {hotel.phone || "+91 98648 79505"}</span>
+                <span>Contact: {hotel.phone || "+91 98648 79505"}</span>
               </a>
             </div>
 
@@ -542,43 +542,41 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
         </div>
       </div>
 
-      {/* In-Page Section Navigation Tab Bar (Sticky on Scroll) */}
-      <div className="sticky top-[58px] sm:top-[66px] z-30 bg-[#edf7f2]/95 backdrop-blur-md border-y border-emerald-900/10 shadow-xs py-2 mb-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center gap-2 overflow-x-auto scrollbar-none py-0.5 text-xs sm:text-sm font-sans font-bold text-slate-600">
-            {[
-              { id: "overview", label: "Overview" },
-              { id: "rooms", label: "Rooms & Tariffs" },
-              { id: "amenities", label: "Features & Amenities" },
-              { id: "policies", label: "Good To Know" },
-              { id: "nearby", label: "Nearby Spots" },
-              { id: "reviews", label: "Guest Reviews" },
-            ].map((tab) => {
-              const isActive = activeNavSection === tab.id;
-              return (
-                <a
-                  key={tab.id}
-                  href={`#${tab.id}`}
-                  onClick={() => setActiveNavSection(tab.id)}
-                  className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
-                    isActive
-                      ? "bg-emerald-700 text-white font-bold shadow-xs"
-                      : "hover:text-slate-900 hover:bg-white/70"
-                  }`}
-                >
-                  {tab.label}
-                </a>
-              );
-            })}
-          </nav>
-        </div>
-      </div>
-
-      {/* Main Details (8 cols) | Sticky Booking Widget (4 cols) */}
-      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-28 lg:pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Main Details (8 cols) | Sticky Booking Widget (4 cols) - Uplifted directly under photos */}
+      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-28 lg:pb-16 mt-2 sm:mt-3">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Main Left Details (8 cols) */}
           <div className="lg:col-span-8 space-y-6">
+            {/* In-Page Section Navigation Tab Bar - Enclosed in rectangular bar with slight rounded corners */}
+            <div className="sticky top-[68px] z-20 bg-white/95 backdrop-blur-md rounded-xl border border-slate-200/90 shadow-xs p-1.5 mb-2">
+              <nav className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5 text-xs sm:text-sm font-sans font-bold">
+                {[
+                  { id: "overview", label: "Overview" },
+                  { id: "rooms", label: "Rooms & Tariffs" },
+                  { id: "amenities", label: "Features & Amenities" },
+                  { id: "policies", label: "Good To Know" },
+                  { id: "nearby", label: "Nearby Spots" },
+                  { id: "reviews", label: "Guest Reviews" },
+                ].map((tab) => {
+                  const isActive = activeNavSection === tab.id;
+                  return (
+                    <a
+                      key={tab.id}
+                      href={`#${tab.id}`}
+                      onClick={() => setActiveNavSection(tab.id)}
+                      className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${
+                        isActive
+                          ? "bg-emerald-800 text-white font-bold shadow-xs"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      }`}
+                    >
+                      {tab.label}
+                    </a>
+                  );
+                })}
+              </nav>
+            </div>
+
             {/* 1. Overview Section */}
             <section id="overview" className="bg-white border border-emerald-900/10 rounded-2xl p-6 space-y-4 shadow-sm scroll-mt-28">
               <div>
