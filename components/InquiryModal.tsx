@@ -17,6 +17,7 @@ import {
   BedDouble,
   ShieldCheck,
   ArrowRight,
+  Star,
 } from "lucide-react";
 import { Hotel } from "@/lib/types";
 import { CHERRAPUNJI_HOTELS } from "@/lib/mockData";
@@ -313,52 +314,53 @@ function InquiryModalContent({
           </div>
         </div>
       ) : (
-        /* Form State - Zero Emojis, Clean Light Theme */
-        <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-3.5 max-h-[75vh] overflow-y-auto">
+        /* Form State - Clean, Spacious, Highly Legible */
+        <form onSubmit={handleSubmit} className="p-5 sm:p-7 space-y-4 max-h-[75vh] overflow-y-auto">
           {errorMsg && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-mono">
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-medium">
               {errorMsg}
             </div>
           )}
 
           {/* Property Card / Selector */}
           {preselectedHotel ? (
-            <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-emerald-800 text-white flex items-center justify-center font-black text-xs">
-                  {preselectedHotel.starRating}★
+            <div className="p-4 bg-emerald-50/60 border border-emerald-900/15 rounded-2xl flex items-center justify-between shadow-xs">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white flex flex-col items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  <span className="text-[11px] font-mono leading-none mt-0.5">{preselectedHotel.starRating}★</span>
                 </div>
                 <div>
-                  <h4 className="text-xs sm:text-sm font-black uppercase text-slate-900 tracking-tight">{preselectedHotel.name}</h4>
-                  <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5 font-mono">
-                    <MapPin className="w-3 h-3 text-emerald-700 shrink-0" />
-                    <span>{preselectedHotel.area}</span>
+                  <h4 className="text-sm sm:text-base font-black uppercase text-slate-900 tracking-tight leading-snug">{preselectedHotel.name}</h4>
+                  <p className="text-xs text-slate-600 flex items-center gap-1.5 mt-0.5 font-medium">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                    <span>{preselectedHotel.area}, Sohra</span>
                   </p>
                 </div>
               </div>
-              <div className="text-right pl-2">
-                <span className="text-[10px] text-slate-400 block font-mono uppercase">Direct Tariff</span>
-                <span className="text-xs sm:text-sm font-black text-slate-900 font-mono">₹{preselectedHotel.pricePerNight}</span>
-                <span className="text-[10px] text-slate-500 font-mono"> / night</span>
+              <div className="text-right pl-3 shrink-0">
+                <span className="text-xs text-slate-500 block uppercase font-mono font-medium">Direct Tariff</span>
+                <span className="text-base sm:text-lg font-bold text-slate-900 font-serif">₹{preselectedHotel.pricePerNight}</span>
+                <span className="text-xs text-slate-500 font-sans"> / night</span>
               </div>
             </div>
           ) : (
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 mb-1 flex items-center gap-1.5">
-                <Building className="w-3.5 h-3.5 text-emerald-700" />
-                <span>Select Property</span>
+              <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                <Building className="w-4 h-4 text-emerald-700" />
+                <span>Select Property *</span>
               </label>
               <select
                 value={selectedHotelId}
                 onChange={(e) => handleHotelSelect(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-emerald-700 cursor-pointer"
+                className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all cursor-pointer"
               >
                 <option value="" disabled>
-                  Select Hotel / Homestay
+                  Select Hotel / Resort / Homestay
                 </option>
                 {hotelsList.map((hotel) => (
                   <option key={hotel.id} value={hotel.id}>
-                    {hotel.name} ({hotel.starRating}★) — ₹{hotel.pricePerNight}/night • {hotel.area}
+                    {hotel.name} ({hotel.starRating} Star) — ₹{hotel.pricePerNight}/night • {hotel.area}
                   </option>
                 ))}
               </select>
@@ -367,13 +369,13 @@ function InquiryModalContent({
 
           {/* Room Selection */}
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 mb-1 flex items-center justify-between">
+            <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <BedDouble className="w-3.5 h-3.5 text-emerald-700" />
+                <BedDouble className="w-4 h-4 text-emerald-700" />
                 <span>Room Configuration</span>
               </span>
               {activeRoom && (
-                <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                <span className="text-xs font-bold text-emerald-900 bg-emerald-100/70 px-2.5 py-1 rounded-md border border-emerald-300/60">
                   ₹{activeRoom.price} / night
                 </span>
               )}
@@ -382,7 +384,7 @@ function InquiryModalContent({
               value={selectedRoomName}
               disabled={!activeHotel}
               onChange={(e) => setSelectedRoomName(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-emerald-700 cursor-pointer disabled:opacity-50"
+              className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all cursor-pointer disabled:opacity-50"
             >
               <option value="" disabled>
                 {activeHotel ? "Select Room Type" : "Select a hotel first"}
@@ -396,10 +398,10 @@ function InquiryModalContent({
           </div>
 
           {/* Dates - 2 Columns */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 mb-1 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-emerald-700" />
+              <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                <Calendar className="w-4 h-4 text-emerald-700" />
                 <span>Check-in Date *</span>
               </label>
               <input
@@ -413,13 +415,13 @@ function InquiryModalContent({
                     setCheckOut(e.target.value);
                   }
                 }}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-emerald-700 cursor-pointer"
+                className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all cursor-pointer [color-scheme:light]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 mb-1 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-emerald-700" />
+              <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                <Calendar className="w-4 h-4 text-emerald-700" />
                 <span>Check-out Date *</span>
               </label>
               <input
@@ -428,22 +430,22 @@ function InquiryModalContent({
                 min={checkIn || todayStr}
                 value={checkOut}
                 onChange={(e) => setCheckOut(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-emerald-700 cursor-pointer"
+                className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all cursor-pointer [color-scheme:light]"
               />
             </div>
           </div>
 
           {/* Guests - 2 Columns */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 mb-1 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-emerald-700" />
+              <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-emerald-700" />
                 <span>Adults</span>
               </label>
               <select
                 value={adults}
                 onChange={(e) => setAdults(Number(e.target.value))}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-emerald-700 cursor-pointer"
+                className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all cursor-pointer"
               >
                 {[1, 2, 3, 4, 5, 6, 8, 10].map((num) => (
                   <option key={num} value={num}>
@@ -454,14 +456,14 @@ function InquiryModalContent({
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 mb-1 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-emerald-700" />
+              <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-emerald-700" />
                 <span>Children</span>
               </label>
               <select
                 value={children}
                 onChange={(e) => setChildren(Number(e.target.value))}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-emerald-700 cursor-pointer"
+                className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all cursor-pointer"
               >
                 {[0, 1, 2, 3, 4].map((num) => (
                   <option key={num} value={num}>
@@ -473,10 +475,10 @@ function InquiryModalContent({
           </div>
 
           {/* Guest Contact Details */}
-          <div className="space-y-3 pt-1 border-t border-slate-100">
+          <div className="space-y-3.5 pt-2 border-t border-slate-200">
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 mb-1 flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-emerald-700" />
+              <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                <User className="w-4 h-4 text-emerald-700" />
                 <span>Lead Guest Full Name *</span>
               </label>
               <input
@@ -485,15 +487,15 @@ function InquiryModalContent({
                 placeholder="e.g. Rahul Sharma"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-700"
+                className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 mb-1 flex items-center gap-1.5">
-                  <Phone className="w-3.5 h-3.5 text-emerald-700" />
-                  <span>WhatsApp / Phone *</span>
+                <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                  <Phone className="w-4 h-4 text-emerald-700" />
+                  <span>WhatsApp / Mobile *</span>
                 </label>
                 <input
                   type="tel"
@@ -501,13 +503,13 @@ function InquiryModalContent({
                   placeholder="+91 98765 43210"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-700"
+                  className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 mb-1 flex items-center gap-1.5">
-                  <Mail className="w-3.5 h-3.5 text-emerald-700" />
+                <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                  <Mail className="w-4 h-4 text-emerald-700" />
                   <span>Email (Optional)</span>
                 </label>
                 <input
@@ -515,21 +517,21 @@ function InquiryModalContent({
                   placeholder="rahul@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-700"
+                  className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-600 mb-1">
+              <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5">
                 Special Requests or Notes (Optional)
               </label>
               <textarea
                 rows={2}
-                placeholder="e.g. Balcony room with waterfall view, bonfire request, or airport pickup..."
+                placeholder="e.g. Balcony room with waterfall view, bonfire arrangement, or early check-in..."
                 value={specialRequests}
                 onChange={(e) => setSpecialRequests(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-700 resize-none"
+                className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all resize-none"
               />
             </div>
           </div>
@@ -539,20 +541,20 @@ function InquiryModalContent({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-mono font-extrabold uppercase tracking-wider text-xs sm:text-sm shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
+              className="w-full py-3.5 px-6 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm sm:text-base tracking-wide shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
             >
               {isSubmitting ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Get Direct Property Quote</span>
+                  <span>Request Direct Property Quote</span>
                   <ArrowRight className="w-4 h-4 text-white" />
                 </>
               )}
             </button>
-            <div className="flex items-center justify-center gap-1.5 text-[11px] font-mono text-slate-500 mt-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Direct tariff pledge • Response within 15 minutes</span>
+            <div className="flex items-center justify-center gap-2 text-xs text-slate-600 mt-2.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+              <span>Direct front-desk quote • Response usually within 15 mins</span>
             </div>
           </div>
         </form>
