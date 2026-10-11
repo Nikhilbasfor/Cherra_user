@@ -135,7 +135,7 @@ export default function HeroSection() {
 
   return (
     <div className="relative min-h-[90vh] sm:min-h-[94vh] flex flex-col justify-end pt-24 sm:pt-28 pb-10 sm:pb-14 overflow-hidden bg-[#064e3b]">
-      {/* Background Drone Video with Cinematic Contrast Scrim */}
+      {/* Background Drone Video on Desktop | Serene Misty Photography on Mobile */}
       <div className="absolute inset-0 z-0">
         <video
           ref={videoRef}
@@ -144,14 +144,22 @@ export default function HeroSection() {
           muted
           playsInline
           preload="auto"
-          className="w-full h-full object-cover object-center scale-[1.02] filter brightness-95 transform-gpu"
+          className="hidden md:block w-full h-full object-cover object-center scale-[1.02] filter brightness-95 transform-gpu"
         >
           <source src="/videos/cherrapunji-homestays-drone.webm" type="video/webm" />
           <source src="/videos/cherrapunji-drone.webm" type="video/webm" />
         </video>
 
+        {/* Mobile Serene Luxury Photography Background (No heavy/distracting video on mobile) */}
+        <div
+          className="md:hidden absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=85')`,
+          }}
+        />
+
         {/* Ambient Nature Fade to lower section */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#042f24]/90 via-black/30 to-emerald-950/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#042f24] via-[#042f24]/75 to-emerald-950/40 pointer-events-none" />
       </div>
 
       {/* Main Content Area */}
@@ -162,7 +170,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-950/80 backdrop-blur-md border border-emerald-400/30 text-emerald-200 font-mono text-[11px] tracking-[0.2em] uppercase mb-4"
+            className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1 rounded-full bg-emerald-950/80 backdrop-blur-md border border-emerald-400/30 text-emerald-200 font-sans text-[11px] font-semibold tracking-wide uppercase mb-3 sm:mb-4"
           >
             <Compass className="w-3.5 h-3.5 text-amber-300" />
             <span>Sohra, Meghalaya • Verified Nature Stays</span>
@@ -201,9 +209,9 @@ export default function HeroSection() {
             onSubmit={handleSearch}
             className="p-3 sm:p-4 bg-white rounded-2xl sm:rounded-3xl border border-[#bfe5d4] shadow-lg shadow-emerald-950/10 text-left"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center">
-              {/* Field 1: Region / Property (4 cols) */}
-              <div ref={areaDropdownRef} className="lg:col-span-4 relative">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 sm:gap-3 items-center">
+              {/* Field 1: Region / Property (4 cols desktop, full width mobile) */}
+              <div ref={areaDropdownRef} className="col-span-2 sm:col-span-2 lg:col-span-4 relative">
                 <div
                   onClick={() => setIsAreaDropdownOpen((prev) => !prev)}
                   className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all cursor-pointer"
@@ -228,7 +236,7 @@ export default function HeroSection() {
                   </div>
                 </div>
 
-                {/* Combobox Dropdown */}
+                {/* Combobox Dropdown - Opens downwards on mobile to avoid viewport cutoff */}
                 <AnimatePresence>
                   {isAreaDropdownOpen && (
                     <motion.div
@@ -236,7 +244,7 @@ export default function HeroSection() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-white rounded-2xl border border-[#bfe5d4] shadow-xl shadow-emerald-950/15 p-2.5 space-y-2 max-h-72 overflow-y-auto text-slate-900"
+                      className="absolute top-full lg:top-auto lg:bottom-full left-0 right-0 mt-2 lg:mt-0 lg:mb-2 z-50 bg-white rounded-2xl border border-[#bfe5d4] shadow-2xl shadow-slate-900/20 p-2.5 space-y-2 max-h-72 overflow-y-auto text-slate-900"
                     >
                       {/* Search Filter Input */}
                       <div className="relative">
@@ -334,8 +342,8 @@ export default function HeroSection() {
                 </AnimatePresence>
               </div>
 
-              {/* Field 2: Check-In (2.5 cols) */}
-              <div className="lg:col-span-2">
+              {/* Field 2: Check-In (1 col mobile, 2 cols desktop) */}
+              <div className="col-span-1 sm:col-span-1 lg:col-span-2">
                 <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all">
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-amber-600" />
@@ -351,8 +359,8 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Field 3: Check-Out (2.5 cols) */}
-              <div className="lg:col-span-2">
+              {/* Field 3: Check-Out (1 col mobile, 2 cols desktop) */}
+              <div className="col-span-1 sm:col-span-1 lg:col-span-2">
                 <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all">
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-amber-600" />
@@ -368,8 +376,8 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Field 4: Guests (2 cols) */}
-              <div className="lg:col-span-2">
+              {/* Field 4: Guests (full width mobile, 2 cols desktop) */}
+              <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                 <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all">
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Users className="w-3.5 h-3.5 text-amber-600" />
@@ -388,14 +396,14 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Field 5: Action Button (2 cols) */}
-              <div className="lg:col-span-2 flex items-center h-full">
+              {/* Field 5: Action Button (full width mobile, 2 cols desktop) */}
+              <div className="col-span-2 sm:col-span-2 lg:col-span-2 flex items-center h-full">
                 <button
                   type="submit"
-                  className="w-full h-full py-3.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-black uppercase tracking-wider text-xs transition-all shadow-md shadow-emerald-900/10 flex items-center justify-center gap-2 cursor-pointer active:scale-95 border-0"
+                  className="w-full h-full py-3.5 px-4 rounded-xl bg-[#df9e38] hover:bg-[#cf8e28] text-slate-950 font-bold uppercase tracking-wider text-xs transition-all shadow-md shadow-amber-950/15 flex items-center justify-center gap-2 cursor-pointer active:scale-95 border-0"
                 >
-                  <span>Explore</span>
-                  <ArrowRight className="w-4 h-4 text-white" />
+                  <span>Explore Stays</span>
+                  <ArrowRight className="w-4 h-4 text-slate-950" />
                 </button>
               </div>
             </div>

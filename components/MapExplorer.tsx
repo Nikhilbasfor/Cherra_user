@@ -80,8 +80,8 @@ export default function MapExplorer({
           <h2 className="text-2xl lg:text-3xl font-black uppercase tracking-tight text-slate-900">
             Explore Hotels &amp; Scenic Spots on Map
           </h2>
-          <p className="text-xs font-mono text-slate-500 mt-1">
-            Interactive coordinates showing real-time tariffs and proximity to waterfalls and root bridges.
+          <p className="text-xs font-sans text-slate-500 mt-1">
+            Explore resort locations, real-time direct tariffs, and proximity to waterfalls and root bridges.
           </p>
         </div>
 
@@ -148,7 +148,7 @@ export default function MapExplorer({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Daylight Map Container (8 cols) */}
         <div className="lg:col-span-8 relative aspect-[16/10] sm:aspect-[16/9] rounded-2xl overflow-hidden border border-emerald-900/10 bg-slate-100 shadow-inner">
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 pointer-events-none md:pointer-events-auto">
             <iframe
               title="Cherrapunji Natural Map"
               width="100%"
@@ -160,9 +160,9 @@ export default function MapExplorer({
           </div>
 
           {/* Map Overlay Badge */}
-          <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-black/5 flex items-center gap-2 text-xs font-mono text-slate-800 shadow-sm">
+          <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-black/5 flex items-center gap-2 text-xs font-sans font-medium text-slate-800 shadow-sm">
             <Navigation className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Sohra Plateau • 1,484m Elevation</span>
+            <span>Sohra Plateau • Scenic Highlights</span>
           </div>
 
           {/* Interactive Pins */}

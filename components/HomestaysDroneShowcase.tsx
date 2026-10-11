@@ -142,9 +142,9 @@ export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDrone
             </div>
 
             {/* Card Body */}
-            <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-1.5 text-xs text-slate-500 font-mono">
+            <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 sm:space-y-4">
+              <div className="space-y-1.5 sm:space-y-2">
+                <div className="flex items-center gap-1.5 text-xs text-slate-500 font-sans">
                   <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
                   <span>{spot.area}, Sohra</span>
                 </div>
@@ -160,24 +160,24 @@ export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDrone
                 </p>
               </div>
 
-              {/* Price & Lush Green Action Button */}
+              {/* Price & Action Button */}
               <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase tracking-widest font-mono block">
+                  <span className="text-[10px] text-slate-400 uppercase tracking-widest font-sans block">
                     Verified Tariff
                   </span>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-lg font-black text-slate-900 font-mono">
-                      ₹{spot.pricePerNight.toLocaleString()}
+                    <span className="text-lg font-black text-slate-900 font-serif">
+                      ₹{spot.pricePerNight.toLocaleString("en-IN")}
                     </span>
-                    <span className="text-[11px] text-slate-500 font-mono">/ night</span>
+                    <span className="text-[11px] text-slate-500 font-sans">/ night</span>
                   </div>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => onOpenInquiry && onOpenInquiry(spot.id)}
-                  className="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-mono font-extrabold uppercase tracking-wider text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-sans font-bold uppercase tracking-wider text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
                 >
                   <span>Reserve</span>
                   <ArrowRight className="w-3.5 h-3.5 text-white" />

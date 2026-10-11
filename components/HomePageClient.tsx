@@ -240,41 +240,41 @@ export default function HomePageClient({
       {/* Guest Satisfaction & Inventory Band - Rich Green, Golden Titles, No 01// */}
       <section className="relative z-10 bg-[#064e3b] text-white py-6 sm:py-8 border-y border-emerald-800 shadow-inner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 divide-y md:divide-y-0 md:divide-x divide-emerald-700/60">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 md:gap-8 md:divide-x divide-emerald-700/60">
             {/* Metric 1 */}
-            <div className="pt-4 md:pt-0 md:px-4 text-left">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
-                Verified Inventory
+            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-emerald-900/30 sm:bg-transparent border border-emerald-700/30 sm:border-0">
+              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
+                Verified Stays
               </span>
-              <p className="text-2xl sm:text-3xl font-black text-white tracking-tight">{currentInventory}</p>
-              <p className="text-xs text-emerald-100/80 mt-1">Curated Sanctuaries in Sohra</p>
+              <p className="text-xl sm:text-3xl font-black text-white tracking-tight">{currentInventory}</p>
+              <p className="text-[11px] sm:text-xs text-emerald-100/80 mt-0.5 sm:mt-1">Curated in Sohra</p>
             </div>
 
             {/* Metric 2 */}
-            <div className="pt-4 md:pt-0 md:px-4 text-left">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
-                Guest Satisfaction
+            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-emerald-900/30 sm:bg-transparent border border-emerald-700/30 sm:border-0">
+              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
+                Guest Score
               </span>
-              <p className="text-2xl sm:text-3xl font-black text-white tracking-tight">{stats.satisfactionRate}</p>
-              <p className="text-xs text-emerald-100/80 mt-1">Superb Guest Review Score</p>
+              <p className="text-xl sm:text-3xl font-black text-white tracking-tight">{stats.satisfactionRate}</p>
+              <p className="text-[11px] sm:text-xs text-emerald-100/80 mt-0.5 sm:mt-1">Superb Reviews</p>
             </div>
 
             {/* Metric 3 */}
-            <div className="pt-4 md:pt-0 md:px-4 text-left">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
-                Rate Integrity
+            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-emerald-900/30 sm:bg-transparent border border-emerald-700/30 sm:border-0">
+              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
+                Tariff Pledge
               </span>
-              <p className="text-2xl sm:text-3xl font-black text-white tracking-tight">{stats.tariffPledge}</p>
-              <p className="text-xs text-emerald-100/80 mt-1">Zero Commission Markups</p>
+              <p className="text-xl sm:text-3xl font-black text-white tracking-tight">{stats.tariffPledge}</p>
+              <p className="text-[11px] sm:text-xs text-emerald-100/80 mt-0.5 sm:mt-1">Zero Commission</p>
             </div>
 
             {/* Metric 4 */}
-            <div className="pt-4 md:pt-0 md:px-4 text-left">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
-                Concierge Speed
+            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-emerald-900/30 sm:bg-transparent border border-emerald-700/30 sm:border-0">
+              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
+                Concierge Desk
               </span>
-              <p className="text-2xl sm:text-3xl font-black text-white tracking-tight">{stats.avgResponseTime}</p>
-              <p className="text-xs text-emerald-100/80 mt-1">Average WhatsApp Confirmation</p>
+              <p className="text-xl sm:text-3xl font-black text-white tracking-tight">{stats.avgResponseTime}</p>
+              <p className="text-[11px] sm:text-xs text-emerald-100/80 mt-0.5 sm:mt-1">Fast WhatsApp Reply</p>
             </div>
           </div>
         </div>
@@ -290,7 +290,7 @@ export default function HomePageClient({
 
       {/* Curated Sanctuaries Section: "The Portfolio" */}
       <section id="hotels" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pt-14 sm:pb-20">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8 sm:mb-10">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-800/10 text-emerald-800 border border-emerald-800/20 text-xs font-mono font-bold uppercase tracking-wider mb-2">
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
@@ -304,24 +304,26 @@ export default function HomePageClient({
             </p>
           </div>
 
-          {/* Elongated Non-Sliding Rectangular Tabs with Slight Curve */}
-          <div className="flex flex-wrap gap-2 items-center">
-            {HOME_COLLECTION_TABS.map((tab) => {
-              const isActive = activeCollectionTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveCollectionTab(tab.id)}
-                  className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
-                    isActive
-                      ? "bg-emerald-700 text-white shadow-md"
-                      : "bg-white/80 hover:bg-white text-slate-700 border border-emerald-900/10 hover:border-emerald-700/30"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
+          {/* Smooth Horizontal Touch-Scroll Tabs on Mobile, Flex on Desktop */}
+          <div className="w-full md:w-auto overflow-x-auto scrollbar-none py-1 -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="flex items-center gap-2 whitespace-nowrap">
+              {HOME_COLLECTION_TABS.map((tab) => {
+                const isActive = activeCollectionTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveCollectionTab(tab.id)}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shrink-0 cursor-pointer ${
+                      isActive
+                        ? "bg-emerald-800 text-white shadow-sm"
+                        : "bg-white text-slate-700 border border-emerald-900/10 hover:border-emerald-700/30 shadow-2xs"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -371,15 +373,15 @@ export default function HomePageClient({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8">
           {/* Spotlight 1 */}
-          <div className="p-7 rounded-2xl bg-white border border-emerald-900/10 hover:border-emerald-700/30 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="p-5 sm:p-7 rounded-2xl bg-white border border-emerald-900/10 hover:border-emerald-700/30 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mb-5">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mb-4 sm:mb-5">
                 <CloudRain className="w-5 h-5" />
               </div>
               <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 block mb-1">Highlight 01</span>
-              <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight mb-2">The Abode of Clouds</h3>
+              <h3 className="text-base sm:text-lg font-black text-slate-900 uppercase tracking-tight mb-2">The Abode of Clouds</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Watch clouds rise from the plains directly over your private balcony. Cherrapunji is home to hundreds of roaring seasonal and perennial cascades.
               </p>
@@ -387,13 +389,13 @@ export default function HomePageClient({
           </div>
 
           {/* Spotlight 2 */}
-          <div className="p-7 rounded-2xl bg-white border border-emerald-900/10 hover:border-emerald-700/30 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="p-5 sm:p-7 rounded-2xl bg-white border border-emerald-900/10 hover:border-emerald-700/30 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mb-5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mb-4 sm:mb-5">
                 <Trees className="w-5 h-5" />
               </div>
               <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 block mb-1">Highlight 02</span>
-              <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight mb-2">Living Root Bridges</h3>
+              <h3 className="text-base sm:text-lg font-black text-slate-900 uppercase tracking-tight mb-2">Living Root Bridges</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Hike into the deep canyon of Nongriat to cross double-decker living root bridges, bio-engineered across generations by indigenous Khasi master arborists.
               </p>
@@ -401,13 +403,13 @@ export default function HomePageClient({
           </div>
 
           {/* Spotlight 3 */}
-          <div className="p-7 rounded-2xl bg-white border border-emerald-900/10 hover:border-emerald-700/30 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="p-5 sm:p-7 rounded-2xl bg-white border border-emerald-900/10 hover:border-emerald-700/30 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mb-5">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mb-4 sm:mb-5">
                 <Footprints className="w-5 h-5" />
               </div>
               <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 block mb-1">Highlight 03</span>
-              <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight mb-2">Subterranean Canyons</h3>
+              <h3 className="text-base sm:text-lg font-black text-slate-900 uppercase tracking-tight mb-2">Subterranean Canyons</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Traverse prehistoric limestone cave chambers in Mawsmai and Arwah embedded with marine fossils, and gaze down the sheer 1,115-foot Nohkalikai drop.
               </p>
@@ -417,8 +419,8 @@ export default function HomePageClient({
       </section>
 
       {/* FAQ Accordion */}
-      <section className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 border-t border-emerald-900/10">
-        <div className="text-left mb-8">
+      <section className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20 border-t border-emerald-900/10">
+        <div className="text-left mb-6 sm:mb-8">
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-600 block mb-1">
             Travel Essentials
           </span>
@@ -440,7 +442,7 @@ export default function HomePageClient({
               >
                 <button
                   onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
-                  className="w-full px-6 py-4 sm:py-5 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-slate-900 hover:text-emerald-800 transition-colors cursor-pointer"
+                  className="w-full px-5 py-3.5 sm:px-6 sm:py-5 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-slate-900 hover:text-emerald-800 transition-colors cursor-pointer"
                 >
                   <span className="pr-4">{faq.q}</span>
                   <ChevronDown
@@ -458,7 +460,7 @@ export default function HomePageClient({
                       transition={{ type: "spring", stiffness: 350, damping: 28 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-5 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                      <div className="px-5 pb-4 pt-1 sm:px-6 sm:pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100">
                         {faq.a}
                       </div>
                     </motion.div>
@@ -471,22 +473,22 @@ export default function HomePageClient({
       </section>
 
       {/* Concierge VIP Direct Booking Banner */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="rounded-3xl bg-[#064e3b] border border-emerald-800 p-8 sm:p-14 text-white shadow-xl relative overflow-hidden">
-          <div className="relative z-10 max-w-2xl space-y-4 text-left">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <div className="rounded-3xl bg-[#064e3b] border border-emerald-800 p-6 sm:p-14 text-white shadow-xl relative overflow-hidden">
+          <div className="relative z-10 max-w-2xl space-y-3 sm:space-y-4 text-left">
             <span className="font-mono text-xs font-bold text-amber-300 uppercase tracking-wider bg-white/10 px-3 py-1 rounded-full border border-white/15 inline-block">
               Dedicated Sohra Concierge
             </span>
-            <h3 className="text-2xl sm:text-4xl font-black uppercase tracking-tight leading-snug">
+            <h3 className="text-xl sm:text-4xl font-black uppercase tracking-tight leading-snug">
               Planning a Journey to Cherrapunji? Let Our Local Specialists Assist.
             </h3>
             <p className="text-emerald-100/80 text-xs sm:text-sm leading-relaxed">
               Submit your dates and requirements. We verify real-time room availability across premier Sohra retreats and deliver guaranteed direct front-desk tariffs with zero booking markups.
             </p>
-            <div className="pt-3 flex flex-wrap gap-3">
+            <div className="pt-2 sm:pt-3 flex flex-col sm:flex-row gap-2.5 sm:gap-3">
               <button
                 onClick={() => handleOpenInquiry()}
-                className="px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold uppercase tracking-wider text-xs shadow-lg transition-all cursor-pointer"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold uppercase tracking-wider text-xs shadow-lg transition-all cursor-pointer text-center"
               >
                 Request Custom Itinerary
               </button>
@@ -494,7 +496,7 @@ export default function HomePageClient({
                 href="https://wa.me/919864879505?text=Hi%20CherraStays,%20I%20need%20help%20booking%20a%20hotel%20in%20Cherrapunji"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 transition-all flex items-center gap-2"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 transition-all flex items-center justify-center gap-2"
               >
                 <PhoneCall className="w-4 h-4 text-amber-300" />
                 <span className="font-mono">WhatsApp: +91 98648 79505</span>

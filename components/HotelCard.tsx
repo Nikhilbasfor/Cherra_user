@@ -207,9 +207,9 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
               </span>
             </div>
 
-            {/* Resort Number below Resort Name & Area with generous, uncrowded spacing */}
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 mb-2">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200/80 font-mono font-medium">
+            {/* Resort Number & Area: Clean single line on mobile, full badges on desktop */}
+            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 mb-1.5 sm:mb-2">
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200/80 font-mono font-medium">
                 <Phone className="w-3 h-3 text-emerald-700 shrink-0" />
                 <span>{hotel.phone || "+91 98648 79505"}</span>
               </span>
@@ -219,13 +219,13 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
               </span>
             </div>
 
-            {/* Tagline */}
-            <p className="text-xs sm:text-sm text-slate-600 mt-1 line-clamp-2 leading-relaxed">
+            {/* Tagline - Visible on tablet/desktop, streamlined on mobile */}
+            <p className="hidden sm:block text-xs sm:text-sm text-slate-600 mt-1 line-clamp-2 leading-relaxed">
               {hotel.tagline}
             </p>
 
-            {/* Amenities Pills */}
-            <div className="flex flex-wrap gap-1.5 mt-3">
+            {/* Amenities Pills - Hidden on phone view to prevent bloated cards, visible on desktop */}
+            <div className="hidden sm:flex flex-wrap gap-1.5 mt-3">
               {hotel.amenities.slice(0, 3).map((amenity, i) => (
                 <span
                   key={i}
