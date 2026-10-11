@@ -69,7 +69,7 @@ export default function MapExplorer({
   }, [attractions, mapSearchQuery]);
 
   return (
-    <div className="w-full bg-white rounded-3xl border border-emerald-900/10 p-5 sm:p-7 lg:p-8 shadow-sm text-slate-900">
+    <div className="w-full bg-white rounded-3xl border border-stone-200/90 p-5 sm:p-7 lg:p-8 shadow-xs text-slate-900">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
         <div>
@@ -273,7 +273,8 @@ export default function MapExplorer({
                   <div className="pt-1 flex gap-2">
                     <Link
                       href={`/hotels/${h.slug}`}
-                      className="flex-1 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs font-mono font-bold uppercase tracking-wider text-center transition-colors flex items-center justify-center gap-1.5"
+                      prefetch={true}
+                      className="flex-1 py-2.5 rounded-xl bg-white hover:bg-stone-50 text-slate-800 border border-stone-200 text-xs font-mono font-bold uppercase tracking-wider text-center transition-colors flex items-center justify-center gap-1.5"
                     >
                       <span>Rooms</span>
                       <ExternalLink className="w-3 h-3 text-slate-400" />
@@ -281,7 +282,7 @@ export default function MapExplorer({
                     <button
                       type="button"
                       onClick={() => onEnquire?.(h)}
-                      className="flex-1 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-mono font-extrabold uppercase tracking-wider shadow-md transition-all cursor-pointer"
+                      className="flex-1 py-2.5 rounded-xl bg-[#064e3b] hover:bg-[#043d2e] text-white text-xs font-mono font-extrabold uppercase tracking-wider shadow-md transition-all cursor-pointer"
                     >
                       Book Now
                     </button>
@@ -294,7 +295,7 @@ export default function MapExplorer({
               const a = activeItem.data as Attraction;
               return (
                 <div className="space-y-3.5">
-                  <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 border border-emerald-900/10">
+                  <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 border border-stone-200/90">
                     <Image src={a.image} alt={a.name} fill className="object-cover" />
                     <div className="absolute top-2.5 left-2.5 bg-slate-900/80 backdrop-blur-md text-amber-400 text-xs font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-lg">
                       {a.category}
@@ -309,7 +310,7 @@ export default function MapExplorer({
                     <p className="text-xs text-slate-600 mt-1 leading-relaxed line-clamp-3">{a.description}</p>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-white border border-emerald-900/10 text-xs font-mono space-y-1.5">
+                  <div className="p-3 rounded-xl bg-white border border-stone-200/90 text-xs font-mono space-y-1.5">
                     <p className="flex items-center justify-between text-slate-600">
                       <span className="text-slate-500">Distance:</span>
                       <span className="font-bold text-slate-900">{a.distanceFromSohra}</span>
@@ -322,7 +323,8 @@ export default function MapExplorer({
 
                   <Link
                     href={`/hotels?near=${a.id}`}
-                    className="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-mono font-extrabold uppercase tracking-wider text-xs text-center block transition-all shadow-md"
+                    prefetch={true}
+                    className="w-full py-2.5 rounded-xl bg-[#064e3b] hover:bg-[#043d2e] text-white font-mono font-extrabold uppercase tracking-wider text-xs text-center block transition-all shadow-md"
                   >
                     Find Stays Near {a.name}
                   </Link>

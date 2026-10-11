@@ -413,11 +413,11 @@ export default function HotelsCatalogClient({
   const currentLinkPrefix = activeStarSlug ? `/hotels/${activeStarSlug}` : "/hotels";
 
   return (
-    <div className="min-h-screen bg-[#edf7f2] text-slate-900 selection:bg-amber-400 selection:text-black">
+    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black">
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Header - Uplifted with reduced padding and compact title */}
-      <div className="pt-20 sm:pt-24 pb-3 sm:pb-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-emerald-900/10">
+      <div className="pt-20 sm:pt-24 pb-3 sm:pb-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-stone-200/90">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-slate-900">
             {pageTitle}

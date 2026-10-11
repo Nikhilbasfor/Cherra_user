@@ -71,11 +71,11 @@ export default function CollectionClient({
   }, [allCategories, category.slug]);
 
   return (
-    <div className="min-h-screen bg-[#edf7f2] text-slate-900 selection:bg-amber-400 selection:text-black relative">
+    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black relative">
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Breadcrumb Navigation */}
-      <div className="pt-20 sm:pt-24 pb-3 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-emerald-900/10">
+      <div className="pt-20 sm:pt-24 pb-3 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-stone-200/90">
         <div className="flex items-center gap-2 text-xs font-mono text-slate-500 overflow-hidden uppercase tracking-wider">
           <Link href="/" className="hover:text-slate-900 transition-colors shrink-0">
             Home

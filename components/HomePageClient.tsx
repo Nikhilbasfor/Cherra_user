@@ -231,7 +231,7 @@ export default function HomePageClient({
       : defaultFaqs;
 
   return (
-    <div className="min-h-screen bg-[#edf7f2] text-slate-900 selection:bg-amber-400 selection:text-black relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black relative overflow-x-hidden">
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Cinematic Hero */}
@@ -292,7 +292,7 @@ export default function HomePageClient({
       <section id="hotels" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pt-14 sm:pb-20">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8 sm:mb-10">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-800/10 text-emerald-800 border border-emerald-800/20 text-xs font-mono font-bold uppercase tracking-wider mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100 text-stone-800 border border-stone-200/90 text-xs font-mono font-bold uppercase tracking-wider mb-2">
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               <span>Direct Booking Collection</span>
             </div>
@@ -315,8 +315,8 @@ export default function HomePageClient({
                     onClick={() => setActiveCollectionTab(tab.id)}
                     className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shrink-0 cursor-pointer ${
                       isActive
-                        ? "bg-emerald-800 text-white shadow-sm"
-                        : "bg-white text-slate-700 border border-emerald-900/10 hover:border-emerald-700/30 shadow-2xs"
+                        ? "bg-[#064e3b] text-white shadow-xs"
+                        : "bg-white text-stone-700 border border-stone-200 hover:border-stone-400/80 shadow-2xs"
                     }`}
                   >
                     {tab.label}
@@ -342,7 +342,7 @@ export default function HomePageClient({
         <div className="mt-12 text-center">
           <Link
             href="/hotels"
-            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md active:scale-98"
+            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl bg-[#064e3b] hover:bg-[#043d2e] text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md active:scale-98"
           >
             <span>Explore All Stays &amp; Interactive Map</span>
             <ArrowRight className="w-4 h-4" />
@@ -360,7 +360,7 @@ export default function HomePageClient({
       </section>
 
       {/* Destination Spotlight: Architectural Highlights */}
-      <section id="about-cherrapunji" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 border-t border-emerald-900/10">
+      <section id="about-cherrapunji" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 border-t border-stone-200/90">
         <div className="text-left max-w-3xl mb-10">
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-600 block mb-1">
             Natural Geography
@@ -375,7 +375,7 @@ export default function HomePageClient({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8">
           {/* Spotlight 1 */}
-          <div className="p-5 sm:p-7 rounded-2xl bg-white border border-emerald-900/10 hover:border-emerald-700/30 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="p-5 sm:p-7 rounded-2xl bg-white border border-stone-200/90 hover:border-stone-300 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
             <div>
               <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mb-4 sm:mb-5">
                 <CloudRain className="w-5 h-5" />
@@ -389,7 +389,7 @@ export default function HomePageClient({
           </div>
 
           {/* Spotlight 2 */}
-          <div className="p-5 sm:p-7 rounded-2xl bg-white border border-emerald-900/10 hover:border-emerald-700/30 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="p-5 sm:p-7 rounded-2xl bg-white border border-stone-200/90 hover:border-stone-300 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
             <div>
               <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mb-4 sm:mb-5">
                 <Trees className="w-5 h-5" />
@@ -403,7 +403,7 @@ export default function HomePageClient({
           </div>
 
           {/* Spotlight 3 */}
-          <div className="p-5 sm:p-7 rounded-2xl bg-white border border-emerald-900/10 hover:border-emerald-700/30 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="p-5 sm:p-7 rounded-2xl bg-white border border-stone-200/90 hover:border-stone-300 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
             <div>
               <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mb-4 sm:mb-5">
                 <Footprints className="w-5 h-5" />
@@ -419,7 +419,7 @@ export default function HomePageClient({
       </section>
 
       {/* FAQ Accordion */}
-      <section className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20 border-t border-emerald-900/10">
+      <section className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20 border-t border-stone-200/90">
         <div className="text-left mb-6 sm:mb-8">
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-amber-600 block mb-1">
             Travel Essentials
@@ -438,7 +438,7 @@ export default function HomePageClient({
             return (
               <div
                 key={idx}
-                className="rounded-xl bg-white border border-emerald-900/10 shadow-xs overflow-hidden transition-colors"
+                className="rounded-xl bg-white border border-stone-200/90 shadow-xs overflow-hidden transition-colors"
               >
                 <button
                   onClick={() => setOpenFaqIndex(isOpen ? null : idx)}

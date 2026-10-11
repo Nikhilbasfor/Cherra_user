@@ -26,11 +26,11 @@ export default function GuidePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#edf7f2] text-slate-900 selection:bg-amber-400 selection:text-black relative">
+    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black relative">
       <Navbar onOpenInquiry={() => setInquiryModalOpen(true)} />
 
       {/* Header - Compact top spacing so sightseeing cards appear without cut on first sight */}
-      <div className="pt-16 sm:pt-18 pb-2 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-emerald-900/10">
+      <div className="pt-16 sm:pt-18 pb-2 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-stone-200/90">
         <div>
           <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
             Sightseeing in <span className="text-amber-600">Cherrapunji</span>

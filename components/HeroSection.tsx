@@ -207,14 +207,14 @@ export default function HeroSection() {
         >
           <form
             onSubmit={handleSearch}
-            className="p-3 sm:p-4 bg-white rounded-2xl sm:rounded-3xl border border-[#bfe5d4] shadow-lg shadow-emerald-950/10 text-left"
+            className="p-3 sm:p-4 bg-white rounded-2xl sm:rounded-3xl border border-stone-200/90 shadow-xl shadow-stone-900/5 text-left"
           >
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 sm:gap-3 items-center">
               {/* Field 1: Region / Property (4 cols desktop, full width mobile) */}
               <div ref={areaDropdownRef} className="col-span-2 sm:col-span-2 lg:col-span-4 relative">
                 <div
                   onClick={() => setIsAreaDropdownOpen((prev) => !prev)}
-                  className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all cursor-pointer"
+                  className="p-3 rounded-xl bg-stone-50 hover:bg-stone-100/80 border border-stone-200/90 hover:border-stone-300 transition-all cursor-pointer"
                 >
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center justify-between cursor-pointer">
                     <span className="flex items-center gap-1.5">
@@ -244,7 +244,7 @@ export default function HeroSection() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute top-full lg:top-auto lg:bottom-full left-0 right-0 mt-2 lg:mt-0 lg:mb-2 z-50 bg-white rounded-2xl border border-[#bfe5d4] shadow-2xl shadow-slate-900/20 p-2.5 space-y-2 max-h-72 overflow-y-auto text-slate-900"
+                      className="absolute top-full lg:top-auto lg:bottom-full left-0 right-0 mt-2 lg:mt-0 lg:mb-2 z-50 bg-white rounded-2xl border border-stone-200 shadow-2xl shadow-slate-900/20 p-2.5 space-y-2 max-h-72 overflow-y-auto text-slate-900"
                     >
                       {/* Search Filter Input */}
                       <div className="relative">
@@ -255,7 +255,7 @@ export default function HeroSection() {
                           value={areaSearchQuery}
                           onChange={(e) => setAreaSearchQuery(e.target.value)}
                           onClick={(e) => e.stopPropagation()}
-                          className="w-full bg-[#edf7f2] border border-[#bfe5d4] rounded-xl pl-8 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-700"
+                          className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-700"
                           autoFocus
                         />
                       </div>
@@ -267,7 +267,7 @@ export default function HeroSection() {
                         className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left cursor-pointer ${
                           selectedArea === "All Areas" && !selectedHotelSlug
                             ? "bg-emerald-700 text-white font-bold"
-                            : "hover:bg-[#edf7f2] text-slate-700"
+                            : "hover:bg-stone-50 text-slate-700"
                         }`}
                       >
                         <span className="flex items-center gap-2">
@@ -294,7 +294,7 @@ export default function HeroSection() {
                                 className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors text-left cursor-pointer ${
                                   selectedArea === area && !selectedHotelSlug
                                     ? "bg-emerald-700 text-white font-bold"
-                                    : "hover:bg-[#edf7f2] text-slate-700"
+                                    : "hover:bg-stone-50 text-slate-700"
                                 }`}
                               >
                                 <span className="truncate">{area}</span>
@@ -322,7 +322,7 @@ export default function HeroSection() {
                                 className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors text-left cursor-pointer ${
                                   selectedHotelSlug === h.slug
                                     ? "bg-emerald-700 text-white font-bold"
-                                    : "hover:bg-[#edf7f2] text-slate-700"
+                                    : "hover:bg-stone-50 text-slate-700"
                                 }`}
                               >
                                 <div className="truncate">
@@ -344,7 +344,7 @@ export default function HeroSection() {
 
               {/* Field 2: Check-In (1 col mobile, 2 cols desktop) */}
               <div className="col-span-1 sm:col-span-1 lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all">
+                <div className="p-3 rounded-xl bg-stone-50 hover:bg-stone-100/80 border border-stone-200/90 hover:border-stone-300 transition-all">
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-amber-600" />
                     Check-in
@@ -361,7 +361,7 @@ export default function HeroSection() {
 
               {/* Field 3: Check-Out (1 col mobile, 2 cols desktop) */}
               <div className="col-span-1 sm:col-span-1 lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all">
+                <div className="p-3 rounded-xl bg-stone-50 hover:bg-stone-100/80 border border-stone-200/90 hover:border-stone-300 transition-all">
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-amber-600" />
                     Check-out
@@ -378,7 +378,7 @@ export default function HeroSection() {
 
               {/* Field 4: Guests (full width mobile, 2 cols desktop) */}
               <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#edf7f2] hover:bg-[#e4f4ec] border border-[#bfe5d4] hover:border-[#8fd4b5] transition-all">
+                <div className="p-3 rounded-xl bg-stone-50 hover:bg-stone-100/80 border border-stone-200/90 hover:border-stone-300 transition-all">
                   <label className="block text-[10px] font-mono font-bold text-amber-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Users className="w-3.5 h-3.5 text-amber-600" />
                     Guests

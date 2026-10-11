@@ -33,8 +33,17 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
     ? `${linkPrefix.replace(/\/$/, "")}/${hotel.slug}`
     : `/hotels/${hotel.slug}`;
 
+  // Eagerly prefetch route bundle & RSC payload so mobile taps load instantly with 0ms delay
+  React.useEffect(() => {
+    router.prefetch(targetUrl);
+  }, [router, targetUrl]);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
+    // Only compute 3D tilt on desktop with fine mouse hover; skip on touch/mobile to eliminate frame drops & latency
+    if (typeof window !== "undefined" && window.matchMedia && !window.matchMedia("(hover: hover)").matches) {
+      return;
+    }
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -88,8 +97,16 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
           transformStyle: "preserve-3d",
         }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className="group relative bg-white rounded-2xl overflow-hidden border border-emerald-900/10 hover:border-emerald-700/30 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full cursor-pointer select-none"
+        className="group relative bg-white rounded-2xl overflow-hidden border border-stone-200/90 hover:border-stone-400/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col h-full cursor-pointer select-none"
       >
+        {/* Instant Prefetched Anchor for zero-lag mobile navigation */}
+        <Link
+          href={targetUrl}
+          prefetch={true}
+          className="absolute inset-0 z-0"
+          aria-label={`View details for ${hotel.name}`}
+          tabIndex={-1}
+        />
         {/* Photo Container */}
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
           <Image
@@ -169,11 +186,11 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
         </div>
 
         {/* Card Body */}
-        <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-4">
+        <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-4 relative z-10">
           <div>
             {/* Proximity Callout if filtered near a landmark */}
             {proximity && (
-              <div className="mb-2.5 p-2 rounded-xl bg-emerald-50 border border-emerald-100 text-xs font-mono text-emerald-950 flex items-center justify-between">
+              <div className="mb-2.5 p-2 rounded-xl bg-stone-50 border border-stone-200/90 text-xs font-mono text-stone-900 flex items-center justify-between">
                 <span className="flex items-center gap-1.5 truncate">
                   <Navigation className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
                   <span className="truncate">{proximity.distanceKm} km from {proximity.landmarkName}</span>
@@ -185,15 +202,9 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
             )}
 
             {/* Hotel Name */}
-            <Link
-              href={targetUrl}
-              onClick={(e) => e.stopPropagation()}
-              className="block group-hover:text-emerald-800 transition-colors"
-            >
-              <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-snug line-clamp-1 transition-colors">
-                {hotel.name}
-              </h3>
-            </Link>
+            <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-snug line-clamp-1 group-hover:text-emerald-800 transition-colors">
+              {hotel.name}
+            </h3>
 
             {/* Star Icons as per 3, 4, 5 star hotel (Golden SVGs, no dull emoji) */}
             <div className="flex items-center gap-2 mt-1.5 mb-1.5">
@@ -209,7 +220,7 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
 
             {/* Resort Number & Area: Clean single line on mobile, full badges on desktop */}
             <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 mb-1.5 sm:mb-2">
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200/80 font-mono font-medium">
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-stone-50 text-stone-800 border border-stone-200/80 font-mono font-medium">
                 <Phone className="w-3 h-3 text-emerald-700 shrink-0" />
                 <span>{hotel.phone || "+91 98648 79505"}</span>
               </span>
@@ -229,22 +240,22 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
               {hotel.amenities.slice(0, 3).map((amenity, i) => (
                 <span
                   key={i}
-                  className="text-xs px-2.5 py-1 rounded-lg bg-emerald-50/70 text-slate-700 border border-emerald-900/10 flex items-center gap-1 font-medium"
+                  className="text-xs px-2.5 py-1 rounded-lg bg-stone-100/80 text-stone-700 border border-stone-200/70 flex items-center gap-1 font-medium"
                 >
                   <Check className="w-3 h-3 text-emerald-700" />
                   {amenity}
                 </span>
               ))}
               {hotel.amenities.length > 3 && (
-                <span className="text-xs font-mono px-2 py-0.5 rounded-lg bg-slate-100 text-slate-500 self-center">
+                <span className="text-xs font-mono px-2 py-0.5 rounded-lg bg-stone-100 text-stone-500 self-center">
                   +{hotel.amenities.length - 3}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Price & Lush Green CTA Footer */}
-          <div className="pt-3.5 border-t border-slate-100 flex items-end justify-between">
+          {/* Price & Royal Pine CTA Footer */}
+          <div className="pt-3.5 border-t border-stone-100 flex items-end justify-between">
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-slate-400 line-through font-mono">₹{hotel.originalPrice}</span>
@@ -267,7 +278,7 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
                   e.stopPropagation();
                   onEnquire(hotel);
                 }}
-                className="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold uppercase tracking-wider text-xs shadow-md transition-all cursor-pointer flex items-center gap-1"
+                className="relative z-10 px-4 py-2.5 rounded-xl bg-[#064e3b] hover:bg-[#043d2e] text-white font-extrabold uppercase tracking-wider text-xs shadow-md transition-all cursor-pointer flex items-center gap-1"
               >
                 <span>Reserve</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />

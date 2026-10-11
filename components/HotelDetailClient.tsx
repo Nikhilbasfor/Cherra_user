@@ -352,7 +352,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#edf7f2] text-slate-900 selection:bg-amber-400 selection:text-black relative">
+    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black relative">
       <Navbar onOpenInquiry={() => setInquiryModalOpen(true)} />
 
       {/* Uplifted Header: Hotel name, golden star icons, resort contact, uncrowded area */}
@@ -548,7 +548,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
           {/* Main Left Details (8 cols) */}
           <div className="lg:col-span-8 space-y-6">
             {/* In-Page Section Navigation Tab Bar - Roomy, un-squeezed sticky container with top breathing room */}
-            <div className="sticky top-[64px] z-20 pt-3 pb-2.5 bg-[#edf7f2]/95 backdrop-blur-md">
+            <div className="sticky top-[64px] z-20 pt-3 pb-2.5 bg-[#faf9f6]/95 backdrop-blur-md">
               <div className="bg-white rounded-xl border border-slate-200/90 shadow-sm p-2 sm:p-2.5">
                 <nav className="flex items-center gap-2 overflow-x-auto scrollbar-none py-0.5 text-xs sm:text-sm font-sans">
                   {[
