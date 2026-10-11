@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Star, MapPin, ChevronLeft, ChevronRight, Check, Heart, Navigation, ArrowUpRight, Phone } from "lucide-react";
+import { Star, MapPin, ChevronLeft, ChevronRight, Check, Heart, Navigation, ArrowRight, Phone, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Hotel } from "@/lib/types";
 
@@ -120,22 +120,14 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
           {/* Subtle vignette gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
 
-          {/* Top Badges */}
+          {/* Top Left Frosted Badge */}
           <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 items-center z-10">
-            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-xs font-mono font-bold text-white shadow-sm">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              <span>{hotel.rating}</span>
-              <span className="text-white/80 text-xs">({hotel.reviewsCount})</span>
+            <span className="px-3 py-1 rounded-full bg-white/85 backdrop-blur-md text-[10px] font-mono font-bold uppercase tracking-wider text-[#1a2e22] shadow-xs border border-white/40">
+              {hotel.featured ? "Private Estate" : `${hotel.starRating}★ Sanctuary`} • {hotel.area}
             </span>
-
-            {hotel.featured && (
-              <span className="px-2.5 py-0.5 rounded-full bg-amber-500 text-white text-xs font-black uppercase tracking-wider shadow-sm">
-                Featured
-              </span>
-            )}
           </div>
 
-          {/* Wishlist Button */}
+          {/* Top Right Frosted Wishlist Button */}
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -144,11 +136,19 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
               e.stopPropagation();
               setIsLiked(!isLiked);
             }}
-            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 hover:bg-white backdrop-blur-md border border-black/5 flex items-center justify-center text-slate-700 hover:text-rose-500 transition-colors z-10 cursor-pointer shadow-xs"
+            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/85 hover:bg-white backdrop-blur-md border border-white/40 flex items-center justify-center text-slate-700 hover:text-rose-500 transition-colors z-10 cursor-pointer shadow-xs"
             aria-label="Save hotel"
           >
             <Heart className={`w-3.5 h-3.5 ${isLiked ? "fill-rose-500 text-rose-500" : ""}`} />
           </motion.button>
+
+          {/* Bottom Left Mountain/Canyon Elevation Badge on Photo */}
+          <div className="absolute bottom-3 left-3 z-10">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#0a3a2a]/80 backdrop-blur-md text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-200 border border-emerald-500/25 flex items-center gap-1 shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>{hotel.area.toLowerCase().includes("nohsngithiang") || hotel.area.toLowerCase().includes("rim") ? "Sunrise Canyon Rim" : "1,480m Elevation"}</span>
+            </span>
+          </div>
 
           {/* Navigation Arrows for Images */}
           {hotel.images.length > 1 && (
@@ -186,7 +186,7 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
         </div>
 
         {/* Card Body */}
-        <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-4 relative z-10">
+        <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3 sm:gap-4 relative z-10">
           <div>
             {/* Proximity Callout if filtered near a landmark */}
             {proximity && (
@@ -201,87 +201,64 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
               </div>
             )}
 
-            {/* Hotel Name */}
-            <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-snug line-clamp-1 group-hover:text-emerald-800 transition-colors">
+            {/* Location & Star Rating Row */}
+            <div className="flex items-center justify-between text-xs text-stone-500 font-sans tracking-wide mb-1">
+              <span className="truncate pr-2">East Khasi Hills • {hotel.area}</span>
+              <span className="font-mono font-bold text-stone-800 flex items-center gap-1 shrink-0">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                <span>{hotel.rating}</span>
+                <span className="text-stone-400 text-[11px]">({hotel.reviewsCount})</span>
+              </span>
+            </div>
+
+            {/* Hotel Name - Editorial Serif Font */}
+            <h3 className="font-serif text-lg sm:text-xl font-bold text-[#14261c] tracking-tight leading-snug group-hover:text-emerald-900 transition-colors line-clamp-1">
               {hotel.name}
             </h3>
 
-            {/* Star Icons as per 3, 4, 5 star hotel (Golden SVGs, no dull emoji) */}
-            <div className="flex items-center gap-2 mt-1.5 mb-1.5">
-              <div className="flex items-center gap-0.5">
-                {Array.from({ length: Math.min(5, Math.max(1, hotel.starRating || 3)) }).map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-                ))}
-              </div>
-              <span className="text-xs font-bold text-amber-900 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-md">
-                {hotel.starRating} Star {hotel.starRating >= 4 ? "Luxury Resort" : "Resort"}
-              </span>
-            </div>
-
-            {/* Resort Number & Area: Clean single line on mobile, full badges on desktop */}
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 mb-1.5 sm:mb-2">
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-stone-50 text-stone-800 border border-stone-200/80 font-mono font-medium">
-                <Phone className="w-3 h-3 text-emerald-700 shrink-0" />
-                <span>{hotel.phone || "+91 98648 79505"}</span>
-              </span>
-              <span className="inline-flex items-center gap-1 text-slate-600 font-sans">
-                <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                <span>{hotel.area}, Sohra</span>
-              </span>
-            </div>
-
-            {/* Tagline - Visible on tablet/desktop, streamlined on mobile */}
-            <p className="hidden sm:block text-xs sm:text-sm text-slate-600 mt-1 line-clamp-2 leading-relaxed">
-              {hotel.tagline}
+            {/* Tagline / Curated Description */}
+            <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed mt-1">
+              {hotel.tagline || hotel.description}
             </p>
 
-            {/* Amenities Pills - Hidden on phone view to prevent bloated cards, visible on desktop */}
-            <div className="hidden sm:flex flex-wrap gap-1.5 mt-3">
+            {/* 3 Curated Luxury Amenities with Icons */}
+            <div className="flex items-center gap-3 sm:gap-4 mt-3 pt-2.5 border-t border-stone-100 text-[11px] text-stone-600 font-medium">
               {hotel.amenities.slice(0, 3).map((amenity, i) => (
-                <span
-                  key={i}
-                  className="text-xs px-2.5 py-1 rounded-lg bg-stone-100/80 text-stone-700 border border-stone-200/70 flex items-center gap-1 font-medium"
-                >
-                  <Check className="w-3 h-3 text-emerald-700" />
-                  {amenity}
+                <span key={i} className="flex items-center gap-1.5 truncate">
+                  <Sparkles className="w-3 h-3 text-amber-600/80 shrink-0" />
+                  <span className="truncate">{amenity}</span>
                 </span>
               ))}
-              {hotel.amenities.length > 3 && (
-                <span className="text-xs font-mono px-2 py-0.5 rounded-lg bg-stone-100 text-stone-500 self-center">
-                  +{hotel.amenities.length - 3}
-                </span>
-              )}
             </div>
           </div>
 
-          {/* Price & Royal Pine CTA Footer */}
-          <div className="pt-3.5 border-t border-stone-100 flex items-end justify-between">
+          {/* Price & Deep Pine Reserve CTA Footer */}
+          <div className="pt-3 border-t border-stone-100 flex items-end justify-between">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-400 line-through font-mono">₹{hotel.originalPrice}</span>
-                <span className="text-xs font-mono font-bold text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
-                  {discountPercent}% OFF
+              <div className="flex items-baseline gap-1">
+                <span className="font-serif text-xl sm:text-2xl font-bold text-[#14261c] tracking-tight">
+                  ₹{hotel.pricePerNight.toLocaleString("en-IN")}
                 </span>
+                <span className="text-xs text-stone-500 font-sans">/ night</span>
               </div>
-              <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">₹{hotel.pricePerNight}</span>
-                <span className="text-xs text-slate-500 font-mono">/ night</span>
-              </div>
+              <p className="text-[10px] text-stone-400 font-sans mt-0.5">
+                Direct Front-Desk Tariff • Zero Markup
+              </p>
             </div>
 
             <div className="flex items-center gap-2">
               <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   onEnquire(hotel);
                 }}
-                className="relative z-10 px-4 py-2.5 rounded-xl bg-[#064e3b] hover:bg-[#043d2e] text-white font-extrabold uppercase tracking-wider text-xs shadow-md transition-all cursor-pointer flex items-center gap-1"
+                className="relative z-10 px-5 py-2.5 rounded-xl bg-[#0a3a2a] hover:bg-[#06291d] text-white font-sans font-bold uppercase tracking-wider text-xs shadow-sm shadow-[#0a3a2a]/20 transition-all cursor-pointer flex items-center gap-2"
               >
                 <span>Reserve</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 text-emerald-200" />
               </motion.button>
             </div>
           </div>

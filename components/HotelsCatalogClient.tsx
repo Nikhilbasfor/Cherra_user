@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import {
   SlidersHorizontal,
   Search,
@@ -12,6 +13,10 @@ import {
   Compass,
   Plus,
   X,
+  Sparkles,
+  Trees,
+  Footprints,
+  PhoneCall,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -413,13 +418,13 @@ export default function HotelsCatalogClient({
   const currentLinkPrefix = activeStarSlug ? `/hotels/${activeStarSlug}` : "/hotels";
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black">
+    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black pb-16 md:pb-0">
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Header - Uplifted with reduced padding and compact title */}
       <div className="pt-20 sm:pt-24 pb-3 sm:pb-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-stone-200/90">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-slate-900">
+          <h1 className="font-serif text-2xl sm:text-4xl font-bold tracking-tight text-slate-900">
             {pageTitle}
           </h1>
           <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed">
@@ -791,6 +796,43 @@ export default function HotelsCatalogClient({
       />
 
       <Footer />
+
+      {/* Sticky Mobile App-Like Navigation Bar (md:hidden) */}
+      <nav aria-label="Mobile Bottom Navigation" className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200/90 py-2.5 px-6 flex items-center justify-around md:hidden shadow-lg shadow-black/5">
+        <Link
+          href="/"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>Sanctuary</span>
+        </Link>
+
+        <Link
+          href="/hotels"
+          className="flex flex-col items-center gap-1 text-[#0a3a2a] font-bold text-[10px] uppercase tracking-wider"
+        >
+          <Trees className="w-4 h-4 text-[#0a3a2a]" />
+          <span>Stays</span>
+        </Link>
+
+        <Link
+          href="/guide"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <Footprints className="w-4 h-4" />
+          <span>Journeys</span>
+        </Link>
+
+        <a
+          href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance%20booking%20a%20hotel"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <PhoneCall className="w-4 h-4 text-amber-600" />
+          <span>Concierge</span>
+        </a>
+      </nav>
     </div>
   );
 }

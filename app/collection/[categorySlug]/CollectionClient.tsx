@@ -11,6 +11,9 @@ import {
   ChevronDown,
   ArrowUpDown,
   Compass,
+  Trees,
+  Footprints,
+  PhoneCall,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -71,7 +74,7 @@ export default function CollectionClient({
   }, [allCategories, category.slug]);
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black relative">
+    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black relative pb-16 md:pb-0">
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Breadcrumb Navigation */}
@@ -90,15 +93,15 @@ export default function CollectionClient({
       </div>
 
       {/* Hero Header */}
-      <header className="py-8 sm:py-12 border-b border-emerald-900/10">
+      <header className="py-8 sm:py-12 border-b border-stone-200/90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-800/10 text-emerald-800 text-xs font-mono font-bold uppercase tracking-wider border border-emerald-800/20 mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100 text-stone-800 text-xs font-mono font-bold uppercase tracking-wider border border-stone-200/90 mb-3">
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               <span>{category.heroBadge}</span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-slate-900 leading-tight">
+            <h1 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
               {category.title}
             </h1>
 
@@ -107,7 +110,7 @@ export default function CollectionClient({
             </p>
 
             {/* Direct Booking Guarantees */}
-            <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-mono text-slate-500 pt-3 border-t border-emerald-900/10">
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-mono text-slate-500 pt-3 border-t border-stone-200/90">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-emerald-700" />
                 100% Physically Verified
@@ -289,6 +292,43 @@ export default function CollectionClient({
       />
 
       <Footer />
+
+      {/* Sticky Mobile App-Like Navigation Bar (md:hidden) */}
+      <nav aria-label="Mobile Bottom Navigation" className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200/90 py-2.5 px-6 flex items-center justify-around md:hidden shadow-lg shadow-black/5">
+        <Link
+          href="/"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>Sanctuary</span>
+        </Link>
+
+        <Link
+          href="/hotels"
+          className="flex flex-col items-center gap-1 text-[#0a3a2a] font-bold text-[10px] uppercase tracking-wider"
+        >
+          <Trees className="w-4 h-4 text-[#0a3a2a]" />
+          <span>Stays</span>
+        </Link>
+
+        <Link
+          href="/guide"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <Footprints className="w-4 h-4" />
+          <span>Journeys</span>
+        </Link>
+
+        <a
+          href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <PhoneCall className="w-4 h-4 text-amber-600" />
+          <span>Concierge</span>
+        </a>
+      </nav>
     </div>
   );
 }

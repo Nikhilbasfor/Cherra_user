@@ -170,31 +170,34 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1 rounded-full bg-emerald-950/80 backdrop-blur-md border border-emerald-400/30 text-emerald-200 font-sans text-[11px] font-semibold tracking-wide uppercase mb-3 sm:mb-4"
+            className="flex items-center justify-between gap-3 mb-2.5 sm:mb-3"
           >
-            <Compass className="w-3.5 h-3.5 text-amber-300" />
-            <span>Sohra, Meghalaya • Verified Nature Stays</span>
+            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest text-amber-300 uppercase flex items-center gap-1.5">
+              <span className="text-amber-400">•</span>
+              <span>THE CLOUD HIGHLANDS OF SOHRA</span>
+            </span>
+            <span className="text-[10px] font-mono tracking-widest text-emerald-200/90 uppercase bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              14+ SANCTUARIES
+            </span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-3xl sm:text-6xl lg:text-7xl font-black tracking-[-0.03em] text-white leading-[1.05] uppercase drop-shadow-md"
+            className="font-serif text-3xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-md"
           >
-            Sanctuaries <br />
-            <span className="text-amber-300">
-              Above the Mist
-            </span>
+            Sanctuaries <span className="italic font-serif font-normal text-amber-300">in the</span> <br />
+            Mist
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-3 text-xs sm:text-base text-emerald-50/90 font-medium max-w-2xl leading-relaxed drop-shadow"
+            className="mt-3 text-xs sm:text-base text-emerald-50/90 font-light max-w-2xl leading-relaxed drop-shadow"
           >
-            Direct front-desk reservation at Cherrapunji’s finest cliffside retreats, canyon sanctuaries, and living root bridge lodges. Zero booking markups.
+            Private cliff pavilions and thermal hideaways suspended above Nohkalikai Falls and Sohra gorges. Direct front-desk tariffs with zero booking markups.
           </motion.p>
         </div>
 

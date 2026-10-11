@@ -360,7 +360,7 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
           <div className="space-y-2.5">
             {/* 1. Hotel Name on Top */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight text-slate-900 leading-tight">
+            <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 leading-tight">
               {hotel.name}
             </h1>
 
@@ -1099,14 +1099,14 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
       </AnimatePresence>
 
       {/* Mobile Sticky Booking Bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-emerald-900/10 px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom))] z-40 flex items-center justify-between shadow-lg">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-stone-200/90 px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom))] z-40 flex items-center justify-between shadow-lg shadow-black/5">
         <div>
-          <span className="text-xs text-slate-500 font-bold block font-mono uppercase">Direct Rate</span>
+          <span className="text-[10px] text-stone-400 font-sans uppercase tracking-widest block">Direct Tariff</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-lg font-black text-slate-900">
-              ₹{selectedRoom ? selectedRoom.price : hotel.pricePerNight}
+            <span className="font-serif text-lg sm:text-xl font-bold text-[#14261c]">
+              ₹{(selectedRoom ? selectedRoom.price : hotel.pricePerNight).toLocaleString("en-IN")}
             </span>
-            <span className="text-xs text-slate-500 font-mono">/ night</span>
+            <span className="text-xs text-stone-500 font-sans">/ night</span>
           </div>
         </div>
 
@@ -1115,14 +1115,15 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             href={whatsappInquiryUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200"
+            className="p-2.5 rounded-xl bg-stone-100 text-stone-800 border border-stone-300 hover:bg-stone-200 transition-colors"
+            aria-label="WhatsApp Concierge"
           >
-            <MessageSquare className="w-4 h-4" />
+            <MessageSquare className="w-4 h-4 text-emerald-800" />
           </a>
           <button
             type="button"
             onClick={() => setInquiryModalOpen(true)}
-            className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-mono font-black uppercase tracking-wider text-xs shadow-md"
+            className="px-6 py-2.5 rounded-xl bg-[#0a3a2a] hover:bg-[#06291d] text-white font-sans font-bold uppercase tracking-wider text-xs shadow-sm shadow-[#0a3a2a]/20 transition-all cursor-pointer"
           >
             Reserve
           </button>

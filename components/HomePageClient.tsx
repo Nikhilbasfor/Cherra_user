@@ -231,7 +231,7 @@ export default function HomePageClient({
       : defaultFaqs;
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black relative overflow-x-hidden pb-16 md:pb-0">
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Cinematic Hero */}
@@ -296,15 +296,15 @@ export default function HomePageClient({
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               <span>Direct Booking Collection</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-slate-900">
-              The <span className="text-amber-600">Portfolio</span>
+            <h2 className="font-serif text-2xl sm:text-4xl font-bold tracking-tight text-slate-900">
+              Curated <span className="italic font-serif font-normal text-amber-700">Sanctuaries</span>
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-stone-600 mt-1 max-w-xl leading-relaxed">
               From cliff-edge heated log cabins facing Seven Sisters Falls to secluded pine cottages and village basecamps.
             </p>
           </div>
 
-          {/* Smooth Horizontal Touch-Scroll Tabs on Mobile, Flex on Desktop */}
+          {/* Smooth Horizontal Touch-Scroll Pills on Mobile, Flex on Desktop */}
           <div className="w-full md:w-auto overflow-x-auto scrollbar-none py-1 -mx-4 px-4 md:mx-0 md:px-0">
             <div className="flex items-center gap-2 whitespace-nowrap">
               {HOME_COLLECTION_TABS.map((tab) => {
@@ -313,10 +313,10 @@ export default function HomePageClient({
                   <button
                     key={tab.id}
                     onClick={() => setActiveCollectionTab(tab.id)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shrink-0 cursor-pointer ${
+                    className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all shrink-0 cursor-pointer ${
                       isActive
-                        ? "bg-[#064e3b] text-white shadow-xs"
-                        : "bg-white text-stone-700 border border-stone-200 hover:border-stone-400/80 shadow-2xs"
+                        ? "bg-[#0a3a2a] text-white shadow-xs"
+                        : "bg-white text-stone-700 border border-stone-200 hover:border-stone-400 shadow-2xs"
                     }`}
                   >
                     {tab.label}
@@ -472,35 +472,41 @@ export default function HomePageClient({
         </div>
       </section>
 
-      {/* Concierge VIP Direct Booking Banner */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <div className="rounded-3xl bg-[#064e3b] border border-emerald-800 p-6 sm:p-14 text-white shadow-xl relative overflow-hidden">
-          <div className="relative z-10 max-w-2xl space-y-3 sm:space-y-4 text-left">
-            <span className="font-mono text-xs font-bold text-amber-300 uppercase tracking-wider bg-white/10 px-3 py-1 rounded-full border border-white/15 inline-block">
-              Dedicated Sohra Concierge
-            </span>
-            <h3 className="text-xl sm:text-4xl font-black uppercase tracking-tight leading-snug">
-              Planning a Journey to Cherrapunji? Let Our Local Specialists Assist.
+      {/* Air & Highland Logistics / Dedicated Sohra Concierge Banner */}
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="rounded-3xl bg-stone-100/90 border border-stone-200/90 p-6 sm:p-10 shadow-xs relative overflow-hidden">
+          <div className="max-w-3xl space-y-3 sm:space-y-4 text-left">
+            <div className="flex items-center gap-2 text-stone-600 font-mono text-xs font-bold uppercase tracking-wider">
+              <span className="w-8 h-8 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center font-bold text-sm">
+                ✈
+              </span>
+              <span>AIR &amp; HIGHLAND LOGISTICS</span>
+            </div>
+            
+            <h3 className="font-serif text-xl sm:text-3xl font-bold text-[#14261c] tracking-tight leading-snug">
+              Airport Cabs &amp; 4x4 Highland Transfers from Guwahati (GAU) &amp; Shillong (SHL)
             </h3>
-            <p className="text-emerald-100/80 text-xs sm:text-sm leading-relaxed">
-              Submit your dates and requirements. We verify real-time room availability across premier Sohra retreats and deliver guaranteed direct front-desk tariffs with zero booking markups.
+            
+            <p className="text-stone-600 text-xs sm:text-sm leading-relaxed">
+              Direct scenic transit with verified local Khasi drivers directly to your cliffside sanctuary. On-demand sightseeing cabs for Double Decker Living Root Bridge, Wei Sawdong, and canyon waterfalls on standby.
             </p>
-            <div className="pt-2 sm:pt-3 flex flex-col sm:flex-row gap-2.5 sm:gap-3">
-              <button
-                onClick={() => handleOpenInquiry()}
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold uppercase tracking-wider text-xs shadow-lg transition-all cursor-pointer text-center"
-              >
-                Request Custom Itinerary
-              </button>
+
+            <div className="pt-2 flex flex-col sm:flex-row gap-3">
               <a
-                href="https://wa.me/919864879505?text=Hi%20CherraStays,%20I%20need%20help%20booking%20a%20hotel%20in%20Cherrapunji"
+                href="https://wa.me/919864879505?text=Hi%20CherraStays,%20I%20need%20help%20with%20cabs%20and%20luxury%20hotels%20in%20Cherrapunji"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 transition-all flex items-center justify-center gap-2"
+                className="px-6 py-3.5 rounded-xl bg-[#0a3a2a] hover:bg-[#06291d] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
               >
-                <PhoneCall className="w-4 h-4 text-amber-300" />
-                <span className="font-mono">WhatsApp: +91 98648 79505</span>
+                <span>Contact Concierge Desk</span>
+                <PhoneCall className="w-4 h-4 text-emerald-200" />
               </a>
+              <button
+                onClick={() => handleOpenInquiry()}
+                className="px-6 py-3.5 rounded-xl bg-white hover:bg-stone-50 text-stone-800 border border-stone-300/80 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-xs text-center"
+              >
+                Request Custom Highland Itinerary
+              </button>
             </div>
           </div>
         </div>
@@ -515,6 +521,43 @@ export default function HomePageClient({
 
       {/* Footer */}
       <Footer />
+
+      {/* Sticky Mobile App-Like Navigation Bar (md:hidden) */}
+      <nav aria-label="Mobile Bottom Navigation" className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200/90 py-2.5 px-6 flex items-center justify-around md:hidden shadow-lg shadow-black/5">
+        <Link
+          href="/"
+          className="flex flex-col items-center gap-1 text-[#0a3a2a] font-bold text-[10px] uppercase tracking-wider"
+        >
+          <Sparkles className="w-4 h-4 text-[#0a3a2a]" />
+          <span>Sanctuary</span>
+        </Link>
+
+        <a
+          href="#hotels"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <Trees className="w-4 h-4" />
+          <span>Stays</span>
+        </a>
+
+        <Link
+          href="/guide"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <Footprints className="w-4 h-4" />
+          <span>Journeys</span>
+        </Link>
+
+        <a
+          href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance%20booking%20a%20hotel"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <PhoneCall className="w-4 h-4 text-amber-600" />
+          <span>Concierge</span>
+        </a>
+      </nav>
     </div>
   );
 }

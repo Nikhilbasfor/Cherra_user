@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, ArrowRight, Star } from "lucide-react";
+import { MapPin, ArrowRight, Star, Sparkles, Trees, Footprints, PhoneCall } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InquiryModal from "@/components/InquiryModal";
@@ -26,17 +26,17 @@ export default function GuidePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black relative">
+    <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black relative pb-16 md:pb-0">
       <Navbar onOpenInquiry={() => setInquiryModalOpen(true)} />
 
       {/* Header - Compact top spacing so sightseeing cards appear without cut on first sight */}
       <div className="pt-16 sm:pt-18 pb-2 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-stone-200/90">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
-            Sightseeing in <span className="text-amber-600">Cherrapunji</span>
+          <h1 className="font-serif text-2xl sm:text-4xl font-bold tracking-tight text-slate-900">
+            Highland Expeditions <span className="italic font-serif font-normal text-amber-700">of</span> Sohra
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5 max-w-xl leading-relaxed">
-            Living root bridges, cascading waterfalls, and caves across the Sohra plateau.
+          <p className="text-xs text-stone-500 mt-1 max-w-xl leading-relaxed">
+            Living root bridges, cascading canyon waterfalls, and prehistoric caves across the Cherrapunji plateau.
           </p>
         </div>
       </div>
@@ -48,7 +48,7 @@ export default function GuidePage() {
             <div
               key={att.id}
               id={att.id}
-              className="bg-white border border-emerald-900/10 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+              className="bg-white border border-stone-200/90 rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
             >
               {/* Image at Top - Compact Height */}
               <div className="relative h-36 sm:h-40 w-full bg-slate-100 overflow-hidden">
@@ -126,6 +126,43 @@ export default function GuidePage() {
       />
 
       <Footer />
+
+      {/* Sticky Mobile App-Like Navigation Bar (md:hidden) */}
+      <nav aria-label="Mobile Bottom Navigation" className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200/90 py-2.5 px-6 flex items-center justify-around md:hidden shadow-lg shadow-black/5">
+        <Link
+          href="/"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>Sanctuary</span>
+        </Link>
+
+        <Link
+          href="/hotels"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <Trees className="w-4 h-4" />
+          <span>Stays</span>
+        </Link>
+
+        <Link
+          href="/guide"
+          className="flex flex-col items-center gap-1 text-[#0a3a2a] font-bold text-[10px] uppercase tracking-wider"
+        >
+          <Footprints className="w-4 h-4 text-[#0a3a2a]" />
+          <span>Journeys</span>
+        </Link>
+
+        <a
+          href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
+        >
+          <PhoneCall className="w-4 h-4 text-amber-600" />
+          <span>Concierge</span>
+        </a>
+      </nav>
     </div>
   );
 }
