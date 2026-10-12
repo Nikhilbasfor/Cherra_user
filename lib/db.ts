@@ -57,7 +57,7 @@ export const INITIAL_FAQS: FAQItem[] = [
 ];
 
 export const INITIAL_STATS: SiteStats = {
-  verifiedStays: "10+",
+  verifiedStays: "66+",
   satisfactionRate: "4.8 / 5.0",
   tariffPledge: "100%",
   avgResponseTime: "20 Min",
