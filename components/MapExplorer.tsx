@@ -22,6 +22,23 @@ export default function MapExplorer({
 }: MapExplorerProps) {
   const [mapSearchQuery, setMapSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<"all" | "hotels" | "attractions">("all");
+  const [mapVisible, setMapVisible] = useState(false);
+  const mapContainerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!mapContainerRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setMapVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "250px" }
+    );
+    observer.observe(mapContainerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const [activeItem, setActiveItem] = useState<{
     type: "hotel" | "attraction";
@@ -147,16 +164,25 @@ export default function MapExplorer({
       {/* Main Map + Card Split */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Daylight Map Container (8 cols) */}
-        <div className="lg:col-span-8 relative aspect-[16/10] sm:aspect-[16/9] rounded-2xl overflow-hidden border border-emerald-900/10 bg-slate-100 shadow-inner">
+        <div
+          ref={mapContainerRef}
+          className="lg:col-span-8 relative aspect-[16/10] sm:aspect-[16/9] rounded-2xl overflow-hidden border border-emerald-900/10 bg-slate-100 shadow-inner"
+        >
           <div className="absolute inset-0 pointer-events-none md:pointer-events-auto">
-            <iframe
-              title="Cherrapunji Natural Map"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=91.6400%2C25.2000%2C91.7800%2C25.3200&layer=mapnik"
-            />
+            {mapVisible ? (
+              <iframe
+                title="Cherrapunji Natural Map"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=91.6400%2C25.2000%2C91.7800%2C25.3200&layer=mapnik"
+              />
+            ) : (
+              <div className="w-full h-full bg-[#f0f4f1] flex items-center justify-center text-xs font-mono text-emerald-800/60">
+                Loading Plateau Map...
+              </div>
+            )}
           </div>
 
           {/* Map Overlay Badge */}

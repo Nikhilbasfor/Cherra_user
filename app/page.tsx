@@ -3,7 +3,8 @@ import { dbGetStats, dbGetHotels, dbGetAttractions, dbGetFAQs } from "@/lib/db";
 import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_ATTRACTIONS, INITIAL_FAQS, INITIAL_STATS } from "@/lib/mockData";
 import { SiteStats, Hotel, Attraction, FAQItem } from "@/lib/types";
 
-export const dynamic = "force-dynamic";
+// Enable Incremental Static Regeneration (ISR) so homepage loads in <30ms from edge cache
+export const revalidate = 60;
 
 export default async function HomePage() {
   let stats: SiteStats = INITIAL_STATS;

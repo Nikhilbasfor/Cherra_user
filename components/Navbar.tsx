@@ -17,10 +17,20 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
   const pathname = usePathname();
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled((prev) => {
+            const next = window.scrollY > 20;
+            return prev !== next ? next : prev;
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -33,7 +43,7 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-[#064e3b]/95 backdrop-blur-2xl shadow-xl shadow-emerald-950/25 border-b border-emerald-700/40 py-2.5"
+          ? "bg-[#064e3b]/98 backdrop-blur-sm shadow-xl shadow-emerald-950/25 border-b border-emerald-700/40 py-2.5"
           : "bg-[#064e3b] shadow-md border-b border-emerald-700/30 py-3.5"
       }`}
     >

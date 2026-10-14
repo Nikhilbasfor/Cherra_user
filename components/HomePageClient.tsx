@@ -56,6 +56,7 @@ export default function HomePageClient({
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [selectedHotelForInquiry, setSelectedHotelForInquiry] = useState<Hotel | null>(null);
   const [activeCollectionTab, setActiveCollectionTab] = useState<string>("all");
+  const [visibleCount, setVisibleCount] = useState<number>(12);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   const [stats, setStats] = useState<SiteStats>(initialStats);
@@ -141,7 +142,8 @@ export default function HomePageClient({
         .catch(console.warn);
     };
 
-    const interval = setInterval(loadAll, 4000);
+    // Initial load once on mount without expensive periodic polling loops
+    loadAll();
 
     return () => {
       isMounted = false;
@@ -154,7 +156,6 @@ export default function HomePageClient({
           channel.close();
         } catch {}
       }
-      clearInterval(interval);
     };
   }, []);
 
@@ -202,6 +203,10 @@ export default function HomePageClient({
     return hotels;
   }, [hotels, activeCollectionTab]);
 
+  const displayedHotels = useMemo(() => {
+    return filteredHotels.slice(0, visibleCount);
+  }, [filteredHotels, visibleCount]);
+
   const defaultFaqs = [
     {
       q: "What is the prime season to visit Cherrapunji (Sohra)?",
@@ -235,7 +240,7 @@ export default function HomePageClient({
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Cinematic Hero */}
-      <HeroSection />
+      <HeroSection hotels={hotels} />
 
       {/* Guest Satisfaction & Inventory Band - Rich Green, Golden Titles, No 01// */}
       <section className="relative z-10 bg-[#064e3b] text-white py-6 sm:py-8 border-y border-emerald-800 shadow-inner">
@@ -312,7 +317,10 @@ export default function HomePageClient({
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveCollectionTab(tab.id)}
+                    onClick={() => {
+                      setActiveCollectionTab(tab.id);
+                      setVisibleCount(12);
+                    }}
                     className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all shrink-0 cursor-pointer ${
                       isActive
                         ? "bg-[#0a3a2a] text-white shadow-xs"
@@ -327,9 +335,9 @@ export default function HomePageClient({
           </div>
         </div>
 
-        {/* 3D Interactive Hotel Cards Grid */}
+        {/* Curated Hotel Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {filteredHotels.map((hotel) => (
+          {displayedHotels.map((hotel) => (
             <HotelCard
               key={hotel.id}
               hotel={hotel}
@@ -338,8 +346,21 @@ export default function HomePageClient({
           ))}
         </div>
 
+        {/* Load More Button for Curated Grid */}
+        {filteredHotels.length > visibleCount && (
+          <div className="mt-8 text-center">
+            <button
+              type="button"
+              onClick={() => setVisibleCount((prev) => prev + 12)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white hover:bg-stone-100 text-emerald-950 border border-stone-300 font-bold text-xs uppercase tracking-wider transition-all shadow-xs cursor-pointer active:scale-95"
+            >
+              <span>Load More Sanctuaries ({filteredHotels.length - visibleCount} remaining)</span>
+            </button>
+          </div>
+        )}
+
         {/* View All Stays Action */}
-        <div className="mt-12 text-center">
+        <div className="mt-10 text-center">
           <Link
             href="/hotels"
             className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl bg-[#064e3b] hover:bg-[#043d2e] text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md active:scale-98"

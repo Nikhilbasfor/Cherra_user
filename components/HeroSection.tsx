@@ -16,10 +16,15 @@ import { CHERRAPUNJI_HOTELS } from "@/lib/mockData";
 import { getAllHotels } from "@/lib/firebase";
 import { Hotel } from "@/lib/types";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  hotels?: Hotel[];
+}
+
+export default function HeroSection({ hotels }: HeroSectionProps = {}) {
   const router = useRouter();
 
-  const [hotelsList, setHotelsList] = useState<Hotel[]>(CHERRAPUNJI_HOTELS);
+  const [hotelsList, setHotelsList] = useState<Hotel[]>(hotels && hotels.length > 0 ? hotels : CHERRAPUNJI_HOTELS);
+  const [isDesktop, setIsDesktop] = useState(false);
   const [selectedArea, setSelectedArea] = useState("All Areas");
   const [selectedHotelSlug, setSelectedHotelSlug] = useState<string | null>(null);
   const [areaSearchQuery, setAreaSearchQuery] = useState("");
@@ -34,6 +39,20 @@ export default function HeroSection() {
   const todayStr = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
+    if (hotels && hotels.length > 0) {
+      setHotelsList(hotels);
+    }
+  }, [hotels]);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 768);
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (hotels && hotels.length > 0) return;
     let isMounted = true;
     getAllHotels()
       .then((data) => {
@@ -46,13 +65,13 @@ export default function HeroSection() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [hotels]);
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (isDesktop && videoRef.current) {
       videoRef.current.play().catch(() => {});
     }
-  }, []);
+  }, [isDesktop]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -135,28 +154,30 @@ export default function HeroSection() {
 
   return (
     <div className="relative min-h-[90vh] sm:min-h-[94vh] flex flex-col justify-end pt-24 sm:pt-28 pb-10 sm:pb-14 overflow-hidden bg-[#064e3b]">
-      {/* Background Drone Video on Desktop | Serene Misty Photography on Mobile */}
+      {/* Background Drone Video on Desktop ONLY | Serene Misty Photography on Mobile */}
       <div className="absolute inset-0 z-0">
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="hidden md:block w-full h-full object-cover object-center scale-[1.02] filter brightness-95 transform-gpu"
-        >
-          <source src="/videos/cherrapunji-homestays-drone.webm" type="video/webm" />
-          <source src="/videos/cherrapunji-drone.webm" type="video/webm" />
-        </video>
-
-        {/* Mobile Serene Luxury Photography Background (No heavy/distracting video on mobile) */}
-        <div
-          className="md:hidden absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=85')`,
-          }}
-        />
+        {isDesktop ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="none"
+            className="w-full h-full object-cover object-center scale-[1.02] filter brightness-95 transform-gpu"
+          >
+            <source src="/videos/cherrapunji-homestays-drone.webm" type="video/webm" />
+            <source src="/videos/cherrapunji-drone.webm" type="video/webm" />
+          </video>
+        ) : (
+          /* Mobile Serene Luxury Photography Background (Zero video download/decoding on mobile) */
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=85')`,
+            }}
+          />
+        )}
 
         {/* Ambient Nature Fade to lower section */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#042f24] via-[#042f24]/75 to-emerald-950/40 pointer-events-none" />

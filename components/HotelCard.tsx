@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Star, MapPin, ChevronLeft, ChevronRight, Check, Heart, Navigation, ArrowRight, Phone, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { Star, ChevronLeft, ChevronRight, Heart, Navigation, ArrowRight, Sparkles } from "lucide-react";
 import { Hotel } from "@/lib/types";
 
 interface HotelCardProps {
@@ -20,53 +18,12 @@ interface HotelCardProps {
 }
 
 export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: HotelCardProps) {
-  const router = useRouter();
-  const cardRef = useRef<HTMLDivElement>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
-
-  // 3D Tilt state
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
 
   const targetUrl = linkPrefix
     ? `${linkPrefix.replace(/\/$/, "")}/${hotel.slug}`
     : `/hotels/${hotel.slug}`;
-
-  // Eagerly prefetch route bundle & RSC payload so mobile taps load instantly with 0ms delay
-  React.useEffect(() => {
-    router.prefetch(targetUrl);
-  }, [router, targetUrl]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    // Only compute 3D tilt on desktop with fine mouse hover; skip on touch/mobile to eliminate frame drops & latency
-    if (typeof window !== "undefined" && window.matchMedia && !window.matchMedia("(hover: hover)").matches) {
-      return;
-    }
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotX = ((y - centerY) / centerY) * -4;
-    const rotY = ((x - centerX) / centerX) * 4;
-    setRotateX(rotX);
-    setRotateY(rotY);
-  };
-
-  const handleMouseLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
-  };
-
-  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.metaKey || e.ctrlKey) {
-      window.open(targetUrl, "_blank");
-      return;
-    }
-    router.push(targetUrl);
-  };
 
   const nextImage = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -80,32 +37,16 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
     setCurrentImageIndex((prev) => (prev - 1 + hotel.images.length) % hotel.images.length);
   };
 
-  const discountPercent = Math.round(
-    ((hotel.originalPrice - hotel.pricePerNight) / hotel.originalPrice) * 100
-  );
-
   return (
-    <div style={{ perspective: 1200 }} className="h-full">
-      <motion.div
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        onClick={handleCardClick}
-        animate={{
-          rotateX,
-          rotateY,
-          transformStyle: "preserve-3d",
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className="group relative bg-white rounded-2xl overflow-hidden border border-stone-200/90 hover:border-stone-400/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col h-full cursor-pointer select-none"
+    <div className="h-full">
+      <div
+        className="group relative bg-white rounded-2xl overflow-hidden border border-stone-200/90 hover:border-stone-400/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col h-full hover:-translate-y-1 cursor-pointer select-none"
       >
-        {/* Instant Prefetched Anchor for zero-lag mobile navigation */}
+        {/* Instant Viewport-Prefetched Next.js Anchor */}
         <Link
           href={targetUrl}
-          prefetch={true}
           className="absolute inset-0 z-0"
           aria-label={`View details for ${hotel.name}`}
-          tabIndex={-1}
         />
         {/* Photo Container */}
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
@@ -122,29 +63,27 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
 
           {/* Top Left Frosted Badge */}
           <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 items-center z-10">
-            <span className="px-3 py-1 rounded-full bg-white/85 backdrop-blur-md text-[10px] font-mono font-bold uppercase tracking-wider text-[#1a2e22] shadow-xs border border-white/40">
+            <span className="px-3 py-1 rounded-full bg-white/95 text-[10px] font-mono font-bold uppercase tracking-wider text-[#1a2e22] shadow-xs border border-white/60">
               {hotel.featured ? "Private Estate" : `${hotel.starRating}★ Sanctuary`} • {hotel.area}
             </span>
           </div>
 
-          {/* Top Right Frosted Wishlist Button */}
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+          {/* Top Right Wishlist Button */}
+          <button
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               setIsLiked(!isLiked);
             }}
-            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/85 hover:bg-white backdrop-blur-md border border-white/40 flex items-center justify-center text-slate-700 hover:text-rose-500 transition-colors z-10 cursor-pointer shadow-xs"
+            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white border border-stone-200/60 flex items-center justify-center text-slate-700 hover:text-rose-500 transition-all z-10 cursor-pointer shadow-xs active:scale-90"
             aria-label="Save hotel"
           >
             <Heart className={`w-3.5 h-3.5 ${isLiked ? "fill-rose-500 text-rose-500" : ""}`} />
-          </motion.button>
+          </button>
 
           {/* Bottom Left Mountain/Canyon Elevation Badge on Photo */}
           <div className="absolute bottom-3 left-3 z-10">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#0a3a2a]/80 backdrop-blur-md text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-200 border border-emerald-500/25 flex items-center gap-1 shadow-sm">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#0a3a2a]/90 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-200 border border-emerald-500/25 flex items-center gap-1 shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>{hotel.area.toLowerCase().includes("nohsngithiang") || hotel.area.toLowerCase().includes("rim") ? "Sunrise Canyon Rim" : "1,480m Elevation"}</span>
             </span>
@@ -155,14 +94,14 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
             <div className="absolute inset-x-2 top-1/2 -translate-y-1/2 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity z-10">
               <button
                 onClick={prevImage}
-                className="w-7 h-7 rounded-full bg-white/90 backdrop-blur-md text-slate-800 flex items-center justify-center hover:bg-white shadow-md border border-black/5 transition-all cursor-pointer"
+                className="w-7 h-7 rounded-full bg-white/95 text-slate-800 flex items-center justify-center hover:bg-white shadow-md border border-black/5 transition-all cursor-pointer active:scale-95"
                 aria-label="Previous photo"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={nextImage}
-                className="w-7 h-7 rounded-full bg-white/90 backdrop-blur-md text-slate-800 flex items-center justify-center hover:bg-white shadow-md border border-black/5 transition-all cursor-pointer"
+                className="w-7 h-7 rounded-full bg-white/95 text-slate-800 flex items-center justify-center hover:bg-white shadow-md border border-black/5 transition-all cursor-pointer active:scale-95"
                 aria-label="Next photo"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -247,23 +186,22 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
             </div>
 
             <div className="flex items-center gap-2">
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
+              <button
+                type="button"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   onEnquire(hotel);
                 }}
-                className="relative z-10 px-5 py-2.5 rounded-xl bg-[#0a3a2a] hover:bg-[#06291d] text-white font-sans font-bold uppercase tracking-wider text-xs shadow-sm shadow-[#0a3a2a]/20 transition-all cursor-pointer flex items-center gap-2"
+                className="relative z-10 px-5 py-2.5 rounded-xl bg-[#0a3a2a] hover:bg-[#06291d] text-white font-sans font-bold uppercase tracking-wider text-xs shadow-sm shadow-[#0a3a2a]/20 transition-all cursor-pointer flex items-center gap-2 active:scale-95"
               >
                 <span>Reserve</span>
                 <ArrowRight className="w-3.5 h-3.5 text-emerald-200" />
-              </motion.button>
+              </button>
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
