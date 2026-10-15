@@ -43,8 +43,8 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/98 backdrop-blur-md shadow-md shadow-slate-900/5 border-b border-stone-200/90 py-2.5"
-          : "bg-white/95 backdrop-blur-sm shadow-xs border-b border-stone-200/80 py-3 sm:py-3.5"
+          ? "bg-[#e6f7f0]/98 backdrop-blur-md shadow-md shadow-emerald-950/5 border-b border-[#a7f3d0] py-2.5"
+          : "bg-[#e6f7f0]/95 backdrop-blur-sm shadow-xs border-b border-[#a7f3d0] py-3 sm:py-3.5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,7 +67,7 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1 bg-stone-100/90 p-1.5 rounded-full border border-stone-200/80 shadow-2xs">
+          <nav className="hidden md:flex items-center gap-1 bg-white/80 p-1.5 rounded-full border border-[#a7f3d0] shadow-2xs">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -77,7 +77,7 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
                   className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all relative select-none ${
                     isActive
                       ? "text-white font-black"
-                      : "text-stone-700 hover:text-emerald-950 hover:bg-stone-200/60"
+                      : "text-[#064e3b] hover:text-[#042f24] hover:bg-emerald-100/50"
                   }`}
                 >
                   {isActive && (
@@ -103,7 +103,7 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
           <div className="hidden sm:flex items-center gap-3">
             <a
               href="tel:+919864879505"
-              className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border border-stone-200/90 text-stone-800 bg-stone-50 hover:bg-stone-100/90 hover:text-emerald-950 transition-all shadow-2xs"
+              className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border border-[#a7f3d0] text-[#064e3b] bg-white/70 hover:bg-white hover:text-[#042f24] transition-all shadow-2xs"
             >
               <Phone className="w-3.5 h-3.5 text-amber-600" />
               <span className="font-mono text-[11px] tracking-wide">+91 98648 79505</span>
@@ -130,7 +130,7 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-full text-stone-700 hover:text-slate-950 hover:bg-stone-100 transition-colors cursor-pointer"
+              className="p-2 rounded-full text-[#064e3b] hover:text-[#042f24] hover:bg-emerald-100/60 transition-colors cursor-pointer"
               aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -147,22 +147,22 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ type: "spring", stiffness: 350, damping: 28 }}
-            className="sm:hidden bg-white border-b border-stone-200/90 px-4 py-5 space-y-2 shadow-xl"
+            className="sm:hidden bg-[#e6f7f0] border-b border-[#a7f3d0] px-4 py-5 space-y-2 shadow-xl"
           >
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-stone-800 hover:bg-stone-100 transition-colors"
+                className="block px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-[#064e3b] hover:bg-[#d1fae5] transition-colors"
               >
                 {link.label}
               </Link>
             ))}
-            <div className="pt-3 border-t border-stone-200 flex flex-col gap-2.5">
+            <div className="pt-3 border-t border-[#a7f3d0] flex flex-col gap-2.5">
               <a
                 href="tel:+919864879505"
-                className="flex items-center justify-center gap-2 py-3 rounded-xl border border-stone-200 text-stone-800 text-xs font-medium bg-stone-50"
+                className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#a7f3d0] text-[#064e3b] text-xs font-medium bg-white/70"
               >
                 <Phone className="w-3.5 h-3.5 text-amber-600" />
                 <span className="font-mono">Concierge: +91 98648 79505</span>
