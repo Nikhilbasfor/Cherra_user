@@ -238,20 +238,20 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
               <div ref={areaDropdownRef} className="col-span-2 sm:col-span-2 lg:col-span-4 relative">
                 <div
                   onClick={() => setIsAreaDropdownOpen((prev) => !prev)}
-                  className="p-3 rounded-xl bg-[#141a16] hover:bg-[#1a221d] border border-white/10 hover:border-white/20 transition-all cursor-pointer"
+                  className="p-3 rounded-xl bg-[#faf9f6] hover:bg-white border border-stone-300 hover:border-stone-400 transition-all cursor-pointer shadow-xs"
                 >
-                  <label className="block text-[10px] font-mono font-bold text-[#df9e38] uppercase tracking-widest mb-1 flex items-center justify-between cursor-pointer">
+                  <label className="block text-[10px] font-mono font-bold text-amber-800 uppercase tracking-widest mb-1 flex items-center justify-between cursor-pointer">
                     <span className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-[#df9e38]" />
+                      <MapPin className="w-3.5 h-3.5 text-amber-600" />
                       Region or Stay
                     </span>
                     <ChevronDown
-                      className={`w-3 h-3 text-slate-400 transition-transform ${
+                      className={`w-3 h-3 text-stone-600 transition-transform ${
                         isAreaDropdownOpen ? "rotate-180" : ""
                       }`}
                     />
                   </label>
-                  <div className="text-xs sm:text-sm font-bold text-white truncate">
+                  <div className="text-xs sm:text-sm font-bold text-slate-950 truncate">
                     {selectedHotelSlug
                       ? areaSearchQuery || selectedArea
                       : selectedArea === "All Areas"
@@ -268,18 +268,18 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute top-full lg:top-auto lg:bottom-full left-0 right-0 mt-2 lg:mt-0 lg:mb-2 z-50 bg-[#090d0b] rounded-2xl border border-white/10 shadow-2xl shadow-black/90 p-2.5 space-y-2 max-h-72 overflow-y-auto text-white"
+                      className="absolute top-full lg:top-auto lg:bottom-full left-0 right-0 mt-2 lg:mt-0 lg:mb-2 z-50 bg-[#faf9f6] rounded-2xl border border-stone-300 shadow-2xl shadow-black/80 p-2.5 space-y-2 max-h-72 overflow-y-auto text-slate-900"
                     >
                       {/* Search Filter Input */}
                       <div className="relative">
-                        <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                        <Search className="w-3.5 h-3.5 text-stone-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           placeholder="Search locality or property..."
                           value={areaSearchQuery}
                           onChange={(e) => setAreaSearchQuery(e.target.value)}
                           onClick={(e) => e.stopPropagation()}
-                          className="w-full bg-[#141a16] border border-white/10 rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#df9e38]"
+                          className="w-full bg-white border border-stone-300 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-900 placeholder-stone-400 focus:outline-none focus:border-amber-600"
                           autoFocus
                         />
                       </div>
@@ -291,11 +291,11 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
                         className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left cursor-pointer ${
                           selectedArea === "All Areas" && !selectedHotelSlug
                             ? "bg-[#df9e38] text-slate-950 font-bold"
-                            : "hover:bg-[#141a16] text-slate-200"
+                            : "hover:bg-stone-200/70 text-slate-800"
                         }`}
                       >
                         <span className="flex items-center gap-2">
-                          <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                          <MapPin className="w-3.5 h-3.5 text-amber-600" />
                           All Cherrapunji (Sohra)
                         </span>
                         <span className="text-[10px] font-mono opacity-70">
@@ -306,7 +306,7 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
                       {/* Region Localities */}
                       {filteredDropdownOptions.areas.length > 0 && (
                         <div>
-                          <div className="text-[10px] font-mono font-bold text-[#df9e38] uppercase tracking-widest px-2 py-1">
+                          <div className="text-[10px] font-mono font-bold text-amber-800 uppercase tracking-widest px-2 py-1">
                             Localities ({filteredDropdownOptions.areas.length})
                           </div>
                           <div className="space-y-0.5">
@@ -318,7 +318,7 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
                                 className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors text-left cursor-pointer ${
                                   selectedArea === area && !selectedHotelSlug
                                     ? "bg-[#df9e38] text-slate-950 font-bold"
-                                    : "hover:bg-[#141a16] text-slate-200"
+                                    : "hover:bg-stone-200/70 text-slate-800"
                                 }`}
                               >
                                 <span className="truncate">{area}</span>
@@ -333,8 +333,8 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
 
                       {/* Specific Properties */}
                       {filteredDropdownOptions.hotels.length > 0 && (
-                        <div className="pt-1 border-t border-white/10">
-                          <div className="text-[10px] font-mono font-bold text-[#df9e38] uppercase tracking-widest px-2 py-1">
+                        <div className="pt-1 border-t border-stone-200">
+                          <div className="text-[10px] font-mono font-bold text-amber-800 uppercase tracking-widest px-2 py-1">
                             Individual Stays ({filteredDropdownOptions.hotels.length})
                           </div>
                           <div className="space-y-0.5">
@@ -346,14 +346,14 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
                                 className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors text-left cursor-pointer ${
                                   selectedHotelSlug === h.slug
                                     ? "bg-[#df9e38] text-slate-950 font-bold"
-                                    : "hover:bg-[#141a16] text-slate-200"
+                                    : "hover:bg-stone-200/70 text-slate-800"
                                 }`}
                               >
                                 <div className="truncate">
-                                  <p className="font-bold truncate text-white">{h.name}</p>
-                                  <p className="text-[10px] font-mono text-slate-400">{h.area}, Sohra</p>
+                                  <p className="font-bold truncate text-slate-950">{h.name}</p>
+                                  <p className="text-[10px] font-mono text-stone-500">{h.area}, Sohra</p>
                                 </div>
-                                <span className="text-[11px] font-mono font-bold text-[#df9e38] shrink-0 ml-2">
+                                <span className="text-[11px] font-mono font-bold text-amber-800 shrink-0 ml-2">
                                   ₹{h.pricePerNight}
                                 </span>
                               </button>
@@ -368,9 +368,9 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
 
               {/* Field 2: Check-In (1 col mobile, 2 cols desktop) */}
               <div className="col-span-1 sm:col-span-1 lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#141a16] hover:bg-[#1a221d] border border-white/10 hover:border-white/20 transition-all">
-                  <label className="block text-[10px] font-mono font-bold text-[#df9e38] uppercase tracking-widest mb-1 flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-[#df9e38]" />
+                <div className="p-3 rounded-xl bg-[#faf9f6] hover:bg-white border border-stone-300 hover:border-stone-400 transition-all shadow-xs">
+                  <label className="block text-[10px] font-mono font-bold text-amber-800 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-amber-600" />
                     Check-in
                   </label>
                   <input
@@ -378,16 +378,16 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
                     min={todayStr}
                     value={checkIn}
                     onChange={(e) => setCheckIn(e.target.value)}
-                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-white border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none cursor-pointer [color-scheme:dark]"
+                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-950 border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none cursor-pointer [color-scheme:light]"
                   />
                 </div>
               </div>
 
               {/* Field 3: Check-Out (1 col mobile, 2 cols desktop) */}
               <div className="col-span-1 sm:col-span-1 lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#141a16] hover:bg-[#1a221d] border border-white/10 hover:border-white/20 transition-all">
-                  <label className="block text-[10px] font-mono font-bold text-[#df9e38] uppercase tracking-widest mb-1 flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-[#df9e38]" />
+                <div className="p-3 rounded-xl bg-[#faf9f6] hover:bg-white border border-stone-300 hover:border-stone-400 transition-all shadow-xs">
+                  <label className="block text-[10px] font-mono font-bold text-amber-800 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-amber-600" />
                     Check-out
                   </label>
                   <input
@@ -395,27 +395,27 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
                     min={checkIn || todayStr}
                     value={checkOut}
                     onChange={(e) => setCheckOut(e.target.value)}
-                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-white border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none cursor-pointer [color-scheme:dark]"
+                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-950 border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none cursor-pointer [color-scheme:light]"
                   />
                 </div>
               </div>
 
               {/* Field 4: Guests (full width mobile, 2 cols desktop) */}
               <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#141a16] hover:bg-[#1a221d] border border-white/10 hover:border-white/20 transition-all">
-                  <label className="block text-[10px] font-mono font-bold text-[#df9e38] uppercase tracking-widest mb-1 flex items-center gap-1.5">
-                    <Users className="w-3.5 h-3.5 text-[#df9e38]" />
+                <div className="p-3 rounded-xl bg-[#faf9f6] hover:bg-white border border-stone-300 hover:border-stone-400 transition-all shadow-xs">
+                  <label className="block text-[10px] font-mono font-bold text-amber-800 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                    <Users className="w-3.5 h-3.5 text-amber-600" />
                     Guests
                   </label>
                   <select
                     value={guests}
                     onChange={(e) => setGuests(e.target.value)}
-                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-white border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none cursor-pointer [color-scheme:dark]"
+                    className="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-950 border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none cursor-pointer [color-scheme:light]"
                   >
-                    <option value="1 Adult" className="bg-[#141a16] text-white">1 Adult</option>
-                    <option value="2 Adults" className="bg-[#141a16] text-white">2 Adults</option>
-                    <option value="2 Adults, 1 Child" className="bg-[#141a16] text-white">2 Adults + 1 Child</option>
-                    <option value="3+ Guests (Family)" className="bg-[#141a16] text-white">3+ Guests (Family)</option>
+                    <option value="1 Adult" className="bg-white text-slate-950">1 Adult</option>
+                    <option value="2 Adults" className="bg-white text-slate-950">2 Adults</option>
+                    <option value="2 Adults, 1 Child" className="bg-white text-slate-950">2 Adults + 1 Child</option>
+                    <option value="3+ Guests (Family)" className="bg-white text-slate-950">3+ Guests (Family)</option>
                   </select>
                 </div>
               </div>
