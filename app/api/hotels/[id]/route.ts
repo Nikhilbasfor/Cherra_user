@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { dbGetHotels, dbSaveHotel, dbDeleteHotel } from "@/lib/db";
 import { Hotel } from "@/lib/types";
+import { isAuthorizedAdmin } from "@/lib/rateLimit";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Key",
 };
 
 interface Params {
@@ -31,7 +32,18 @@ export async function GET(req: Request, { params }: Params) {
   }
 }
 
+/**
+ * PUT /api/hotels/[id]
+ * Protected: Requires Admin authorization
+ */
 export async function PUT(req: Request, { params }: Params) {
+  if (!isAuthorizedAdmin(req)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Admin authorization required to update hotel data" },
+      { status: 401, headers: corsHeaders }
+    );
+  }
+
   try {
     const { id } = await params;
     const body: Hotel = await req.json();
@@ -44,7 +56,18 @@ export async function PUT(req: Request, { params }: Params) {
   }
 }
 
+/**
+ * DELETE /api/hotels/[id]
+ * Protected: Requires Admin authorization
+ */
 export async function DELETE(req: Request, { params }: Params) {
+  if (!isAuthorizedAdmin(req)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Admin authorization required to delete hotel records" },
+      { status: 401, headers: corsHeaders }
+    );
+  }
+
   try {
     const { id } = await params;
     await dbDeleteHotel(id);

@@ -132,6 +132,7 @@ function InquiryModalContent({
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [checkIn, setCheckIn] = useState(initialCheckIn || "");
   const [checkOut, setCheckOut] = useState(initialCheckOut || "");
   const [adults, setAdults] = useState(2);
@@ -205,9 +206,10 @@ function InquiryModalContent({
         guests: { adults, children },
         specialRequests,
         budget: roomTariff,
+        _hp: honeypot,
       };
 
-      await submitInquiry(leadData);
+      await submitInquiry(leadData as any);
       setIsSubmitted(true);
     } catch (err) {
       console.error("Error submitting inquiry:", err);
@@ -532,6 +534,19 @@ function InquiryModalContent({
                 value={specialRequests}
                 onChange={(e) => setSpecialRequests(e.target.value)}
                 className="w-full bg-[#f8faf9] focus:bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all resize-none"
+              />
+            </div>
+
+            {/* Anti-spam honeypot - invisible to human visitors */}
+            <div className="hidden" aria-hidden="true" style={{ display: "none" }}>
+              <label htmlFor="website_hp">Leave empty</label>
+              <input
+                id="website_hp"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
               />
             </div>
           </div>

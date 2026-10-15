@@ -1,0 +1,32 @@
+[
+  {
+    "id": "faq-1",
+    "question": "What is the best time to visit Cherrapunji (Sohra)?",
+    "answer": "Cherrapunji is spectacular year-round. For roaring waterfalls and dramatic misty canyon clouds, the monsoon season from June to September is magical. For trekking down to the Double Decker Living Root Bridge and clear sunny skies, October to April is ideal.",
+    "order": 1
+  },
+  {
+    "id": "faq-2",
+    "question": "How do I book hotels through CherraStays without commission?",
+    "answer": "When you submit an inquiry through our portal, your request connects directly with the resort management and our local desk in Sohra. There are no middleman surcharges, ensuring you get direct front-desk tariffs along with prompt WhatsApp verification.",
+    "order": 2
+  },
+  {
+    "id": "faq-3",
+    "question": "Are hotels in Cherrapunji safe for families and solo female travelers?",
+    "answer": "Yes, exceptionally so. Meghalaya is globally recognized for its matrilineal society, peaceful culture, and warm Khasi hospitality. All hotels in our collection are verified physical properties adhering to strict safety and hygiene benchmarks.",
+    "order": 3
+  },
+  {
+    "id": "faq-4",
+    "question": "Can hotels arrange airport transfers from Guwahati or Shillong?",
+    "answer": "Yes. Our partner resorts and boutique stays coordinate reliable cab pickups and drop-offs from Guwahati Airport (GAU) and Shillong Airport (SHL) with verified local drivers.",
+    "order": 4
+  },
+  {
+    "id": "faq-5",
+    "question": "Do hotels in Cherrapunji provide 24/7 hot water geysers?",
+    "answer": "Yes. Because Cherrapunji remains crisp and misty throughout the year, every stay in our curated portfolio is equipped with reliable hot water geysers in private bathrooms.",
+    "order": 5
+  }
+]

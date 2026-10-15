@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { dbGetHotels, dbSaveHotel } from "@/lib/db";
 import { Hotel } from "@/lib/types";
+import { isAuthorizedAdmin } from "@/lib/rateLimit";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Key",
 };
 
 export async function OPTIONS() {
@@ -22,7 +23,18 @@ export async function GET() {
   }
 }
 
+/**
+ * POST /api/hotels
+ * Protected: Requires Admin authorization
+ */
 export async function POST(req: Request) {
+  if (!isAuthorizedAdmin(req)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Admin authorization required to add or modify hotel inventory" },
+      { status: 401, headers: corsHeaders }
+    );
+  }
+
   try {
     const body: Hotel = await req.json();
     if (!body.name || !body.slug) {

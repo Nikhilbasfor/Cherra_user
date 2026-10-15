@@ -1,0 +1,41 @@
+[
+  {
+    "id": "rev-1",
+    "hotelId": "polo-orchid-resort",
+    "userId": "user-1",
+    "userName": "Aditi Sharma",
+    "userEmail": "aditi@gmail.com",
+    "rating": 5,
+    "title": "Unmatched sunrise view over Nohsngithiang Falls",
+    "comment": "Waking up to the clouds rising from the Bangladesh plains was surreal. The log cabin was warm with 24/7 hot water, and the bonfire dinner was exceptional.",
+    "stayMonth": "October 2024",
+    "createdAt": "Nov 2, 2024",
+    "verified": true
+  },
+  {
+    "id": "rev-2",
+    "hotelId": "cherrapunjee-holiday-resort",
+    "userId": "user-2",
+    "userName": "Rahul Sengupta",
+    "userEmail": "rahul@outlook.com",
+    "rating": 5,
+    "title": "The true authentic Khasi homestay experience",
+    "comment": "Denis and his family treated us like personal guests. Best guidance for the Living Root Bridge trek, and homecooked local meals were pure comfort.",
+    "stayMonth": "December 2024",
+    "createdAt": "Dec 18, 2024",
+    "verified": true
+  },
+  {
+    "id": "rev-3",
+    "hotelId": "saimika-park-resort",
+    "userId": "user-3",
+    "userName": "Vikram Mehta",
+    "userEmail": "vikram@yahoo.com",
+    "rating": 4,
+    "title": "Serene stream & stone cottages in nature",
+    "comment": "Very rustic and peaceful. Listening to local Khasi musicians around the campfire was memorable.",
+    "stayMonth": "January 2025",
+    "createdAt": "Jan 12, 2025",
+    "verified": true
+  }
+]

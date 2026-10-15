@@ -1,0 +1,57 @@
+[
+  {
+    "id": "nohkalikai-falls",
+    "name": "Nohkalikai Falls",
+    "khasiName": "Ka Likai",
+    "category": "Waterfall",
+    "description": "India's tallest plunge waterfall (1,115 feet), cascading into a mesmerizing turquoise plunge pool surrounded by deep evergreen cliffs.",
+    "distanceFromSohra": "7.5 km",
+    "image": "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80",
+    "rating": 4.9,
+    "bestTime": "Monsoon & Post-Monsoon (June - Nov)"
+  },
+  {
+    "id": "double-decker-bridge",
+    "name": "Double Decker Living Root Bridge",
+    "khasiName": "Jingkieng Nongriat",
+    "category": "Living Root Bridge",
+    "description": "A 200-year-old biological marvel grown across the Umshiang river from the living roots of Ficus elastica trees in Nongriat village.",
+    "distanceFromSohra": "18 km (start from Tyrna + 3,500 steps trek)",
+    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+    "rating": 5,
+    "bestTime": "September to May (Safe trekking)"
+  },
+  {
+    "id": "seven-sisters-falls",
+    "name": "Seven Sisters Falls",
+    "khasiName": "Nohsngithiang Falls",
+    "category": "Waterfall",
+    "description": "Seven segmented roaring waterfalls plunging down the limestone plateau cliffs facing Bangladesh, illuminated beautifully at sunset.",
+    "distanceFromSohra": "4 km",
+    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
+    "rating": 4.8,
+    "bestTime": "Peak Monsoon (July - Sept)"
+  },
+  {
+    "id": "mawsmai-cave",
+    "name": "Mawsmai Cave",
+    "khasiName": "Krem Mawsmai",
+    "category": "Caves",
+    "description": "An illuminated limestone cave system with ancient stalactites and stalagmites, giving visitors a thrilling spelunking adventure.",
+    "distanceFromSohra": "6 km",
+    "image": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
+    "rating": 4.7,
+    "bestTime": "All Year Round"
+  },
+  {
+    "id": "wei-sawdong-falls",
+    "name": "Wei Sawdong Three-Tier Falls",
+    "khasiName": "Wei Sawdong",
+    "category": "Waterfall",
+    "description": "A breathtaking three-level stepped waterfall with crystal clear turquoise pools tucked within a pristine forest gorge.",
+    "distanceFromSohra": "14 km",
+    "image": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80",
+    "rating": 4.9,
+    "bestTime": "September to April"
+  }
+]
