@@ -153,7 +153,7 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
   };
 
   return (
-    <div className="relative min-h-[90vh] sm:min-h-[94vh] flex flex-col justify-end pt-24 sm:pt-28 pb-10 sm:pb-14 overflow-hidden bg-[#064e3b]">
+    <div className="relative min-h-[90vh] sm:min-h-[94vh] flex flex-col justify-end pt-24 sm:pt-28 pb-10 sm:pb-14 overflow-hidden bg-slate-950">
       {/* Background Drone Video on Desktop ONLY | Serene Misty Photography on Mobile */}
       <div className="absolute inset-0 z-0">
         {isDesktop ? (
@@ -179,8 +179,8 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
           />
         )}
 
-        {/* Ambient Nature Fade to lower section */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#042f24] via-[#042f24]/75 to-emerald-950/40 pointer-events-none" />
+        {/* Ambient Cinematic Vignette - lets natural scenery breathe without heavy green tint */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/20 pointer-events-none" />
       </div>
 
       {/* Main Content Area */}

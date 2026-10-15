@@ -242,44 +242,44 @@ export default function HomePageClient({
       {/* Cinematic Hero */}
       <HeroSection hotels={hotels} />
 
-      {/* Guest Satisfaction & Inventory Band - Rich Green, Golden Titles, No 01// */}
-      <section className="relative z-10 bg-[#064e3b] text-white py-6 sm:py-8 border-y border-emerald-800 shadow-inner">
+      {/* Guest Satisfaction & Inventory Band - Clean Warm Ivory, Crisp Charcoal Typography, Amber Accents */}
+      <section className="relative z-10 bg-[#f8f7f4] text-slate-900 py-6 sm:py-8 border-y border-stone-200/90 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 md:gap-8 md:divide-x divide-emerald-700/60">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 md:gap-8 md:divide-x divide-stone-200">
             {/* Metric 1 */}
-            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-emerald-900/30 sm:bg-transparent border border-emerald-700/30 sm:border-0">
-              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
+            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-white sm:bg-transparent border border-stone-200/80 sm:border-0 shadow-xs sm:shadow-none">
+              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-700 block mb-1">
                 Verified Stays
               </span>
-              <p className="text-xl sm:text-3xl font-black text-white tracking-tight">{currentInventory}</p>
-              <p className="text-[11px] sm:text-xs text-emerald-100/80 mt-0.5 sm:mt-1">Curated in Sohra</p>
+              <p className="text-xl sm:text-3xl font-black text-slate-950 tracking-tight">{currentInventory}</p>
+              <p className="text-[11px] sm:text-xs text-stone-500 mt-0.5 sm:mt-1">Curated in Sohra</p>
             </div>
 
             {/* Metric 2 */}
-            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-emerald-900/30 sm:bg-transparent border border-emerald-700/30 sm:border-0">
-              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
+            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-white sm:bg-transparent border border-stone-200/80 sm:border-0 shadow-xs sm:shadow-none">
+              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-700 block mb-1">
                 Guest Score
               </span>
-              <p className="text-xl sm:text-3xl font-black text-white tracking-tight">{stats.satisfactionRate}</p>
-              <p className="text-[11px] sm:text-xs text-emerald-100/80 mt-0.5 sm:mt-1">Superb Reviews</p>
+              <p className="text-xl sm:text-3xl font-black text-slate-950 tracking-tight">{stats.satisfactionRate}</p>
+              <p className="text-[11px] sm:text-xs text-stone-500 mt-0.5 sm:mt-1">Superb Reviews</p>
             </div>
 
             {/* Metric 3 */}
-            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-emerald-900/30 sm:bg-transparent border border-emerald-700/30 sm:border-0">
-              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
+            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-white sm:bg-transparent border border-stone-200/80 sm:border-0 shadow-xs sm:shadow-none">
+              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-700 block mb-1">
                 Tariff Pledge
               </span>
-              <p className="text-xl sm:text-3xl font-black text-white tracking-tight">{stats.tariffPledge}</p>
-              <p className="text-[11px] sm:text-xs text-emerald-100/80 mt-0.5 sm:mt-1">Zero Commission</p>
+              <p className="text-xl sm:text-3xl font-black text-slate-950 tracking-tight">{stats.tariffPledge}</p>
+              <p className="text-[11px] sm:text-xs text-stone-500 mt-0.5 sm:mt-1">Zero Commission</p>
             </div>
 
             {/* Metric 4 */}
-            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-emerald-900/30 sm:bg-transparent border border-emerald-700/30 sm:border-0">
-              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">
+            <div className="p-3.5 sm:p-0 md:px-4 text-left rounded-xl sm:rounded-none bg-white sm:bg-transparent border border-stone-200/80 sm:border-0 shadow-xs sm:shadow-none">
+              <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-700 block mb-1">
                 Concierge Desk
               </span>
-              <p className="text-xl sm:text-3xl font-black text-white tracking-tight">{stats.avgResponseTime}</p>
-              <p className="text-[11px] sm:text-xs text-emerald-100/80 mt-0.5 sm:mt-1">Fast WhatsApp Reply</p>
+              <p className="text-xl sm:text-3xl font-black text-slate-950 tracking-tight">{stats.avgResponseTime}</p>
+              <p className="text-[11px] sm:text-xs text-stone-500 mt-0.5 sm:mt-1">Fast WhatsApp Reply</p>
             </div>
           </div>
         </div>
