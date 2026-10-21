@@ -163,7 +163,9 @@ export async function dbGetHotels(): Promise<Hotel[]> {
   ensureFilesExist();
   try {
     const raw = fs.readFileSync(HOTELS_FILE, "utf-8");
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    return CHERRAPUNJI_HOTELS;
   } catch {
     return CHERRAPUNJI_HOTELS;
   }

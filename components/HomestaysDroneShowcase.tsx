@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   MapPin,
@@ -48,7 +49,7 @@ const TOP_3_HOMESTAYS: FeaturedHomestay[] = [
     reviewsCount: 122,
     highlight: "Spectacular edge-of-the-world cliff views overlooking endless misty gorges and lush canyon panoramas.",
     image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=800&q=80",
-    hotelSlug: "kutmadan-resort-sohra",
+    hotelSlug: "kutmadan-resort",
   },
   {
     id: "saimika-park-resort",
@@ -60,7 +61,7 @@ const TOP_3_HOMESTAYS: FeaturedHomestay[] = [
     reviewsCount: 178,
     highlight: "65-acre peaceful wilderness retreat with natural river streams, stone cottages, and acoustic campfire nights.",
     image: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80",
-    hotelSlug: "saimika-park-cottages",
+    hotelSlug: "saimika-resort",
   },
 ];
 
@@ -69,6 +70,8 @@ interface HomestaysDroneShowcaseProps {
 }
 
 export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDroneShowcaseProps) {
+  const router = useRouter();
+
   return (
     <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Header - Uplifted with clean black and golden typography */}
@@ -113,13 +116,15 @@ export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDrone
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: idx * 0.1 }}
-            className="group relative bg-white rounded-2xl border border-stone-200/90 hover:border-stone-400/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
+            onClick={() => router.push(`/hotels/${spot.hotelSlug}`)}
+            className="group relative bg-white rounded-2xl border border-stone-200/90 hover:border-stone-400/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer select-none"
           >
-            {/* Instant Prefetched Route Link */}
+            {/* Viewport-prefetched anchor for browser recognition & SEO */}
             <Link
               href={`/hotels/${spot.hotelSlug}`}
               prefetch={true}
-              className="absolute inset-0 z-0"
+              className="absolute inset-0 z-0 pointer-events-none"
+              tabIndex={-1}
               aria-label={`View details for ${spot.name}`}
             />
 
@@ -132,7 +137,7 @@ export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDrone
                 sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
 
               {/* Top Badge */}
               <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
@@ -157,9 +162,13 @@ export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDrone
                   <span>{spot.area}, Sohra</span>
                 </div>
 
-                <h3 className="font-serif text-base sm:text-lg font-bold text-slate-900 tracking-tight group-hover:text-emerald-900 transition-colors line-clamp-1">
+                <Link
+                  href={`/hotels/${spot.hotelSlug}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="font-serif text-base sm:text-lg font-bold text-slate-900 tracking-tight group-hover:text-emerald-900 transition-colors line-clamp-1 block hover:underline"
+                >
                   {spot.name}
-                </h3>
+                </Link>
 
                 <p className="text-xs text-stone-600 leading-relaxed line-clamp-2">
                   {spot.highlight}
@@ -167,7 +176,7 @@ export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDrone
               </div>
 
               {/* Price & Action Button */}
-              <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-3">
+              <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
                 <div>
                   <span className="text-[10px] text-stone-400 uppercase tracking-widest font-sans block">
                     Verified Tariff
@@ -180,18 +189,28 @@ export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDrone
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (onOpenInquiry) onOpenInquiry(spot.id);
-                  }}
-                  className="relative z-10 px-4 py-2.5 rounded-xl bg-[#0a3a2a] hover:bg-[#06291d] text-white font-sans font-bold uppercase tracking-wider text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
-                >
-                  <span>Reserve</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-emerald-200" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/hotels/${spot.hotelSlug}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="px-3.5 py-2.5 rounded-xl border border-stone-300 text-stone-700 hover:text-emerald-900 hover:bg-stone-50 text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>Details</span>
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (onOpenInquiry) onOpenInquiry(spot.id);
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-[#0a3a2a] hover:bg-[#06291d] text-white font-sans font-bold uppercase tracking-wider text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 shrink-0"
+                  >
+                    <span>Reserve</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-emerald-200" />
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>

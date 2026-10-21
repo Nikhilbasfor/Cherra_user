@@ -98,7 +98,8 @@ export async function getAllHotels(): Promise<Hotel[]> {
     // Server-side
     try {
       const { dbGetHotels } = await import("./db");
-      return await dbGetHotels();
+      const list = await dbGetHotels();
+      if (Array.isArray(list) && list.length > 0) return list;
     } catch {
       // fallback
     }
@@ -108,12 +109,33 @@ export async function getAllHotels(): Promise<Hotel[]> {
 }
 
 /**
- * Fetch a single hotel by its slug
+ * Fetch a single hotel by its slug or ID with resilient matching
  */
 export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
+  if (!slug) return null;
+  const decoded = decodeURIComponent(slug).toLowerCase().trim().replace(/\/+$/, "");
   const all = await getAllHotels();
-  const found = all.find((h) => h.slug === slug || h.id === slug);
-  return found || null;
+
+  // 1. Exact match by slug or id
+  const found = all.find((h) => {
+    const hSlug = (h.slug || "").toLowerCase().trim();
+    const hId = (h.id || "").toLowerCase().trim();
+    return hSlug === decoded || hId === decoded;
+  });
+  if (found) return found;
+
+  // 2. Resilient suffix-stripped matching (e.g., -sohra, -cherrapunji, -resort, -cottages)
+  const cleanSearch = decoded.replace(/-(resort|sohra|cherrapunji|cottages|hotel|retreat|stays)$/g, "");
+  if (cleanSearch.length >= 4) {
+    const fuzzy = all.find((h) => {
+      const s = (h.slug || "").toLowerCase();
+      const id = (h.id || "").toLowerCase();
+      return s.includes(cleanSearch) || cleanSearch.includes(s) || id.includes(cleanSearch) || cleanSearch.includes(id);
+    });
+    if (fuzzy) return fuzzy;
+  }
+
+  return null;
 }
 
 /**
