@@ -193,9 +193,9 @@ export default function MapExplorer({
 
           {/* Interactive Pins */}
           <div className="absolute inset-0 pointer-events-none">
-            {/* Hotels Pins */}
+            {/* Hotels Pins - Top 10 featured stays pinned on map for silky smooth performance */}
             {(filterType === "all" || filterType === "hotels") &&
-              filteredHotels.map((hotel, idx) => {
+              filteredHotels.slice(0, 10).map((hotel, idx) => {
                 const isActive = activeItem.type === "hotel" && (activeItem.data as Hotel).id === hotel.id;
                 const positions = [
                   { top: "45%", left: "62%" },

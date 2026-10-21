@@ -18,7 +18,7 @@ interface HotelCardProps {
   linkPrefix?: string;
 }
 
-export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: HotelCardProps) {
+function HotelCardComponent({ hotel, onEnquire, proximity, linkPrefix }: HotelCardProps) {
   const router = useRouter();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
@@ -225,3 +225,6 @@ export default function HotelCard({ hotel, onEnquire, proximity, linkPrefix }: H
     </div>
   );
 }
+
+const HotelCard = React.memo(HotelCardComponent);
+export default HotelCard;

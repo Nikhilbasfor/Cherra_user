@@ -67,14 +67,16 @@ export default function HotelsCatalogClient({
   const [hotels, setHotels] = useState<Hotel[]>(CHERRAPUNJI_HOTELS);
 
   useEffect(() => {
-    getAllHotels()
-      .then((data) => {
-        if (data && data.length > 0) {
-          setHotels(data);
-        }
-      })
-      .catch(console.error);
-  }, []);
+    if (!hotels || hotels.length === 0) {
+      getAllHotels()
+        .then((data) => {
+          if (data && data.length > 0) {
+            setHotels(data);
+          }
+        })
+        .catch(console.error);
+    }
+  }, [hotels]);
 
   const searchParams = useSearchParams();
 
@@ -113,6 +115,7 @@ export default function HotelsCatalogClient({
   const [selectedHotelForInquiry, setSelectedHotelForInquiry] = useState<Hotel | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [amenitiesModalOpen, setAmenitiesModalOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState<number>(12);
 
   useEffect(() => {
     if (initialStarRating) {
@@ -396,6 +399,22 @@ export default function HotelsCatalogClient({
     selectedLandmark,
     proximityData,
   ]);
+
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [
+    searchQuery,
+    selectedCollection,
+    selectedStars,
+    maxPrice,
+    selectedAmenities,
+    sortBy,
+    selectedLandmark,
+  ]);
+
+  const displayedHotels = useMemo(() => {
+    return filteredHotels.slice(0, visibleCount);
+  }, [filteredHotels, visibleCount]);
 
   const handleOpenInquiry = (hotel?: Hotel) => {
     setSelectedHotelForInquiry(hotel || null);
@@ -699,17 +718,41 @@ export default function HotelsCatalogClient({
 
             {/* Cards Grid */}
             {filteredHotels.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {filteredHotels.map((hotel) => (
-                  <HotelCard
-                    key={hotel.id}
-                    hotel={hotel}
-                    proximity={proximityData?.map.get(hotel.id)}
-                    linkPrefix={currentLinkPrefix}
-                    onEnquire={(h) => handleOpenInquiry(h)}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {displayedHotels.map((hotel) => (
+                    <HotelCard
+                      key={hotel.id}
+                      hotel={hotel}
+                      proximity={proximityData?.map.get(hotel.id)}
+                      linkPrefix={currentLinkPrefix}
+                      onEnquire={(h) => handleOpenInquiry(h)}
+                    />
+                  ))}
+                </div>
+
+                {visibleCount < filteredHotels.length && (
+                  <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setVisibleCount((prev) => Math.min(prev + 12, filteredHotels.length))}
+                      className="px-6 py-3 rounded-xl bg-[#0a3a2a] hover:bg-[#06291d] text-white font-mono font-bold uppercase tracking-wider text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+                    >
+                      <span>Load More Stays</span>
+                      <span className="text-emerald-200">
+                        ({displayedHotels.length} of {filteredHotels.length})
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setVisibleCount(filteredHotels.length)}
+                      className="px-5 py-3 rounded-xl border border-stone-300 hover:border-emerald-700 bg-white hover:bg-stone-50 text-stone-700 hover:text-emerald-900 font-mono font-bold uppercase tracking-wider text-xs transition-all cursor-pointer"
+                    >
+                      <span>Show All ({filteredHotels.length})</span>
+                    </button>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="p-10 text-center bg-white rounded-2xl border border-emerald-900/10 space-y-3">
                 <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">

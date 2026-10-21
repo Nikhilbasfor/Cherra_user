@@ -68,9 +68,24 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
   }, [hotels]);
 
   useEffect(() => {
-    if (isDesktop && videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
+    if (!isDesktop || !videoRef.current) return;
+    const video = videoRef.current;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
   }, [isDesktop]);
 
   useEffect(() => {
@@ -163,11 +178,12 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
             loop
             muted
             playsInline
-            preload="none"
+            preload="metadata"
+            poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80"
             className="w-full h-full object-cover object-center scale-[1.02] filter brightness-95 transform-gpu"
           >
-            <source src="/videos/cherrapunji-homestays-drone.webm" type="video/webm" />
             <source src="/videos/cherrapunji-drone.webm" type="video/webm" />
+            <source src="/videos/cherrapunji-waterfall.mp4" type="video/mp4" />
           </video>
         ) : (
           /* Mobile Serene Luxury Photography Background (Zero video download/decoding on mobile) */

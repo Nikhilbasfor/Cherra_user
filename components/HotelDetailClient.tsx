@@ -144,21 +144,29 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
     }
   };
 
-  // Scroll spy to highlight active in-page navigation tab
+  // Scroll spy to highlight active in-page navigation tab with requestAnimationFrame throttling
   useEffect(() => {
     const sectionIds = ["overview", "rooms", "amenities", "policies", "nearby", "reviews"];
+    let ticking = false;
+
     const handleScroll = () => {
-      const scrollPos = window.scrollY + 140;
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveNavSection(id);
-            break;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollPos = window.scrollY + 140;
+          for (const id of sectionIds) {
+            const el = document.getElementById(id);
+            if (el) {
+              const top = el.offsetTop;
+              const height = el.offsetHeight;
+              if (scrollPos >= top && scrollPos < top + height) {
+                setActiveNavSection((prev) => (prev !== id ? id : prev));
+                break;
+              }
+            }
           }
-        }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });

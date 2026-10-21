@@ -142,8 +142,10 @@ export default function HomePageClient({
         .catch(console.warn);
     };
 
-    // Initial load once on mount without expensive periodic polling loops
-    loadAll();
+    // Only fetch if initial SSR props were empty
+    if (!initialHotels || initialHotels.length === 0) {
+      loadAll();
+    }
 
     return () => {
       isMounted = false;
