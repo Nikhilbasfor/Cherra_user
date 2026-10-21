@@ -147,17 +147,17 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
   };
 
   return (
-    <div className="relative min-h-[90vh] sm:min-h-[94vh] flex flex-col justify-end pt-24 sm:pt-28 pb-10 sm:pb-14 overflow-hidden bg-slate-950">
-      {/* High-Resolution Luxury Hotel Balcony View Background (Option 1) */}
+    <div className="relative min-h-[85vh] sm:min-h-[90vh] lg:min-h-[92vh] flex flex-col justify-end pt-24 sm:pt-28 pb-8 sm:pb-12 overflow-hidden bg-slate-950">
+      {/* High-Resolution Luxury Hotel Balcony View Background - Perfectly Proportioned */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/cherrapunji-hero-balcony.jpg"
+          src="/images/cherrapunji-hero-balcony-fitted.jpg"
           alt="Cherrapunji Luxury Resort Balcony View"
           fill
           priority
-          quality={92}
+          quality={95}
           sizes="100vw"
-          className="object-cover object-center scale-[1.01] transform-gpu"
+          className="object-cover object-center transform-gpu"
         />
 
         {/* Cinematic contrast gradients ensuring all text and buttons are 100% visible and crisp */}
