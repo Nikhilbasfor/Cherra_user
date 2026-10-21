@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -33,7 +34,6 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState("2 Adults");
 
-  const videoRef = useRef<HTMLVideoElement>(null);
   const areaDropdownRef = useRef<HTMLDivElement>(null);
 
   const todayStr = new Date().toISOString().split("T")[0];
@@ -66,27 +66,6 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
       isMounted = false;
     };
   }, [hotels]);
-
-  useEffect(() => {
-    if (!isDesktop || !videoRef.current) return;
-    const video = videoRef.current;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            video.play().catch(() => {});
-          } else {
-            video.pause();
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, [isDesktop]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -169,34 +148,21 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
 
   return (
     <div className="relative min-h-[90vh] sm:min-h-[94vh] flex flex-col justify-end pt-24 sm:pt-28 pb-10 sm:pb-14 overflow-hidden bg-slate-950">
-      {/* Background Drone Video on Desktop ONLY | Serene Misty Photography on Mobile */}
+      {/* High-Resolution Luxury Hotel Balcony View Background (Option 1) */}
       <div className="absolute inset-0 z-0">
-        {isDesktop ? (
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80"
-            className="w-full h-full object-cover object-center scale-[1.02] filter brightness-95 transform-gpu"
-          >
-            <source src="/videos/cherrapunji-drone.webm" type="video/webm" />
-            <source src="/videos/cherrapunji-waterfall.mp4" type="video/mp4" />
-          </video>
-        ) : (
-          /* Mobile Serene Luxury Photography Background (Zero video download/decoding on mobile) */
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=85')`,
-            }}
-          />
-        )}
+        <Image
+          src="/images/cherrapunji-hero-balcony.jpg"
+          alt="Cherrapunji Luxury Resort Balcony View"
+          fill
+          priority
+          quality={92}
+          sizes="100vw"
+          className="object-cover object-center scale-[1.01] transform-gpu"
+        />
 
-        {/* Ambient Cinematic Vignette - lets natural scenery breathe without heavy green tint */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/20 pointer-events-none" />
+        {/* Cinematic contrast gradients ensuring all text and buttons are 100% visible and crisp */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/55 to-black/35 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-transparent to-black/35 pointer-events-none" />
       </div>
 
       {/* Main Content Area */}
@@ -209,12 +175,12 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
             transition={{ duration: 0.6 }}
             className="flex items-center justify-between gap-3 mb-2.5 sm:mb-3"
           >
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest text-amber-300 uppercase flex items-center gap-1.5">
+            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest text-amber-300 uppercase flex items-center gap-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
               <span className="text-amber-400">•</span>
               <span>THE CLOUD HIGHLANDS OF SOHRA</span>
             </span>
-            <span className="text-[10px] font-mono tracking-widest text-emerald-200/90 uppercase bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-              14+ SANCTUARIES
+            <span className="text-[10px] font-mono font-bold tracking-widest text-emerald-300 uppercase bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-emerald-400/30 shadow-md">
+              {hotelsList.length > 0 ? `${hotelsList.length}+ VERIFIED STAYS` : "66+ VERIFIED STAYS"}
             </span>
           </motion.div>
 
@@ -222,7 +188,7 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="font-serif text-3xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-md"
+            className="font-serif text-3xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]"
           >
             Sanctuaries <span className="italic font-serif font-normal text-amber-300">in the</span> <br />
             Mist
@@ -232,7 +198,7 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-3 text-xs sm:text-base text-emerald-50/90 font-light max-w-2xl leading-relaxed drop-shadow"
+            className="mt-3 text-sm sm:text-base text-stone-100 font-normal max-w-2xl leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]"
           >
             Private cliff pavilions and thermal hideaways suspended above Nohkalikai Falls and Sohra gorges. Direct front-desk tariffs with zero booking markups.
           </motion.p>
@@ -247,22 +213,22 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
         >
           <form
             onSubmit={handleSearch}
-            className="p-3 sm:p-4 bg-[#090d0b] rounded-2xl sm:rounded-3xl border border-white/10 shadow-2xl shadow-black/80 text-left"
+            className="p-3.5 sm:p-5 bg-black/85 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/25 shadow-2xl shadow-black/95 text-left"
           >
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 sm:gap-3 items-center">
               {/* Field 1: Region / Property (4 cols desktop, full width mobile) */}
               <div ref={areaDropdownRef} className="col-span-2 sm:col-span-2 lg:col-span-4 relative">
                 <div
                   onClick={() => setIsAreaDropdownOpen((prev) => !prev)}
-                  className="p-3 rounded-xl bg-[#faf9f6] hover:bg-white border border-stone-300 hover:border-stone-400 transition-all cursor-pointer shadow-xs"
+                  className="p-3 rounded-xl bg-white hover:bg-stone-50 border border-stone-200 hover:border-amber-500/70 transition-all cursor-pointer shadow-sm"
                 >
-                  <label className="block text-[10px] font-mono font-bold text-amber-800 uppercase tracking-widest mb-1 flex items-center justify-between cursor-pointer">
+                  <label className="block text-[10px] font-mono font-black text-amber-950 uppercase tracking-widest mb-1 flex items-center justify-between cursor-pointer">
                     <span className="flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5 text-amber-600" />
                       Region or Stay
                     </span>
                     <ChevronDown
-                      className={`w-3 h-3 text-stone-600 transition-transform ${
+                      className={`w-3.5 h-3.5 text-stone-700 transition-transform ${
                         isAreaDropdownOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -295,7 +261,7 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
                           value={areaSearchQuery}
                           onChange={(e) => setAreaSearchQuery(e.target.value)}
                           onClick={(e) => e.stopPropagation()}
-                          className="w-full bg-white border border-stone-300 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-900 placeholder-stone-400 focus:outline-none focus:border-amber-600"
+                          className="w-full bg-white border border-stone-300 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-900 placeholder-stone-400 focus:outline-none focus:border-amber-600 font-medium"
                           autoFocus
                         />
                       </div>
@@ -384,8 +350,8 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
 
               {/* Field 2: Check-In (1 col mobile, 2 cols desktop) */}
               <div className="col-span-1 sm:col-span-1 lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#faf9f6] hover:bg-white border border-stone-300 hover:border-stone-400 transition-all shadow-xs">
-                  <label className="block text-[10px] font-mono font-bold text-amber-800 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                <div className="p-3 rounded-xl bg-white hover:bg-stone-50 border border-stone-200 hover:border-amber-500/70 transition-all shadow-sm">
+                  <label className="block text-[10px] font-mono font-black text-amber-950 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-amber-600" />
                     Check-in
                   </label>
@@ -401,8 +367,8 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
 
               {/* Field 3: Check-Out (1 col mobile, 2 cols desktop) */}
               <div className="col-span-1 sm:col-span-1 lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#faf9f6] hover:bg-white border border-stone-300 hover:border-stone-400 transition-all shadow-xs">
-                  <label className="block text-[10px] font-mono font-bold text-amber-800 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                <div className="p-3 rounded-xl bg-white hover:bg-stone-50 border border-stone-200 hover:border-amber-500/70 transition-all shadow-sm">
+                  <label className="block text-[10px] font-mono font-black text-amber-950 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-amber-600" />
                     Check-out
                   </label>
@@ -418,8 +384,8 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
 
               {/* Field 4: Guests (full width mobile, 2 cols desktop) */}
               <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                <div className="p-3 rounded-xl bg-[#faf9f6] hover:bg-white border border-stone-300 hover:border-stone-400 transition-all shadow-xs">
-                  <label className="block text-[10px] font-mono font-bold text-amber-800 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                <div className="p-3 rounded-xl bg-white hover:bg-stone-50 border border-stone-200 hover:border-amber-500/70 transition-all shadow-sm">
+                  <label className="block text-[10px] font-mono font-black text-amber-950 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                     <Users className="w-3.5 h-3.5 text-amber-600" />
                     Guests
                   </label>
@@ -428,10 +394,10 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
                     onChange={(e) => setGuests(e.target.value)}
                     className="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-950 border-0 border-none outline-none focus:outline-none ring-0 focus:ring-0 shadow-none cursor-pointer [color-scheme:light]"
                   >
-                    <option value="1 Adult" className="bg-white text-slate-950">1 Adult</option>
-                    <option value="2 Adults" className="bg-white text-slate-950">2 Adults</option>
-                    <option value="2 Adults, 1 Child" className="bg-white text-slate-950">2 Adults + 1 Child</option>
-                    <option value="3+ Guests (Family)" className="bg-white text-slate-950">3+ Guests (Family)</option>
+                    <option value="1 Adult" className="bg-white text-slate-950 font-medium">1 Adult</option>
+                    <option value="2 Adults" className="bg-white text-slate-950 font-medium">2 Adults</option>
+                    <option value="2 Adults, 1 Child" className="bg-white text-slate-950 font-medium">2 Adults + 1 Child</option>
+                    <option value="3+ Guests (Family)" className="bg-white text-slate-950 font-medium">3+ Guests (Family)</option>
                   </select>
                 </div>
               </div>
@@ -440,10 +406,10 @@ export default function HeroSection({ hotels }: HeroSectionProps = {}) {
               <div className="col-span-2 sm:col-span-2 lg:col-span-2 flex items-center h-full">
                 <button
                   type="submit"
-                  className="w-full h-full py-3.5 px-4 rounded-xl bg-[#df9e38] hover:bg-[#cf8e28] text-slate-950 font-bold uppercase tracking-wider text-xs transition-all shadow-md shadow-amber-950/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95 border-0"
+                  className="w-full h-full py-3.5 px-4 rounded-xl bg-[#df9e38] hover:bg-[#cf8e28] text-slate-950 font-black uppercase tracking-wider text-xs transition-all shadow-lg shadow-amber-950/40 flex items-center justify-center gap-2 cursor-pointer active:scale-95 border-0"
                 >
                   <span>Explore Stays</span>
-                  <ArrowRight className="w-4 h-4 text-slate-950" />
+                  <ArrowRight className="w-4 h-4 text-slate-950 stroke-[2.5]" />
                 </button>
               </div>
             </div>
