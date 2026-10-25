@@ -106,26 +106,38 @@ export const INITIAL_REVIEWS: HotelReview[] = [
 ];
 
 function ensureFilesExist() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    if (!fs.existsSync(HOTELS_FILE)) {
+      fs.writeFileSync(HOTELS_FILE, JSON.stringify(CHERRAPUNJI_HOTELS, null, 2), "utf-8");
+    }
+    if (!fs.existsSync(INQUIRIES_FILE)) {
+      fs.writeFileSync(INQUIRIES_FILE, JSON.stringify([], null, 2), "utf-8");
+    }
+    if (!fs.existsSync(ATTRACTIONS_FILE)) {
+      fs.writeFileSync(ATTRACTIONS_FILE, JSON.stringify(CHERRAPUNJI_ATTRACTIONS, null, 2), "utf-8");
+    }
+    if (!fs.existsSync(FAQS_FILE)) {
+      fs.writeFileSync(FAQS_FILE, JSON.stringify(INITIAL_FAQS, null, 2), "utf-8");
+    }
+    if (!fs.existsSync(STATS_FILE)) {
+      fs.writeFileSync(STATS_FILE, JSON.stringify(INITIAL_STATS, null, 2), "utf-8");
+    }
+    if (!fs.existsSync(REVIEWS_FILE)) {
+      fs.writeFileSync(REVIEWS_FILE, JSON.stringify(INITIAL_REVIEWS, null, 2), "utf-8");
+    }
+  } catch {
+    // Ignore on read-only serverless filesystems (e.g. Vercel)
   }
-  if (!fs.existsSync(HOTELS_FILE)) {
-    fs.writeFileSync(HOTELS_FILE, JSON.stringify(CHERRAPUNJI_HOTELS, null, 2), "utf-8");
-  }
-  if (!fs.existsSync(INQUIRIES_FILE)) {
-    fs.writeFileSync(INQUIRIES_FILE, JSON.stringify([], null, 2), "utf-8");
-  }
-  if (!fs.existsSync(ATTRACTIONS_FILE)) {
-    fs.writeFileSync(ATTRACTIONS_FILE, JSON.stringify(CHERRAPUNJI_ATTRACTIONS, null, 2), "utf-8");
-  }
-  if (!fs.existsSync(FAQS_FILE)) {
-    fs.writeFileSync(FAQS_FILE, JSON.stringify(INITIAL_FAQS, null, 2), "utf-8");
-  }
-  if (!fs.existsSync(STATS_FILE)) {
-    fs.writeFileSync(STATS_FILE, JSON.stringify(INITIAL_STATS, null, 2), "utf-8");
-  }
-  if (!fs.existsSync(REVIEWS_FILE)) {
-    fs.writeFileSync(REVIEWS_FILE, JSON.stringify(INITIAL_REVIEWS, null, 2), "utf-8");
+}
+
+function safeWriteFile(filePath: string, data: unknown) {
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+  } catch {
+    // Ignore on read-only serverless filesystems (e.g. Vercel)
   }
 }
 
@@ -175,13 +187,13 @@ export async function dbSaveHotel(hotel: Hotel): Promise<Hotel> {
   // Save to Firebase if configured
   if (db && isFirebaseConfigured) {
     try {
-      await withTimeout(setDoc(doc(db, "hotels", hotel.id), hotel, { merge: true }), 2500);
+      await withTimeout(setDoc(doc(db, "hotels", hotel.id), hotel, { merge: true }), 12000);
     } catch (err) {
       console.warn("Firestore save error:", err);
     }
   }
 
-  // Also persist to local file
+  // Also persist to local file (when writable)
   ensureFilesExist();
   const hotels = await dbGetHotels();
   const existingIdx = hotels.findIndex((h) => h.id === hotel.id || h.slug === hotel.slug);
@@ -190,14 +202,14 @@ export async function dbSaveHotel(hotel: Hotel): Promise<Hotel> {
   } else {
     hotels.unshift(hotel);
   }
-  fs.writeFileSync(HOTELS_FILE, JSON.stringify(hotels, null, 2), "utf-8");
+  safeWriteFile(HOTELS_FILE, hotels);
   return hotel;
 }
 
 export async function dbDeleteHotel(hotelId: string): Promise<boolean> {
   if (db && isFirebaseConfigured) {
     try {
-      await withTimeout(deleteDoc(doc(db, "hotels", hotelId)), 2500);
+      await withTimeout(deleteDoc(doc(db, "hotels", hotelId)), 5000);
     } catch (err) {
       console.warn("Firestore delete error:", err);
     }
@@ -206,7 +218,7 @@ export async function dbDeleteHotel(hotelId: string): Promise<boolean> {
   ensureFilesExist();
   const hotels = await dbGetHotels();
   const updated = hotels.filter((h) => h.id !== hotelId);
-  fs.writeFileSync(HOTELS_FILE, JSON.stringify(updated, null, 2), "utf-8");
+  safeWriteFile(HOTELS_FILE, updated);
   return true;
 }
 
@@ -302,7 +314,7 @@ export async function dbSaveInquiry(inquiry: InquiryLead): Promise<InquiryLead> 
   } else {
     list.unshift(finalInquiry);
   }
-  fs.writeFileSync(INQUIRIES_FILE, JSON.stringify(list, null, 2), "utf-8");
+  safeWriteFile(INQUIRIES_FILE, list);
   return finalInquiry;
 }
 
@@ -352,7 +364,7 @@ export async function dbSaveAttraction(attraction: Attraction): Promise<Attracti
   } else {
     list.push(attraction);
   }
-  fs.writeFileSync(ATTRACTIONS_FILE, JSON.stringify(list, null, 2), "utf-8");
+  safeWriteFile(ATTRACTIONS_FILE, list);
   return attraction;
 }
 
@@ -368,7 +380,7 @@ export async function dbDeleteAttraction(attractionId: string): Promise<boolean>
   ensureFilesExist();
   const list = await dbGetAttractions();
   const updated = list.filter((a) => a.id !== attractionId);
-  fs.writeFileSync(ATTRACTIONS_FILE, JSON.stringify(updated, null, 2), "utf-8");
+  safeWriteFile(ATTRACTIONS_FILE, updated);
   return true;
 }
 
@@ -421,7 +433,7 @@ export async function dbSaveFAQ(faq: FAQItem): Promise<FAQItem> {
   } else {
     list.push(finalFaq);
   }
-  fs.writeFileSync(FAQS_FILE, JSON.stringify(list, null, 2), "utf-8");
+  safeWriteFile(FAQS_FILE, list);
   return finalFaq;
 }
 
@@ -437,7 +449,7 @@ export async function dbDeleteFAQ(faqId: string): Promise<boolean> {
   ensureFilesExist();
   const list = await dbGetFAQs();
   const updated = list.filter((f) => f.id !== faqId);
-  fs.writeFileSync(FAQS_FILE, JSON.stringify(updated, null, 2), "utf-8");
+  safeWriteFile(FAQS_FILE, updated);
   return true;
 }
 
@@ -479,7 +491,7 @@ export async function dbSaveStats(stats: SiteStats): Promise<SiteStats> {
   }
 
   ensureFilesExist();
-  fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2), "utf-8");
+  safeWriteFile(STATS_FILE, stats);
   return stats;
 }
 
@@ -544,7 +556,7 @@ export async function dbSaveReview(review: HotelReview): Promise<HotelReview> {
   ensureFilesExist();
   const all = await dbGetReviews();
   all.unshift(finalRev);
-  fs.writeFileSync(REVIEWS_FILE, JSON.stringify(all, null, 2), "utf-8");
+  safeWriteFile(REVIEWS_FILE, all);
   return finalRev;
 }
 
