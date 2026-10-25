@@ -24,6 +24,7 @@ import {
   getAllFAQs,
   getSiteStats,
   getAllAttractions,
+  logWhatsAppClick,
   subscribeToSiteStats,
   subscribeToHotels,
   subscribeToAttractions,
@@ -519,6 +520,7 @@ export default function HomePageClient({
                 href="https://wa.me/919864879505?text=Hi%20CherraStays,%20I%20need%20help%20with%20cabs%20and%20luxury%20hotels%20in%20Cherrapunji"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => logWhatsAppClick({ page: "Homepage Concierge Desk", note: "Clicked Concierge Desk button on Homepage" })}
                 className="px-6 py-3.5 rounded-xl bg-[#0a3a2a] hover:bg-[#06291d] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
               >
                 <span>Contact Concierge Desk</span>
@@ -575,6 +577,7 @@ export default function HomePageClient({
           href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance%20booking%20a%20hotel"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => logWhatsAppClick({ page: "Mobile Bottom Bar", note: "Clicked Concierge icon on mobile bottom bar" })}
           className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
         >
           <PhoneCall className="w-4 h-4 text-amber-600" />

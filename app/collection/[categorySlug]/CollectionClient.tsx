@@ -21,6 +21,7 @@ import HotelCard from "@/components/HotelCard";
 import InquiryModal from "@/components/InquiryModal";
 import { TravelCategory } from "@/lib/categories";
 import { Hotel } from "@/lib/types";
+import { logWhatsAppClick } from "@/lib/firebase";
 
 interface CollectionClientProps {
   category: TravelCategory;
@@ -323,6 +324,7 @@ export default function CollectionClient({
           href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => logWhatsAppClick({ page: `Collection: ${category.name}`, note: `Clicked Concierge on collection ${category.name}` })}
           className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
         >
           <PhoneCall className="w-4 h-4 text-amber-600" />

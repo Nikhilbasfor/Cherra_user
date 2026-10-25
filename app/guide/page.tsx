@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_ATTRACTIONS } from "@/lib/mockData";
-import { getAllAttractions } from "@/lib/firebase";
+import { getAllAttractions, logWhatsAppClick } from "@/lib/firebase";
 import { Attraction } from "@/lib/types";
 
 export default function GuidePage() {
@@ -157,6 +157,7 @@ export default function GuidePage() {
           href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => logWhatsAppClick({ page: "Guide Page Mobile Bar", note: "Clicked Concierge icon on /guide page" })}
           className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
         >
           <PhoneCall className="w-4 h-4 text-amber-600" />

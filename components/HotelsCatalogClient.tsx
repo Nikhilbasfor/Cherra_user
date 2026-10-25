@@ -23,7 +23,7 @@ import Footer from "@/components/Footer";
 import HotelCard from "@/components/HotelCard";
 import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_HOTELS } from "@/lib/mockData";
-import { getAllHotels } from "@/lib/firebase";
+import { getAllHotels, logWhatsAppClick } from "@/lib/firebase";
 import { Hotel } from "@/lib/types";
 import {
   getHotelsNearLandmark,
@@ -870,6 +870,7 @@ export default function HotelsCatalogClient({
           href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance%20booking%20a%20hotel"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => logWhatsAppClick({ page: "Hotels Catalog Mobile Bar", note: "Clicked Concierge icon on /hotels mobile bar" })}
           className="flex flex-col items-center gap-1 text-stone-500 hover:text-stone-900 font-medium text-[10px] uppercase tracking-wider transition-colors"
         >
           <PhoneCall className="w-4 h-4 text-amber-600" />

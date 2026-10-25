@@ -29,6 +29,7 @@ const firebaseConfig = {
 };
 
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 const isFirebaseConfigured = Boolean(
   firebaseConfig.apiKey && firebaseConfig.projectId
@@ -37,6 +38,7 @@ const isFirebaseConfigured = Boolean(
 let app: ReturnType<typeof initializeApp> | null = null;
 let db: ReturnType<typeof getFirestore> | null = null;
 let auth: ReturnType<typeof getAuth> | null = null;
+let storage: ReturnType<typeof getStorage> | null = null;
 
 if (typeof window !== "undefined" || isFirebaseConfigured) {
   try {
@@ -44,6 +46,7 @@ if (typeof window !== "undefined" || isFirebaseConfigured) {
       app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
       db = getFirestore(app);
       auth = getAuth(app);
+      storage = getStorage(app);
     }
   } catch (error) {
     console.warn("Firebase initialization skipped or failed:", error);
@@ -185,6 +188,46 @@ export async function submitInquiry(lead: Omit<InquiryLead, "id" | "createdAt" |
   }
 
   return { success: true, id: docId };
+}
+
+/**
+ * Auto-logger for direct WhatsApp clicks across the website.
+ * Captures visitor intent without blocking or delaying their WhatsApp conversation.
+ */
+export async function logWhatsAppClick(details: {
+  hotelName?: string;
+  hotelId?: string;
+  roomType?: string;
+  page?: string;
+  note?: string;
+}) {
+  const docId = "wa-lead-" + Date.now();
+  const payload = {
+    id: docId,
+    customerName: details.hotelName ? `WhatsApp Visitor (${details.hotelName})` : "WhatsApp Direct Visitor",
+    customerPhone: "Direct WhatsApp Click",
+    customerEmail: "",
+    hotelId: details.hotelId || "general",
+    hotelName: details.hotelName || "Cherrapunji Concierge Desk",
+    roomType: details.roomType || "WhatsApp Inquiry",
+    source: "whatsapp_click",
+    page: details.page || (typeof window !== "undefined" ? window.location.pathname : "/"),
+    specialRequests: details.note || "Guest clicked direct WhatsApp button to chat with concierge.",
+    checkIn: new Date().toISOString().split("T")[0],
+    checkOut: new Date(Date.now() + 86400000).toISOString().split("T")[0],
+  };
+
+  try {
+    if (typeof window !== "undefined") {
+      fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }).catch(console.warn);
+    }
+  } catch (err) {
+    console.warn("logWhatsAppClick non-blocking error:", err);
+  }
 }
 
 /**
@@ -446,4 +489,4 @@ export function subscribeToFAQs(callback: (faqs: FAQItem[]) => void): () => void
   }
 }
 
-export { app, db, auth, isFirebaseConfigured };
+export { app, db, auth, storage, isFirebaseConfigured };

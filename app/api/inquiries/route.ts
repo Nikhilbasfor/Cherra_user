@@ -40,8 +40,8 @@ export async function GET(req: Request) {
  * Public lead intake: Protected by IP Rate Limiting (5 per 10 min) and Anti-Bot Honeypot.
  */
 export async function POST(req: Request) {
-  // 1. IP Rate Limiting Guard
-  const rateLimit = checkRateLimit(req, { maxRequests: 5, windowMs: 10 * 60 * 1000 });
+  // 1. IP Rate Limiting Guard - Relaxed to 60 requests per 10 mins to support mobile networks (CGNAT)
+  const rateLimit = checkRateLimit(req, { maxRequests: 60, windowMs: 10 * 60 * 1000 });
   const rateHeaders = {
     ...corsHeaders,
     "X-RateLimit-Limit": String(rateLimit.limit),
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body: Partial<InquiryLead> & { _hp?: string; botField?: string } = await req.json();
+    const body: Partial<InquiryLead> & { _hp?: string; botField?: string; source?: string; page?: string } = await req.json();
 
     // 2. Anti-Bot Honeypot Trap (Invisible to real humans, filled by spam bots)
     if (body._hp || body.botField) {
@@ -71,38 +71,57 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Input Validation
-    if (!body.customerName?.trim() || !body.customerPhone?.trim() || !body.hotelName?.trim()) {
-      return NextResponse.json(
-        { error: "Missing required inquiry fields: Name, Phone, and Hotel selection are required." },
-        { status: 400, headers: rateHeaders }
-      );
+    // 3. Detect WhatsApp Click vs Form Inquiry
+    const isWhatsAppClick = body.source === "whatsapp" || body.source === "whatsapp_click" || body.customerPhone === "Direct WhatsApp Click";
+
+    let cleanPhone = "Direct WhatsApp Click";
+    if (!isWhatsAppClick) {
+      // Input Validation for standard form submissions
+      if (!body.customerName?.trim() || !body.customerPhone?.trim() || !body.hotelName?.trim()) {
+        return NextResponse.json(
+          { error: "Missing required inquiry fields: Name, Phone, and Hotel selection are required." },
+          { status: 400, headers: rateHeaders }
+        );
+      }
+
+      // Sanitize phone number (remove excess characters, check realistic length)
+      cleanPhone = body.customerPhone.replace(/[^\d+]/g, "");
+      if (cleanPhone.length < 8) {
+        return NextResponse.json(
+          { error: "Please enter a valid phone number with country code for WhatsApp booking confirmation." },
+          { status: 400, headers: rateHeaders }
+        );
+      }
     }
 
-    // Sanitize phone number (remove excess characters, check realistic length)
-    const cleanPhone = body.customerPhone.replace(/[^\d+]/g, "");
-    if (cleanPhone.length < 8) {
-      return NextResponse.json(
-        { error: "Please enter a valid phone number with country code for WhatsApp booking confirmation." },
-        { status: 400, headers: rateHeaders }
-      );
-    }
+    const leadId = body.id || (isWhatsAppClick ? "wa-lead-" + Date.now() : "lead-" + Date.now());
 
     const newInquiry: InquiryLead = {
-      id: body.id || "lead-" + Date.now(),
-      customerName: body.customerName.trim().slice(0, 100),
-      customerPhone: cleanPhone,
+      id: leadId,
+      customerName: body.customerName?.trim().slice(0, 100) || (isWhatsAppClick ? "WhatsApp Direct Lead" : "Guest"),
+      customerPhone: isWhatsAppClick ? "Direct WhatsApp Click" : cleanPhone,
       customerEmail: body.customerEmail ? body.customerEmail.trim().slice(0, 120) : "",
-      hotelId: body.hotelId || "hotel-" + Date.now(),
-      hotelName: body.hotelName.trim().slice(0, 150),
-      roomType: body.roomType || "Standard Deluxe",
+      hotelId: body.hotelId || "general",
+      hotelName: body.hotelName?.trim().slice(0, 150) || "Cherrapunji Stay",
+      roomType: body.roomType || (isWhatsAppClick ? "WhatsApp Inquiry" : "Standard Deluxe"),
       checkIn: body.checkIn || new Date().toISOString().split("T")[0],
       checkOut: body.checkOut || new Date().toISOString().split("T")[0],
       guests: body.guests || { adults: 2, children: 0 },
-      specialRequests: body.specialRequests ? body.specialRequests.trim().slice(0, 500) : "",
+      specialRequests: body.specialRequests
+        ? body.specialRequests.trim().slice(0, 500)
+        : (isWhatsAppClick ? `Direct WhatsApp chat clicked on ${body.page || "website"}` : ""),
       status: "new",
       budget: body.budget || 5000,
-      notes: [],
+      notes: isWhatsAppClick
+        ? [
+            {
+              id: "n-" + Date.now(),
+              text: `Guest clicked direct WhatsApp button on ${body.page || "website"}.`,
+              author: "WhatsApp Tracker",
+              createdAt: "Just now",
+            },
+          ]
+        : [],
       createdAt: new Date().toLocaleString("en-US", {
         month: "short",
         day: "numeric",

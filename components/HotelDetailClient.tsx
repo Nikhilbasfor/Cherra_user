@@ -32,7 +32,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InquiryModal from "@/components/InquiryModal";
 import { Hotel, Room, HotelReview } from "@/lib/types";
-import { getHotelReviews, submitHotelReview, submitInquiry } from "@/lib/firebase";
+import { getHotelReviews, submitHotelReview, submitInquiry, logWhatsAppClick } from "@/lib/firebase";
 
 interface HotelDetailClientProps {
   hotel: Hotel;
@@ -1024,6 +1024,15 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                   href={whatsappInquiryUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() =>
+                    logWhatsAppClick({
+                      hotelName: hotel.name,
+                      hotelId: hotel.id,
+                      roomType: selectedRoom ? selectedRoom.name : "Deluxe Room",
+                      page: `Hotel Page: ${hotel.name}`,
+                      note: `Visitor clicked WhatsApp Desk link on ${hotel.name} page`,
+                    })
+                  }
                   className="inline-flex items-center gap-1 font-bold text-emerald-800 hover:text-emerald-950 transition-colors"
                 >
                   <MessageSquare className="w-3.5 h-3.5 text-emerald-700" />
@@ -1123,6 +1132,15 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
             href={whatsappInquiryUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              logWhatsAppClick({
+                hotelName: hotel.name,
+                hotelId: hotel.id,
+                roomType: selectedRoom ? selectedRoom.name : "Deluxe Room",
+                page: `Hotel Page Mobile Bar: ${hotel.name}`,
+                note: `Visitor clicked bottom bar WhatsApp icon on ${hotel.name} page`,
+              })
+            }
             className="p-2.5 rounded-xl bg-stone-100 text-stone-800 border border-stone-300 hover:bg-stone-200 transition-colors"
             aria-label="WhatsApp Concierge"
           >
