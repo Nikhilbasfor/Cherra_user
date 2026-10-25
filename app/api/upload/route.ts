@@ -39,8 +39,16 @@ export async function POST(req: Request) {
     const safeSlug = hotelSlug.replace(/[^a-zA-Z0-9_-]/g, "_").toLowerCase();
     const uploadDir = path.join(process.cwd(), "public", "uploads", "hotels", safeSlug);
 
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    try {
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+    } catch {
+      // Serverless hosts (e.g. Vercel) have a read-only filesystem
+      return NextResponse.json(
+        { error: "This server cannot store files (read-only hosting)" },
+        { status: 503, headers: corsHeaders }
+      );
     }
 
     const savedUrls: string[] = [];
