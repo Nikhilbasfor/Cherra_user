@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { dbGetStats, dbSaveStats, dbGetHotels } from "@/lib/db";
 import { SiteStats } from "@/lib/types";
+import { isAuthorizedAdmin } from "@/lib/rateLimit";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Key",
 };
 
 export async function OPTIONS() {
@@ -15,8 +16,13 @@ export async function OPTIONS() {
 export async function GET() {
   try {
     const [stats, hotels] = await Promise.all([dbGetStats(), dbGetHotels()]);
+    const activeHotels = (hotels || []).filter((h) => h.status !== "inactive");
     const liveVerifiedStays =
-      hotels && hotels.length > 0 ? `${hotels.length}+` : stats.verifiedStays;
+      stats.verifiedStays && stats.verifiedStays !== "0"
+        ? stats.verifiedStays
+        : activeHotels.length > 0
+          ? `${activeHotels.length}+`
+          : "60+";
     return NextResponse.json(
       { ...stats, verifiedStays: liveVerifiedStays },
       { headers: corsHeaders }
@@ -28,6 +34,13 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  if (!isAuthorizedAdmin(req)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Admin authorization required to update site stats" },
+      { status: 401, headers: corsHeaders }
+    );
+  }
+
   try {
     const body: SiteStats = await req.json();
     const saved = await dbSaveStats(body);

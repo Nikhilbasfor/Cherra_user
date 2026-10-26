@@ -63,7 +63,7 @@ function withTimeout<T>(promise: Promise<T>, ms = 2000): Promise<T> {
 }
 
 /**
- * Fetch all hotels from Firestore or local backend
+ * Fetch all active hotels from Firestore or local backend
  */
 export async function getAllHotels(): Promise<Hotel[]> {
   if (db && isFirebaseConfigured) {
@@ -72,14 +72,16 @@ export async function getAllHotels(): Promise<Hotel[]> {
       const q = query(hotelsCol, orderBy("rating", "desc"));
       const snapshot = await withTimeout(getDocs(q), 2000);
       if (!snapshot.empty) {
-        return snapshot.docs.map((docSnap) => ({
-          id: docSnap.id,
-          ...(docSnap.data() as Omit<Hotel, "id">),
-        }));
+        return snapshot.docs
+          .map((docSnap) => ({
+            id: docSnap.id,
+            ...(docSnap.data() as Omit<Hotel, "id">),
+          }))
+          .filter((h) => h.status !== "inactive");
       } else {
         // Auto-seed Firestore so user's new Firebase project isn't empty!
         Promise.all(CHERRAPUNJI_HOTELS.map((h) => setDoc(doc(db!, "hotels", h.id), h))).catch(console.warn);
-        return CHERRAPUNJI_HOTELS;
+        return CHERRAPUNJI_HOTELS.filter((h) => h.status !== "inactive");
       }
     } catch (err) {
       console.warn("Firestore fetch error, falling back to local backend:", err);
@@ -91,8 +93,10 @@ export async function getAllHotels(): Promise<Hotel[]> {
     try {
       const res = await fetch("/api/hotels", { cache: "no-store" });
       if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) return data;
+        const data: Hotel[] = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          return data.filter((h) => h.status !== "inactive");
+        }
       }
     } catch {
       // fallback
@@ -102,13 +106,15 @@ export async function getAllHotels(): Promise<Hotel[]> {
     try {
       const { dbGetHotels } = await import("./db");
       const list = await dbGetHotels();
-      if (Array.isArray(list) && list.length > 0) return list;
+      if (Array.isArray(list) && list.length > 0) {
+        return list.filter((h) => h.status !== "inactive");
+      }
     } catch {
       // fallback
     }
   }
 
-  return CHERRAPUNJI_HOTELS;
+  return CHERRAPUNJI_HOTELS.filter((h) => h.status !== "inactive");
 }
 
 /**
@@ -413,9 +419,9 @@ export function subscribeToHotels(callback: (hotels: Hotel[]) => void): () => vo
       q,
       (snapshot) => {
         if (!snapshot.empty) {
-          const list = snapshot.docs.map(
-            (d) => ({ id: d.id, ...d.data() } as Hotel)
-          );
+          const list = snapshot.docs
+            .map((d) => ({ id: d.id, ...d.data() } as Hotel))
+            .filter((h) => h.status !== "inactive");
           callback(list);
         }
       },

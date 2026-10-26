@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { dbGetInquiries, dbSaveInquiry } from "@/lib/db";
 import { InquiryLead } from "@/lib/types";
+import { isAuthorizedAdmin } from "@/lib/rateLimit";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Key",
 };
 
 interface Params {
@@ -17,6 +18,13 @@ export async function OPTIONS() {
 }
 
 export async function PATCH(req: Request, { params }: Params) {
+  if (!isAuthorizedAdmin(req)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Admin API key required to update inquiry leads" },
+      { status: 401, headers: corsHeaders }
+    );
+  }
+
   try {
     const { id } = await params;
     const body = await req.json();

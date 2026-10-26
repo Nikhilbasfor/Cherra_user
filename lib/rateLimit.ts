@@ -89,7 +89,10 @@ export function checkRateLimit(
  * Checks if request contains a valid Admin API key in headers
  */
 export function isAuthorizedAdmin(req: Request): boolean {
-  const adminSecret = process.env.ADMIN_API_KEY || "cherra_admin_secret_2026";
+  const adminSecret =
+    process.env.ADMIN_API_KEY ||
+    process.env.NEXT_PUBLIC_ADMIN_API_KEY ||
+    "cherra_admin_secret_2026";
   const authHeader = req.headers.get("authorization");
   const customKey = req.headers.get("x-admin-key");
 

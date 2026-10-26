@@ -1,7 +1,13 @@
 import fs from "fs";
 import path from "path";
 import { Hotel, InquiryLead, Attraction, FAQItem, SiteStats, HotelReview } from "./types";
-import { CHERRAPUNJI_HOTELS, CHERRAPUNJI_ATTRACTIONS } from "./mockData";
+import {
+  CHERRAPUNJI_HOTELS,
+  CHERRAPUNJI_ATTRACTIONS,
+  INITIAL_FAQS,
+  INITIAL_STATS,
+  INITIAL_REVIEWS,
+} from "./mockData";
 import { db, isFirebaseConfigured } from "./firebase";
 import {
   collection,
@@ -15,6 +21,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
+export { INITIAL_FAQS, INITIAL_STATS, INITIAL_REVIEWS };
+
 const DATA_DIR = path.join(process.cwd(), "data");
 const HOTELS_FILE = path.join(DATA_DIR, "hotels.json");
 const INQUIRIES_FILE = path.join(DATA_DIR, "inquiries.json");
@@ -22,88 +30,6 @@ const ATTRACTIONS_FILE = path.join(DATA_DIR, "attractions.json");
 const FAQS_FILE = path.join(DATA_DIR, "faqs.json");
 const STATS_FILE = path.join(DATA_DIR, "stats.json");
 const REVIEWS_FILE = path.join(DATA_DIR, "reviews.json");
-
-export const INITIAL_FAQS: FAQItem[] = [
-  {
-    id: "faq-1",
-    question: "What is the best time to visit Cherrapunji (Sohra)?",
-    answer: "Cherrapunji is spectacular year-round. For roaring waterfalls and dramatic misty canyon clouds, the monsoon season from June to September is magical. For trekking down to the Double Decker Living Root Bridge and clear sunny skies, October to April is ideal.",
-    order: 1,
-  },
-  {
-    id: "faq-2",
-    question: "How do I book hotels through CherraStays without commission?",
-    answer: "When you submit an inquiry through our portal, your request connects directly with the resort management and our local desk in Sohra. There are no middleman surcharges, ensuring you get direct front-desk tariffs along with prompt WhatsApp verification.",
-    order: 2,
-  },
-  {
-    id: "faq-3",
-    question: "Are hotels in Cherrapunji safe for families and solo female travelers?",
-    answer: "Yes, exceptionally so. Meghalaya is globally recognized for its matrilineal society, peaceful culture, and warm Khasi hospitality. All hotels in our collection are verified physical properties adhering to strict safety and hygiene benchmarks.",
-    order: 3,
-  },
-  {
-    id: "faq-4",
-    question: "Can hotels arrange airport transfers from Guwahati or Shillong?",
-    answer: "Yes. Our partner resorts and boutique stays coordinate reliable cab pickups and drop-offs from Guwahati Airport (GAU) and Shillong Airport (SHL) with verified local drivers.",
-    order: 4,
-  },
-  {
-    id: "faq-5",
-    question: "Do hotels in Cherrapunji provide 24/7 hot water geysers?",
-    answer: "Yes. Because Cherrapunji remains crisp and misty throughout the year, every stay in our curated portfolio is equipped with reliable hot water geysers in private bathrooms.",
-    order: 5,
-  },
-];
-
-export const INITIAL_STATS: SiteStats = {
-  verifiedStays: "66+",
-  satisfactionRate: "4.8 / 5.0",
-  tariffPledge: "100%",
-  avgResponseTime: "20 Min",
-};
-
-export const INITIAL_REVIEWS: HotelReview[] = [
-  {
-    id: "rev-1",
-    hotelId: "polo-orchid-resort",
-    userId: "user-1",
-    userName: "Aditi Sharma",
-    userEmail: "aditi@gmail.com",
-    rating: 5,
-    title: "Unmatched sunrise view over Nohsngithiang Falls",
-    comment: "Waking up to the clouds rising from the Bangladesh plains was surreal. The log cabin was warm with 24/7 hot water, and the bonfire dinner was exceptional.",
-    stayMonth: "October 2024",
-    createdAt: "Nov 2, 2024",
-    verified: true,
-  },
-  {
-    id: "rev-2",
-    hotelId: "cherrapunjee-holiday-resort",
-    userId: "user-2",
-    userName: "Rahul Sengupta",
-    userEmail: "rahul@outlook.com",
-    rating: 5,
-    title: "The true authentic Khasi homestay experience",
-    comment: "Denis and his family treated us like personal guests. Best guidance for the Living Root Bridge trek, and homecooked local meals were pure comfort.",
-    stayMonth: "December 2024",
-    createdAt: "Dec 18, 2024",
-    verified: true,
-  },
-  {
-    id: "rev-3",
-    hotelId: "saimika-park-resort",
-    userId: "user-3",
-    userName: "Vikram Mehta",
-    userEmail: "vikram@yahoo.com",
-    rating: 4,
-    title: "Serene stream & stone cottages in nature",
-    comment: "Very rustic and peaceful. Listening to local Khasi musicians around the campfire was memorable.",
-    stayMonth: "January 2025",
-    createdAt: "Jan 12, 2025",
-    verified: true,
-  },
-];
 
 function ensureFilesExist() {
   try {

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { dbGetFAQs, dbSaveFAQ } from "@/lib/db";
 import { FAQItem } from "@/lib/types";
+import { isAuthorizedAdmin } from "@/lib/rateLimit";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Key",
 };
 
 export async function OPTIONS() {
@@ -23,6 +24,13 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  if (!isAuthorizedAdmin(req)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Admin authorization required to save FAQs" },
+      { status: 401, headers: corsHeaders }
+    );
+  }
+
   try {
     const body: FAQItem = await req.json();
     if (!body.question || !body.answer) {

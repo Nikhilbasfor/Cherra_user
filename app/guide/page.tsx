@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_ATTRACTIONS } from "@/lib/mockData";
-import { getAllAttractions, logWhatsAppClick } from "@/lib/firebase";
+import { getAllAttractions, subscribeToAttractions, logWhatsAppClick } from "@/lib/firebase";
 import { Attraction } from "@/lib/types";
 
 export default function GuidePage() {
@@ -16,13 +16,25 @@ export default function GuidePage() {
   const [attractions, setAttractions] = useState<Attraction[]>(CHERRAPUNJI_ATTRACTIONS);
 
   useEffect(() => {
+    let isMounted = true;
     getAllAttractions()
       .then((data) => {
-        if (data && data.length > 0) {
+        if (isMounted && data && data.length > 0) {
           setAttractions(data);
         }
       })
       .catch(console.warn);
+
+    const unsub = subscribeToAttractions((liveData) => {
+      if (isMounted && liveData && liveData.length > 0) {
+        setAttractions(liveData);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      unsub();
+    };
   }, []);
 
   return (

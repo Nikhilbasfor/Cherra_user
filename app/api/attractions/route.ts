@@ -1,11 +1,12 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { dbGetAttractions, dbSaveAttraction } from "@/lib/db";
 import { Attraction } from "@/lib/types";
+import { isAuthorizedAdmin } from "@/lib/rateLimit";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Key",
 };
 
 export async function OPTIONS() {
@@ -23,6 +24,13 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  if (!isAuthorizedAdmin(req)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Admin authorization required to save attractions" },
+      { status: 401, headers: corsHeaders }
+    );
+  }
+
   try {
     const body: Attraction = await req.json();
     if (!body.name || !body.category) {

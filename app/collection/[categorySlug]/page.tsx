@@ -9,6 +9,8 @@ import {
 } from "@/lib/categories";
 import { Hotel } from "@/lib/types";
 
+export const revalidate = 60;
+
 interface PageProps {
   params: Promise<{
     categorySlug: string;

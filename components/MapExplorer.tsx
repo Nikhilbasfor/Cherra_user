@@ -59,9 +59,21 @@ export default function MapExplorer({
       const match = attractions.find((a) => a.id === selectedLandmark);
       if (match) {
         setActiveItem({ type: "attraction", data: match });
+        return;
       }
     }
-  }, [selectedLandmark, attractions]);
+    setActiveItem((prev) => {
+      if (prev.type === "hotel") {
+        const updatedHotel = hotels.find((h) => h.id === (prev.data as Hotel).id);
+        if (updatedHotel) return { type: "hotel", data: updatedHotel };
+        if (hotels.length > 0) return { type: "hotel", data: hotels[0] };
+      } else {
+        const updatedAttr = attractions.find((a) => a.id === (prev.data as Attraction).id);
+        if (updatedAttr) return { type: "attraction", data: updatedAttr };
+      }
+      return prev;
+    });
+  }, [selectedLandmark, hotels, attractions]);
 
   const filteredHotels = useMemo(() => {
     if (!mapSearchQuery.trim()) return hotels;
@@ -193,11 +205,11 @@ export default function MapExplorer({
 
           {/* Interactive Pins */}
           <div className="absolute inset-0 pointer-events-none">
-            {/* Hotels Pins - Top 10 featured stays pinned on map for silky smooth performance */}
+            {/* Hotels Pins - Top 10 featured stays pinned on map using live GPS coordinates */}
             {(filterType === "all" || filterType === "hotels") &&
               filteredHotels.slice(0, 10).map((hotel, idx) => {
                 const isActive = activeItem.type === "hotel" && (activeItem.data as Hotel).id === hotel.id;
-                const positions = [
+                const fallbackPositions = [
                   { top: "45%", left: "62%" },
                   { top: "35%", left: "48%" },
                   { top: "72%", left: "28%" },
@@ -205,7 +217,15 @@ export default function MapExplorer({
                   { top: "25%", left: "42%" },
                   { top: "38%", left: "50%" },
                 ];
-                const pos = positions[idx % positions.length];
+                let pos = fallbackPositions[idx % fallbackPositions.length];
+                if (hotel.coordinates?.lat && hotel.coordinates?.lng) {
+                  // Project into bbox: lng [91.64, 91.78], lat [25.20, 25.32]
+                  const rawLeft = ((hotel.coordinates.lng - 91.64) / (91.78 - 91.64)) * 100;
+                  const rawTop = ((25.32 - hotel.coordinates.lat) / (25.32 - 25.20)) * 100;
+                  const clampedLeft = Math.min(86, Math.max(14, rawLeft));
+                  const clampedTop = Math.min(84, Math.max(16, rawTop));
+                  pos = { top: `${clampedTop.toFixed(1)}%`, left: `${clampedLeft.toFixed(1)}%` };
+                }
 
                 return (
                   <button

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -21,7 +21,7 @@ import HotelCard from "@/components/HotelCard";
 import InquiryModal from "@/components/InquiryModal";
 import { TravelCategory } from "@/lib/categories";
 import { Hotel } from "@/lib/types";
-import { logWhatsAppClick } from "@/lib/firebase";
+import { getAllHotels, subscribeToHotels, logWhatsAppClick } from "@/lib/firebase";
 
 interface CollectionClientProps {
   category: TravelCategory;
@@ -29,16 +29,88 @@ interface CollectionClientProps {
   allCategories: TravelCategory[];
 }
 
+function filterHotelsForCategory(allHotels: Hotel[], category: TravelCategory): Hotel[] {
+  const active = allHotels.filter((h) => h.status !== "inactive");
+  const matched = active.filter((h) => {
+    if (category.starFilter && h.starRating === category.starFilter) return true;
+    return h.categories && h.categories.includes(category.slug);
+  });
+  if (matched.length > 0) return matched;
+
+  if (category.starFilter) {
+    return active.filter((h) => h.starRating === category.starFilter);
+  }
+  if (category.slug.includes("honeymoon")) {
+    return active.filter(
+      (h) =>
+        h.starRating >= 3 ||
+        h.tagline.toLowerCase().includes("cliff") ||
+        h.tagline.toLowerCase().includes("valley")
+    );
+  }
+  if (category.slug.includes("family")) {
+    return active.filter((h) => h.rooms && h.rooms.length > 0);
+  }
+  if (category.slug.includes("waterfall")) {
+    return active.filter(
+      (h) =>
+        h.amenities.some((a) => a.toLowerCase().includes("view") || a.toLowerCase().includes("falls")) ||
+        h.tagline.toLowerCase().includes("cliff")
+    );
+  }
+  if (category.slug.includes("luxury")) {
+    return active.filter((h) => h.starRating >= 4);
+  }
+  if (category.slug.includes("budget")) {
+    return active.filter((h) => h.pricePerNight <= 3500);
+  }
+  if (category.slug.includes("cottage")) {
+    return active.filter(
+      (h) =>
+        h.name.toLowerCase().includes("cottage") ||
+        h.description.toLowerCase().includes("cottage") ||
+        h.description.toLowerCase().includes("pine")
+    );
+  }
+  if (category.slug.includes("root-bridge")) {
+    return active.filter((h) => h.area.toLowerCase().includes("laitkynsew") || h.pricePerNight <= 4500);
+  }
+  return active;
+}
+
 export default function CollectionClient({
   category,
-  hotels,
+  hotels: initialHotels,
   allCategories,
 }: CollectionClientProps) {
+  const [hotels, setHotels] = useState<Hotel[]>(initialHotels);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [selectedHotelForInquiry, setSelectedHotelForInquiry] = useState<Hotel | null>(null);
   const [selectedArea, setSelectedArea] = useState<string>("All Areas");
   const [sortBy, setSortBy] = useState<string>("featured");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  useEffect(() => {
+    let isMounted = true;
+    getAllHotels()
+      .then((all) => {
+        if (isMounted && all && all.length > 0) {
+          setHotels(filterHotelsForCategory(all, category));
+        }
+      })
+      .catch(console.warn);
+
+    const unsub = subscribeToHotels((liveAll) => {
+      if (isMounted && liveAll && liveAll.length > 0) {
+        setHotels(filterHotelsForCategory(liveAll, category));
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      unsub();
+    };
+  }, [category]);
 
   const handleOpenInquiry = (hotel?: Hotel) => {
     setSelectedHotelForInquiry(hotel || null);

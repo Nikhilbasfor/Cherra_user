@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { dbDeleteFAQ } from "@/lib/db";
+import { isAuthorizedAdmin } from "@/lib/rateLimit";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Key",
 };
 
 export async function OPTIONS() {
@@ -12,9 +13,16 @@ export async function OPTIONS() {
 }
 
 export async function DELETE(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!isAuthorizedAdmin(req)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Admin authorization required to delete FAQs" },
+      { status: 401, headers: corsHeaders }
+    );
+  }
+
   try {
     const { id } = await params;
     const success = await dbDeleteFAQ(id);

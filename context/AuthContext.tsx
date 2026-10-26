@@ -79,21 +79,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(profile));
         return { success: true };
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : "Failed to sign in";
-        console.warn("Auth fallback sign in:", msg);
-        // Fallback for seamless demo
-        const profile: UserProfile = {
-          uid: "usr-" + Date.now(),
-          email,
-          displayName: email.split("@")[0],
+        const msg = err instanceof Error ? err.message : "Invalid email or password.";
+        return {
+          success: false,
+          error: msg.includes("invalid-credential") || msg.includes("wrong-password") || msg.includes("user-not-found")
+            ? "Invalid email or password. Please check your credentials."
+            : msg,
         };
-        setUser(profile);
-        localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(profile));
-        return { success: true };
       }
     }
 
-    // Local fallback session
+    // Local fallback session (only when Firebase is not configured)
     const profile: UserProfile = {
       uid: "usr-" + Date.now(),
       email,
@@ -117,16 +113,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(profile);
         localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(profile));
         return { success: true };
-      } catch {
-        // Fallback
-        const profile: UserProfile = {
-          uid: "usr-" + Date.now(),
-          email,
-          displayName: name,
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "Failed to create account.";
+        return {
+          success: false,
+          error: msg.includes("email-already-in-use")
+            ? "An account with this email already exists. Please sign in instead."
+            : msg.includes("weak-password")
+              ? "Password should be at least 6 characters."
+              : msg,
         };
-        setUser(profile);
-        localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(profile));
-        return { success: true };
       }
     }
 

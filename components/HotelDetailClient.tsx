@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import {
   Star,
@@ -32,7 +32,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InquiryModal from "@/components/InquiryModal";
 import { Hotel, Room, HotelReview } from "@/lib/types";
-import { getHotelReviews, submitHotelReview, submitInquiry, logWhatsAppClick } from "@/lib/firebase";
+import {
+  getHotelReviews,
+  submitHotelReview,
+  submitInquiry,
+  logWhatsAppClick,
+  subscribeToHotels,
+} from "@/lib/firebase";
+import { CHERRAPUNJI_LANDMARKS, dijkstra, haversineDistanceKm } from "@/lib/geoDistance";
 
 interface HotelDetailClientProps {
   hotel: Hotel;
@@ -42,7 +49,26 @@ interface HotelDetailClientProps {
   };
 }
 
-export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
+export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailClientProps) {
+  const [hotel, setHotel] = useState<Hotel>(initialHotel);
+
+  // Sync live edits from Admin / Firestore
+  useEffect(() => {
+    setHotel(initialHotel);
+  }, [initialHotel]);
+
+  useEffect(() => {
+    const unsub = subscribeToHotels((liveHotels) => {
+      const updated = liveHotels.find(
+        (h) => h.id === initialHotel.id || h.slug === initialHotel.slug
+      );
+      if (updated) {
+        setHotel(updated);
+      }
+    });
+    return () => unsub();
+  }, [initialHotel.id, initialHotel.slug]);
+
   // Photo Lightbox & Gallery state
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -53,6 +79,16 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
 
   // Selected room for inquiry
   const [selectedRoom, setSelectedRoom] = useState<Room>(hotel.rooms[0] || null);
+
+  useEffect(() => {
+    if (hotel.rooms && hotel.rooms.length > 0) {
+      setSelectedRoom((prev) => {
+        if (!prev) return hotel.rooms[0];
+        const match = hotel.rooms.find((r) => r.id === prev.id || r.name === prev.name);
+        return match || hotel.rooms[0];
+      });
+    }
+  }, [hotel.rooms]);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -271,33 +307,31 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
     },
   ];
 
-  const nearbyLandmarks = [
-    {
-      name: "Nohsngithiang (Seven Sisters) Falls",
-      distance: hotel.area.toLowerCase().includes("nohsngithiang") ? "1.2 km" : "4.8 km",
-      time: "5-10 mins drive",
-    },
-    {
-      name: "Nohkalikai Falls",
-      distance: "6.5 km",
-      time: "15 mins drive",
-    },
-    {
-      name: "Mawsmai Limestone Cave",
-      distance: "3.2 km",
-      time: "8 mins drive",
-    },
-    {
-      name: "Wei Sawdong Falls",
-      distance: "8.4 km",
-      time: "20 mins drive",
-    },
-    {
-      name: "Double Decker Living Root Bridge (Tyrna)",
-      distance: "9.8 km",
-      time: "25 mins drive",
-    },
-  ];
+  const nearbyLandmarks = useMemo(() => {
+    return CHERRAPUNJI_LANDMARKS.map((lm) => {
+      const roadDistances = dijkstra(lm.id);
+      let distanceKm = roadDistances[hotel.id];
+      if (distanceKm === undefined) {
+        if (hotel.coordinates?.lat && hotel.coordinates?.lng) {
+          const straightLine = haversineDistanceKm(
+            lm.lat,
+            lm.lng,
+            hotel.coordinates.lat,
+            hotel.coordinates.lng
+          );
+          distanceKm = Number((straightLine * 1.35).toFixed(1));
+        } else {
+          distanceKm = 6.5;
+        }
+      }
+      const driveTimeMins = Math.max(3, Math.round((distanceKm / 32) * 60));
+      return {
+        name: lm.name,
+        distance: `${distanceKm} km`,
+        time: `~${driveTimeMins} mins drive`,
+      };
+    });
+  }, [hotel.id, hotel.coordinates]);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -633,7 +667,10 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
               <div className="space-y-3">
                 {hotel.rooms.map((room) => {
                   const isSelected = selectedRoom?.id === room.id;
-                  const rackPrice = Math.round(room.price * 1.25);
+                  const rackPrice =
+                    room.originalPrice && room.originalPrice > room.price
+                      ? room.originalPrice
+                      : Math.round(room.price * 1.25);
                   const saving = rackPrice - room.price;
                   return (
                     <div
@@ -737,6 +774,25 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                   Everything curated for an unforgettable mountain escape above the clouds
                 </p>
               </div>
+
+              {hotel.amenities && hotel.amenities.length > 0 && (
+                <div className="p-4 rounded-xl bg-emerald-50/50 border border-emerald-900/10 space-y-2.5">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-800 block">
+                    Verified Property Amenities
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {hotel.amenities.map((amenity, idx) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-emerald-200/80 text-xs font-semibold text-slate-800 shadow-2xs"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                        <span>{amenity}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {amenityCategories.map((cat, idx) => {
@@ -1040,8 +1096,11 @@ export default function HotelDetailClient({ hotel }: HotelDetailClientProps) {
                 </a>
                 <span className="text-[11px] text-slate-500 font-sans">
                   Helpline:{" "}
-                  <a href="tel:+919864879505" className="text-slate-800 font-bold hover:underline">
-                    +91 98648 79505
+                  <a
+                    href={`tel:${(hotel.phone || "+919864879505").replace(/\s+/g, "")}`}
+                    className="text-slate-800 font-bold hover:underline"
+                  >
+                    {hotel.phone || "+91 98648 79505"}
                   </a>
                 </span>
               </div>

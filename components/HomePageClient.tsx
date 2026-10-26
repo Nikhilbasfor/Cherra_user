@@ -65,7 +65,10 @@ export default function HomePageClient({
   const [attractionsList, setAttractionsList] = useState<Attraction[]>(initialAttractions);
 
   const currentInventory = useMemo(() => {
-    return hotels && hotels.length > 0 ? `${hotels.length}+` : (stats.verifiedStays || "6+");
+    if (stats.verifiedStays && stats.verifiedStays !== "0") {
+      return stats.verifiedStays;
+    }
+    return hotels && hotels.length > 0 ? `${hotels.length}+` : "60+";
   }, [hotels, stats.verifiedStays]);
 
   useEffect(() => {
@@ -98,26 +101,8 @@ export default function HomePageClient({
       }
     });
 
-    let channel: BroadcastChannel | null = null;
-    if (typeof window !== "undefined" && "BroadcastChannel" in window) {
-      try {
-        channel = new BroadcastChannel("cherra_realtime_sync");
-        channel.onmessage = (event) => {
-          if (!isMounted) return;
-          if (event.data?.type === "STATS_UPDATED" && event.data.payload) {
-            setStats((prev) => ({ ...prev, ...event.data.payload }));
-          } else if (event.data?.type === "HOTELS_UPDATED" && event.data.payload) {
-            setHotels(event.data.payload);
-          } else if (event.data?.type === "REFRESH_ALL") {
-            loadAll();
-          }
-        };
-      } catch (err) {
-        console.warn("BroadcastChannel warning:", err);
-      }
-    }
-
-    const loadAll = () => {
+    // Only fetch if initial SSR props were empty
+    if (!initialHotels || initialHotels.length === 0) {
       getAllHotels()
         .then((data) => {
           if (isMounted && data && data.length > 0) setHotels(data);
@@ -141,11 +126,6 @@ export default function HomePageClient({
           if (isMounted && a && a.length > 0) setAttractionsList(a);
         })
         .catch(console.warn);
-    };
-
-    // Only fetch if initial SSR props were empty
-    if (!initialHotels || initialHotels.length === 0) {
-      loadAll();
     }
 
     return () => {
@@ -154,11 +134,6 @@ export default function HomePageClient({
       unsubHotels();
       unsubAttractions();
       unsubFaqs();
-      if (channel) {
-        try {
-          channel.close();
-        } catch {}
-      }
     };
   }, []);
 
@@ -290,8 +265,9 @@ export default function HomePageClient({
 
       {/* Homestays Section - 3 Best Homestays in 1 Row */}
       <HomestaysDroneShowcase
+        hotels={hotels}
         onOpenInquiry={(hotelId) => {
-          const found = hotels.find((h) => h.id === hotelId);
+          const found = hotels.find((h) => h.id === hotelId || h.slug === hotelId);
           handleOpenInquiry(found);
         }}
       />

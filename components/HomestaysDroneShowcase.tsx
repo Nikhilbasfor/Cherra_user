@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
+import { Hotel } from "@/lib/types";
 
 interface FeaturedHomestay {
   id: string;
@@ -61,16 +62,44 @@ const TOP_3_HOMESTAYS: FeaturedHomestay[] = [
     reviewsCount: 178,
     highlight: "65-acre peaceful wilderness retreat with natural river streams, stone cottages, and acoustic campfire nights.",
     image: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80",
-    hotelSlug: "saimika-resort",
+    hotelSlug: "saimika-park-resort",
   },
 ];
 
 interface HomestaysDroneShowcaseProps {
+  hotels?: Hotel[];
   onOpenInquiry?: (hotelId?: string) => void;
 }
 
-export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDroneShowcaseProps) {
+export default function HomestaysDroneShowcase({
+  hotels = [],
+  onOpenInquiry,
+}: HomestaysDroneShowcaseProps) {
   const router = useRouter();
+
+  const liveHomestays = useMemo(() => {
+    return TOP_3_HOMESTAYS.map((spot) => {
+      const liveMatch = hotels.find(
+        (h) =>
+          h.id === spot.id ||
+          h.slug === spot.hotelSlug ||
+          h.slug === "saimika-resort" && spot.id === "saimika-park-resort"
+      );
+      if (!liveMatch) return spot;
+      return {
+        ...spot,
+        id: liveMatch.id,
+        name: liveMatch.name || spot.name,
+        area: liveMatch.area || spot.area,
+        pricePerNight: liveMatch.pricePerNight || spot.pricePerNight,
+        rating: liveMatch.rating || spot.rating,
+        reviewsCount: liveMatch.reviewsCount || spot.reviewsCount,
+        highlight: liveMatch.tagline || spot.highlight,
+        image: liveMatch.images?.[0] || spot.image,
+        hotelSlug: liveMatch.slug || spot.hotelSlug,
+      };
+    });
+  }, [hotels]);
 
   return (
     <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
@@ -109,7 +138,7 @@ export default function HomestaysDroneShowcase({ onOpenInquiry }: HomestaysDrone
 
       {/* Top 3 Homestays in 1 Row on Desktop View */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-        {TOP_3_HOMESTAYS.map((spot, idx) => (
+        {liveHomestays.map((spot, idx) => (
           <motion.div
             key={spot.id}
             initial={{ opacity: 0, y: 16 }}

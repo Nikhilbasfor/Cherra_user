@@ -13,10 +13,16 @@ export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const includeInactive =
+      searchParams.get("includeInactive") === "true" || isAuthorizedAdmin(req);
     const hotels = await dbGetHotels();
-    return NextResponse.json(hotels, { headers: corsHeaders });
+    const filtered = includeInactive
+      ? hotels
+      : hotels.filter((h) => h.status !== "inactive");
+    return NextResponse.json(filtered, { headers: corsHeaders });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Internal server error";
     return NextResponse.json({ error: message }, { status: 500, headers: corsHeaders });

@@ -13,6 +13,7 @@ import {
 import { Hotel } from "@/lib/types";
 
 export const dynamicParams = true;
+export const revalidate = 60;
 
 interface PageProps {
   params: Promise<{

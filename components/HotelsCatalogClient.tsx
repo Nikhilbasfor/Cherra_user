@@ -23,7 +23,7 @@ import Footer from "@/components/Footer";
 import HotelCard from "@/components/HotelCard";
 import InquiryModal from "@/components/InquiryModal";
 import { CHERRAPUNJI_HOTELS } from "@/lib/mockData";
-import { getAllHotels, logWhatsAppClick } from "@/lib/firebase";
+import { getAllHotels, subscribeToHotels, logWhatsAppClick } from "@/lib/firebase";
 import { Hotel } from "@/lib/types";
 import {
   getHotelsNearLandmark,
@@ -64,23 +64,36 @@ export default function HotelsCatalogClient({
   initialStarSlug = null,
   category = null,
 }: HotelsCatalogClientProps) {
-  const [hotels, setHotels] = useState<Hotel[]>(CHERRAPUNJI_HOTELS);
+  const [hotels, setHotels] = useState<Hotel[]>(
+    CHERRAPUNJI_HOTELS.filter((h) => h.status !== "inactive")
+  );
 
   useEffect(() => {
-    if (!hotels || hotels.length === 0) {
-      getAllHotels()
-        .then((data) => {
-          if (data && data.length > 0) {
-            setHotels(data);
-          }
-        })
-        .catch(console.error);
-    }
-  }, [hotels]);
+    let isMounted = true;
+
+    getAllHotels()
+      .then((data) => {
+        if (isMounted && data && data.length > 0) {
+          setHotels(data);
+        }
+      })
+      .catch(console.error);
+
+    const unsub = subscribeToHotels((liveHotels) => {
+      if (isMounted && liveHotels && liveHotels.length > 0) {
+        setHotels(liveHotels);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      unsub();
+    };
+  }, []);
 
   const searchParams = useSearchParams();
 
-  const rawArea = searchParams.get("area");
+  const rawArea = searchParams.get("area") || searchParams.get("q");
   const initialArea =
     !rawArea || rawArea.toLowerCase() === "all" || rawArea === "All Areas"
       ? ""

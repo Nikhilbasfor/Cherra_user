@@ -20,16 +20,22 @@ export default async function HomePage() {
       dbGetFAQs(),
     ]);
     if (dbStats) stats = dbStats;
-    if (dbHotels && dbHotels.length > 0) hotels = dbHotels;
+    if (dbHotels && dbHotels.length > 0) {
+      hotels = dbHotels.filter((h) => h.status !== "inactive");
+    }
     if (dbAttractions && dbAttractions.length > 0) attractions = dbAttractions;
     if (dbFaqs && dbFaqs.length > 0) faqs = dbFaqs;
   } catch (err) {
     console.warn("SSR page data fetch fallback:", err);
   }
 
-  // Automatically derive verifiedStays from currently present hotels
+  // Respect customized verifiedStays or derive from active hotels
   const liveVerifiedStays =
-    hotels && hotels.length > 0 ? `${hotels.length}+` : (stats.verifiedStays || "6+");
+    stats.verifiedStays && stats.verifiedStays !== "0"
+      ? stats.verifiedStays
+      : hotels && hotels.length > 0
+        ? `${hotels.length}+`
+        : "60+";
   stats = {
     ...stats,
     verifiedStays: liveVerifiedStays,
@@ -60,9 +66,9 @@ export default async function HomePage() {
     "@type": "TravelAgency",
     name: "CherraStays",
     url: baseUrl,
-    logo: `${baseUrl}/images/logo.png`,
+    logo: `${baseUrl}/images/cherrapunji-hotels-logo.png`,
     description: "Verified nature retreats, luxury cliffside resorts, and authentic homestays in Cherrapunji (Sohra), Meghalaya.",
-    telephone: "+91-9366767512",
+    telephone: "+91-98648-79505",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Cherrapunji",
