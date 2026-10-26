@@ -23,6 +23,15 @@ function HotelCardComponent({ hotel, onEnquire, proximity, linkPrefix }: HotelCa
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
 
+  const rawImages = (hotel.images || []).filter(Boolean);
+  const customImages = rawImages.filter((img) => !img.includes("unsplash.com"));
+  const cardImages =
+    customImages.length > 0
+      ? customImages
+      : rawImages.length > 0
+        ? rawImages
+        : ["https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"];
+
   const targetUrl = linkPrefix
     ? `${linkPrefix.replace(/\/$/, "")}/${hotel.slug}`
     : `/hotels/${hotel.slug}`;
@@ -30,13 +39,13 @@ function HotelCardComponent({ hotel, onEnquire, proximity, linkPrefix }: HotelCa
   const nextImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev + 1) % hotel.images.length);
+    setCurrentImageIndex((prev) => (prev + 1) % cardImages.length);
   };
 
   const prevImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev - 1 + hotel.images.length) % hotel.images.length);
+    setCurrentImageIndex((prev) => (prev - 1 + cardImages.length) % cardImages.length);
   };
 
   const handleCardClick = () => {
@@ -60,7 +69,7 @@ function HotelCardComponent({ hotel, onEnquire, proximity, linkPrefix }: HotelCa
         {/* Photo Container */}
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
           <Image
-            src={hotel.images[currentImageIndex] || hotel.images[0]}
+            src={cardImages[currentImageIndex] || cardImages[0]}
             alt={hotel.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -99,7 +108,7 @@ function HotelCardComponent({ hotel, onEnquire, proximity, linkPrefix }: HotelCa
           </div>
 
           {/* Navigation Arrows for Images */}
-          {hotel.images.length > 1 && (
+          {cardImages.length > 1 && (
             <div className="absolute inset-x-2 top-1/2 -translate-y-1/2 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity z-20">
               <button
                 onClick={prevImage}
@@ -119,9 +128,9 @@ function HotelCardComponent({ hotel, onEnquire, proximity, linkPrefix }: HotelCa
           )}
 
           {/* Dot Indicators */}
-          {hotel.images.length > 1 && (
+          {cardImages.length > 1 && (
             <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1 z-10">
-              {hotel.images.map((_, idx) => (
+              {cardImages.map((_, idx) => (
                 <span
                   key={idx}
                   className={`h-1 rounded-full transition-all ${

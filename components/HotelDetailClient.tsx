@@ -33,6 +33,7 @@ import Footer from "@/components/Footer";
 import InquiryModal from "@/components/InquiryModal";
 import { Hotel, Room, HotelReview } from "@/lib/types";
 import {
+  getHotelBySlug,
   getHotelReviews,
   submitHotelReview,
   submitInquiry,
@@ -58,15 +59,25 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
   }, [initialHotel]);
 
   useEffect(() => {
+    let mounted = true;
+    getHotelBySlug(initialHotel.slug || initialHotel.id)
+      .then((live) => {
+        if (mounted && live) setHotel(live);
+      })
+      .catch(() => {});
+
     const unsub = subscribeToHotels((liveHotels) => {
       const updated = liveHotels.find(
         (h) => h.id === initialHotel.id || h.slug === initialHotel.slug
       );
-      if (updated) {
+      if (mounted && updated) {
         setHotel(updated);
       }
     });
-    return () => unsub();
+    return () => {
+      mounted = false;
+      unsub();
+    };
   }, [initialHotel.id, initialHotel.slug]);
 
   // Photo Lightbox & Gallery state
@@ -101,17 +112,14 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
   const [reviewComment, setReviewComment] = useState("");
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
 
-  // Curated gallery images ensuring at least 5 for the mosaic collage
-  const fallbackImages = [
-    "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
-  ];
-  const roomImages = (hotel.rooms?.map((r) => r.image).filter(Boolean) as string[]) || [];
-  const rawList = [...hotel.images, ...roomImages];
-  const galleryImages = Array.from(new Set(rawList.length >= 5 ? rawList : [...rawList, ...fallbackImages])).slice(0, 12);
+  // Use the exact photos saved for this hotel in Admin (never pad with hardcoded Unsplash images)
+  const rawImages = (hotel.images || []).filter(Boolean);
+  const customUploadedImages = rawImages.filter((img) => !img.includes("unsplash.com"));
+  const effectiveImages = customUploadedImages.length > 0 ? customUploadedImages : rawImages;
+  const galleryImages =
+    effectiveImages.length > 0
+      ? Array.from(new Set(effectiveImages)).slice(0, 12)
+      : ["https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"];
 
   // Keyboard navigation for Fullscreen Lightbox
   useEffect(() => {
@@ -484,47 +492,166 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
       {/* Photos Gallery - Restored Generous Luxurious Height */}
       <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto my-4 sm:my-5">
         <div className="relative rounded-2xl overflow-hidden bg-slate-100 border border-emerald-900/10 shadow-sm">
-          {/* Desktop 5-Photo Mosaic Grid (Generous 320px - 390px) */}
+          {/* Desktop Adaptive Photo Gallery (1, 2, 3, 4, or 5+ saved photos without fake filler images) */}
           <div className="hidden md:grid grid-cols-12 gap-2 h-[320px] sm:h-[360px] lg:h-[390px] p-2 bg-slate-100 rounded-2xl overflow-hidden">
-            {/* Left Large Photo */}
-            <div
-              onClick={() => {
-                setLightboxIndex(0);
-                setLightboxOpen(true);
-              }}
-              className="col-span-7 relative h-full rounded-xl overflow-hidden cursor-pointer group"
-            >
-              <Image
-                src={galleryImages[0]}
-                alt={hotel.name}
-                fill
-                priority
-                className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60" />
-            </div>
-
-            {/* Right 4-Photo 2x2 Grid */}
-            <div className="col-span-5 grid grid-cols-2 grid-rows-2 gap-1.5 h-full">
-              {galleryImages.slice(1, 5).map((img, idx) => (
+            {galleryImages.length === 1 ? (
+              <div
+                onClick={() => {
+                  setLightboxIndex(0);
+                  setLightboxOpen(true);
+                }}
+                className="col-span-12 relative h-full rounded-xl overflow-hidden cursor-pointer group"
+              >
+                <Image
+                  src={galleryImages[0]}
+                  alt={hotel.name}
+                  fill
+                  priority
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60" />
+              </div>
+            ) : galleryImages.length === 2 ? (
+              galleryImages.slice(0, 2).map((img, idx) => (
                 <div
                   key={idx}
                   onClick={() => {
-                    setLightboxIndex(idx + 1);
+                    setLightboxIndex(idx);
                     setLightboxOpen(true);
                   }}
-                  className="relative h-full rounded-lg overflow-hidden cursor-pointer group"
+                  className="col-span-6 relative h-full rounded-xl overflow-hidden cursor-pointer group"
                 >
                   <Image
                     src={img}
-                    alt={`${hotel.name} Photo ${idx + 2}`}
+                    alt={`${hotel.name} Photo ${idx + 1}`}
                     fill
+                    priority={idx === 0}
                     className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                   />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
                 </div>
-              ))}
-            </div>
+              ))
+            ) : galleryImages.length === 3 ? (
+              <>
+                <div
+                  onClick={() => {
+                    setLightboxIndex(0);
+                    setLightboxOpen(true);
+                  }}
+                  className="col-span-7 relative h-full rounded-xl overflow-hidden cursor-pointer group"
+                >
+                  <Image
+                    src={galleryImages[0]}
+                    alt={hotel.name}
+                    fill
+                    priority
+                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60" />
+                </div>
+                <div className="col-span-5 grid grid-rows-2 gap-1.5 h-full">
+                  {galleryImages.slice(1, 3).map((img, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setLightboxIndex(idx + 1);
+                        setLightboxOpen(true);
+                      }}
+                      className="relative h-full rounded-lg overflow-hidden cursor-pointer group"
+                    >
+                      <Image
+                        src={img}
+                        alt={`${hotel.name} Photo ${idx + 2}`}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : galleryImages.length === 4 ? (
+              <>
+                <div
+                  onClick={() => {
+                    setLightboxIndex(0);
+                    setLightboxOpen(true);
+                  }}
+                  className="col-span-6 relative h-full rounded-xl overflow-hidden cursor-pointer group"
+                >
+                  <Image
+                    src={galleryImages[0]}
+                    alt={hotel.name}
+                    fill
+                    priority
+                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60" />
+                </div>
+                <div className="col-span-6 grid grid-cols-2 grid-rows-2 gap-1.5 h-full">
+                  {galleryImages.slice(1, 4).map((img, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setLightboxIndex(idx + 1);
+                        setLightboxOpen(true);
+                      }}
+                      className={`${idx === 0 ? "col-span-2" : "col-span-1"} relative h-full rounded-lg overflow-hidden cursor-pointer group`}
+                    >
+                      <Image
+                        src={img}
+                        alt={`${hotel.name} Photo ${idx + 2}`}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Left Large Photo */}
+                <div
+                  onClick={() => {
+                    setLightboxIndex(0);
+                    setLightboxOpen(true);
+                  }}
+                  className="col-span-7 relative h-full rounded-xl overflow-hidden cursor-pointer group"
+                >
+                  <Image
+                    src={galleryImages[0]}
+                    alt={hotel.name}
+                    fill
+                    priority
+                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60" />
+                </div>
+
+                {/* Right 4-Photo 2x2 Grid */}
+                <div className="col-span-5 grid grid-cols-2 grid-rows-2 gap-1.5 h-full">
+                  {galleryImages.slice(1, 5).map((img, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setLightboxIndex(idx + 1);
+                        setLightboxOpen(true);
+                      }}
+                      className="relative h-full rounded-lg overflow-hidden cursor-pointer group"
+                    >
+                      <Image
+                        src={img}
+                        alt={`${hotel.name} Photo ${idx + 2}`}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
 
             {/* Floating "View All Photos" Button */}
             <button
@@ -535,7 +662,9 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
               className="absolute bottom-4 right-4 z-10 flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/90 hover:bg-white text-slate-800 font-mono uppercase text-xs font-bold tracking-wider shadow-md border border-black/5 backdrop-blur-md transition-all cursor-pointer"
             >
               <Grid className="w-3.5 h-3.5 text-emerald-700" />
-              <span>All {galleryImages.length} photos</span>
+              <span>
+                {galleryImages.length === 1 ? "View Full Photo" : `All ${galleryImages.length} photos`}
+              </span>
             </button>
           </div>
 

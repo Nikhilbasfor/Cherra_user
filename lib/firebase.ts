@@ -3,9 +3,11 @@ import {
   getFirestore,
   collection,
   getDocs,
+  getDoc,
   doc,
   setDoc,
   query,
+  where,
   orderBy,
   onSnapshot,
 } from "firebase/firestore";
@@ -53,7 +55,7 @@ if (typeof window !== "undefined" || isFirebaseConfigured) {
   }
 }
 
-function withTimeout<T>(promise: Promise<T>, ms = 2000): Promise<T> {
+function withTimeout<T>(promise: Promise<T>, ms = 8000): Promise<T> {
   return Promise.race([
     promise,
     new Promise<T>((_, reject) =>
@@ -70,7 +72,7 @@ export async function getAllHotels(): Promise<Hotel[]> {
     try {
       const hotelsCol = collection(db, "hotels");
       const q = query(hotelsCol, orderBy("rating", "desc"));
-      const snapshot = await withTimeout(getDocs(q), 2000);
+      const snapshot = await withTimeout(getDocs(q), 8000);
       if (!snapshot.empty) {
         return snapshot.docs
           .map((docSnap) => ({
@@ -118,11 +120,34 @@ export async function getAllHotels(): Promise<Hotel[]> {
 }
 
 /**
- * Fetch a single hotel by its slug or ID with resilient matching
+ * Fetch a single hotel by its slug or ID with fast direct Firestore lookup + resilient matching
  */
 export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
   if (!slug) return null;
   const decoded = decodeURIComponent(slug).toLowerCase().trim().replace(/\/+$/, "");
+
+  // 0. Fast direct single-document lookup in Firestore (~100ms instead of downloading entire collection)
+  if (db && isFirebaseConfigured) {
+    try {
+      const docRef = doc(db, "hotels", decoded);
+      const docSnap = await withTimeout(getDoc(docRef), 5000);
+      if (docSnap.exists()) {
+        const data = { id: docSnap.id, ...(docSnap.data() as Omit<Hotel, "id">) };
+        if (data.status !== "inactive") return data;
+      }
+
+      const slugQuery = query(collection(db, "hotels"), where("slug", "==", decoded));
+      const slugSnap = await withTimeout(getDocs(slugQuery), 5000);
+      if (!slugSnap.empty) {
+        const firstDoc = slugSnap.docs[0];
+        const data = { id: firstDoc.id, ...(firstDoc.data() as Omit<Hotel, "id">) };
+        if (data.status !== "inactive") return data;
+      }
+    } catch (err) {
+      console.warn("Direct Firestore getHotelBySlug fallback:", err);
+    }
+  }
+
   const all = await getAllHotels();
 
   // 1. Exact match by slug or id
