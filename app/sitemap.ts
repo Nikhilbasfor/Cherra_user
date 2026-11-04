@@ -3,6 +3,8 @@ import { getAllHotels } from "@/lib/firebase";
 import { CHERRAPUNJI_TRAVEL_CATEGORIES } from "@/lib/categories";
 import { Hotel } from "@/lib/types";
 
+export const dynamic = "force-static";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://resortsincherrapunji.com";
   let hotels: Hotel[] = [];

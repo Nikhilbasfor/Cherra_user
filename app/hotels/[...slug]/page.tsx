@@ -12,7 +12,7 @@ import {
 } from "@/lib/categories";
 import { Hotel } from "@/lib/types";
 
-export const dynamicParams = true;
+export const dynamicParams = false;
 export const revalidate = 60;
 
 interface PageProps {

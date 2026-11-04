@@ -194,24 +194,24 @@ function HotelCardComponent({ hotel, onEnquire, proximity, linkPrefix }: HotelCa
           </div>
 
           {/* Price & CTA Footer */}
-          <div className="pt-3 border-t border-stone-100 flex items-end justify-between gap-2">
-            <div>
+          <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-1.5">
+            <div className="min-w-0 pr-1">
               <div className="flex items-baseline gap-1">
-                <span className="font-serif text-xl sm:text-2xl font-bold text-[#14261c] tracking-tight">
+                <span className="font-serif text-lg sm:text-xl font-bold text-[#14261c] tracking-tight whitespace-nowrap">
                   ₹{hotel.pricePerNight.toLocaleString("en-IN")}
                 </span>
-                <span className="text-xs text-stone-500 font-sans">/ night</span>
+                <span className="text-[11px] text-stone-500 font-sans whitespace-nowrap">/ night</span>
               </div>
-              <p className="text-[10px] text-stone-400 font-sans mt-0.5">
+              <p className="text-[9.5px] text-stone-400 font-sans truncate">
                 Direct Front-Desk Tariff
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 shrink-0">
               <Link
                 href={targetUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="px-3.5 py-2.5 rounded-xl border border-stone-300 text-stone-700 hover:text-emerald-900 hover:bg-stone-50 text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center gap-1 cursor-pointer"
+                className="px-2.5 py-2 rounded-lg border border-stone-300 text-stone-700 hover:text-emerald-900 hover:bg-stone-50 text-[11px] font-mono font-bold uppercase tracking-wider transition-all flex items-center justify-center cursor-pointer whitespace-nowrap"
               >
                 <span>Details</span>
               </Link>
@@ -222,10 +222,10 @@ function HotelCardComponent({ hotel, onEnquire, proximity, linkPrefix }: HotelCa
                   e.stopPropagation();
                   onEnquire(hotel);
                 }}
-                className="px-4 py-2.5 rounded-xl bg-[#0a3a2a] hover:bg-[#06291d] text-white font-sans font-bold uppercase tracking-wider text-xs shadow-sm shadow-[#0a3a2a]/20 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shrink-0"
+                className="px-3 py-2 rounded-lg bg-[#0a3a2a] hover:bg-[#06291d] text-white font-sans font-bold uppercase tracking-wider text-[11px] shadow-sm shadow-[#0a3a2a]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0 whitespace-nowrap"
               >
                 <span>Reserve</span>
-                <ArrowRight className="w-3.5 h-3.5 text-emerald-200" />
+                <ArrowRight className="w-3 h-3 text-emerald-200" />
               </button>
             </div>
           </div>

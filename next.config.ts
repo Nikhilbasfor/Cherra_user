@@ -28,9 +28,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  output: "export",
   images: {
-    formats: ["image/avif", "image/webp"],
-    minimumCacheTTL: 604800,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -41,14 +41,6 @@ const nextConfig: NextConfig = {
         hostname: "firebasestorage.googleapis.com",
       },
     ],
-  },
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: securityHeaders,
-      },
-    ];
   },
 };
 
