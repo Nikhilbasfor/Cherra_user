@@ -219,7 +219,7 @@ function InquiryModalContent({
     }
   };
 
-  const hotelPhoneClean = "919864879505";
+  const hotelPhoneClean = "917065077630";
   const hotelNameForWa = activeHotel ? activeHotel.name : "Selected Homestay";
   const roomNameForWa = selectedRoomName || "Standard Room";
   const whatsappMessage = encodeURIComponent(

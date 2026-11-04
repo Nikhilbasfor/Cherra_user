@@ -880,7 +880,7 @@ export default function HotelsCatalogClient({
         </Link>
 
         <a
-          href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance%20booking%20a%20hotel"
+          href="https://wa.me/917065077630?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance%20booking%20a%20hotel"
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => logWhatsAppClick({ page: "Hotels Catalog Mobile Bar", note: "Clicked Concierge icon on /hotels mobile bar" })}

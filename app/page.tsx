@@ -68,7 +68,7 @@ export default async function HomePage() {
     url: baseUrl,
     logo: `${baseUrl}/images/cherrapunji-hotels-logo.png`,
     description: "Verified nature retreats, luxury cliffside resorts, and authentic homestays in Cherrapunji (Sohra), Meghalaya.",
-    telephone: "+91-98648-79505",
+    telephone: "+91-70650-77630",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Cherrapunji",

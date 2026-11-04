@@ -102,11 +102,11 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
           {/* Action CTAs */}
           <div className="hidden sm:flex items-center gap-3">
             <a
-              href="tel:+919864879505"
+              href="tel:+917065077630"
               className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border border-white/20 text-white bg-white/10 hover:bg-white/20 hover:text-white transition-all shadow-2xs"
             >
               <Phone className="w-3.5 h-3.5 text-amber-400" />
-              <span className="font-mono text-[11px] tracking-wide">+91 98648 79505</span>
+              <span className="font-mono text-[11px] tracking-wide">+91 70650 77630</span>
             </a>
 
             <motion.button
@@ -161,11 +161,11 @@ export default function Navbar({ onOpenInquiry }: NavbarProps) {
             ))}
             <div className="pt-3 border-t border-emerald-900 flex flex-col gap-2.5">
               <a
-                href="tel:+919864879505"
+                href="tel:+917065077630"
                 className="flex items-center justify-center gap-2 py-3 rounded-xl border border-white/20 text-white text-xs font-medium bg-white/10"
               >
                 <Phone className="w-3.5 h-3.5 text-amber-400" />
-                <span className="font-mono">Concierge: +91 98648 79505</span>
+                <span className="font-mono">Concierge: +91 70650 77630</span>
               </a>
               <button
                 onClick={() => {

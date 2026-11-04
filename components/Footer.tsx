@@ -31,7 +31,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>Helpline: +91 98648 79505</span>
+                <span>Helpline: +91 70650 77630</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-amber-300 shrink-0" />

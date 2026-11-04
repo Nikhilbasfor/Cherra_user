@@ -493,7 +493,7 @@ export default function HomePageClient({
 
             <div className="pt-2 flex flex-col sm:flex-row gap-3">
               <a
-                href="https://wa.me/919864879505?text=Hi%20CherraStays,%20I%20need%20help%20with%20cabs%20and%20luxury%20hotels%20in%20Cherrapunji"
+                href="https://wa.me/917065077630?text=Hi%20CherraStays,%20I%20need%20help%20with%20cabs%20and%20luxury%20hotels%20in%20Cherrapunji"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => logWhatsAppClick({ page: "Homepage Concierge Desk", note: "Clicked Concierge Desk button on Homepage" })}
@@ -550,7 +550,7 @@ export default function HomePageClient({
         </Link>
 
         <a
-          href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance%20booking%20a%20hotel"
+          href="https://wa.me/917065077630?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance%20booking%20a%20hotel"
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => logWhatsAppClick({ page: "Mobile Bottom Bar", note: "Clicked Concierge icon on mobile bottom bar" })}

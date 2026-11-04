@@ -245,7 +245,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Mawkdok / MDR 27",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "resorts-in-cherrapunji",
@@ -742,7 +742,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Raidkteng",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "resorts-in-cherrapunji",
@@ -1025,7 +1025,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen (Market Center)",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "budget-stays-cherrapunji",
@@ -1357,7 +1357,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Nohkalikai Road",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -1423,7 +1423,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Nohkalikai Road",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -1817,7 +1817,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Sohra Town",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -2347,7 +2347,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "resorts-in-cherrapunji",
@@ -2616,7 +2616,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Khliehshnong",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "resorts-in-cherrapunji",
@@ -2683,7 +2683,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "resorts-in-cherrapunji",
@@ -2832,7 +2832,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Sohra Outskirts",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "resorts-in-cherrapunji",
@@ -2899,7 +2899,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Mawkisyiem",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "resorts-in-cherrapunji",
@@ -3100,7 +3100,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "hotels-in-cherrapunji",
@@ -3167,7 +3167,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Mawsmai",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "budget-stays-cherrapunji",
@@ -3234,7 +3234,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "hotels-in-cherrapunji",
@@ -3301,7 +3301,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Pdengshnong",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -3367,7 +3367,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Nohsngithiang View",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "budget-stays-cherrapunji",
@@ -3434,7 +3434,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Khliehshnong",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "budget-stays-cherrapunji",
@@ -3500,7 +3500,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Mawsmai",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "budget-stays-cherrapunji",
@@ -3566,7 +3566,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near SH 5 Highway",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "budget-stays-cherrapunji",
@@ -3632,7 +3632,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "budget-stays-cherrapunji",
@@ -3699,7 +3699,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -3766,7 +3766,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Khliehshnong",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "hotels-in-cherrapunji",
@@ -3833,7 +3833,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Mawkisyiem",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -3900,7 +3900,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -3966,7 +3966,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Pdengshnong",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -4032,7 +4032,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen Plaza",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -4098,7 +4098,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Sohra Center (1.3 km)",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -4164,7 +4164,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Mawkisyiem",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -4230,7 +4230,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Pdengshnong",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -4296,7 +4296,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Sohra Heights",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "budget-stays-cherrapunji",
@@ -4363,7 +4363,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -4429,7 +4429,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Mawkisyiem",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",
@@ -4495,7 +4495,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Lower Sohra",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "budget-stays-cherrapunji"
@@ -4561,7 +4561,7 @@ export const CHERRAPUNJI_HOTELS: Hotel[] = [
     "checkInTime": "14:00",
     "checkOutTime": "11:00",
     "distanceToCenter": "Near Saitsohpen",
-    "phone": "+91 98648 79505",
+    "phone": "+91 70650 77630",
     "status": "active",
     "categories": [
       "homestays-in-cherrapunji",

@@ -178,7 +178,7 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
         specialRequests: directRequests.trim() || undefined,
       });
       setDirectSubmitted(true);
-      const targetPhone = "919864879505";
+      const targetPhone = "917065077630";
       const msg = `Hello! I requested direct booking for *${hotel.name}* (${selectedRoom?.name || "Standard Room"}) in Cherrapunji.\n\nName: ${directName}\nPhone: ${directPhone}\nDates: ${checkInDate || "Flexible"} to ${checkOutDate || "Flexible"}\nGuests: ${guestsCount}\nRequests: ${directRequests || "Best direct rate"}`;
       window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, "_blank");
     } catch (err) {
@@ -355,7 +355,11 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
     }
   };
 
-  const hotelPhoneClean = "919864879505";
+  const hotelPhoneClean = "917065077630";
+  const displayHotelPhone =
+    hotel.phone && !hotel.phone.includes("98648")
+      ? hotel.phone
+      : "+91 70650 77630";
   const whatsappInquiryUrl = `https://wa.me/${hotelPhoneClean}?text=${encodeURIComponent(
     `Hello! I am looking to book *${hotel.name}* (${selectedRoom ? selectedRoom.name : "Deluxe Room"}) in Cherrapunji. Please confirm room rates & availability.`
   )}`;
@@ -439,11 +443,11 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
               <span className="text-slate-300">|</span>
 
               <a
-                href={`tel:${hotel.phone || "+919864879505"}`}
+                href={`tel:${displayHotelPhone.replace(/\s+/g, "")}`}
                 className="inline-flex items-center gap-1.5 text-emerald-800 hover:text-emerald-950 font-semibold text-xs sm:text-sm bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-md transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                <span>Contact: {hotel.phone || "+91 98648 79505"}</span>
+                <span>Contact: {displayHotelPhone}</span>
               </a>
             </div>
 
@@ -1226,10 +1230,10 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
                 <span className="text-[11px] text-slate-500 font-sans">
                   Helpline:{" "}
                   <a
-                    href={`tel:${(hotel.phone || "+919864879505").replace(/\s+/g, "")}`}
+                    href={`tel:${displayHotelPhone.replace(/\s+/g, "")}`}
                     className="text-slate-800 font-bold hover:underline"
                   >
-                    {hotel.phone || "+91 98648 79505"}
+                    {displayHotelPhone}
                   </a>
                 </span>
               </div>
