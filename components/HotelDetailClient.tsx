@@ -356,10 +356,7 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
   };
 
   const hotelPhoneClean = "917065077630";
-  const displayHotelPhone =
-    hotel.phone && !hotel.phone.includes("98648")
-      ? hotel.phone
-      : "+91 70650 77630";
+  const displayHotelPhone = "+91 70650 77630";
   const whatsappInquiryUrl = `https://wa.me/${hotelPhoneClean}?text=${encodeURIComponent(
     `Hello! I am looking to book *${hotel.name}* (${selectedRoom ? selectedRoom.name : "Deluxe Room"}) in Cherrapunji. Please confirm room rates & availability.`
   )}`;

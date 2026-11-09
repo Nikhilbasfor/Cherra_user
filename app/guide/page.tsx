@@ -166,7 +166,7 @@ export default function GuidePage() {
         </Link>
 
         <a
-          href="https://wa.me/919864879505?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance"
+          href="https://wa.me/917065077630?text=Hi%20CherraStays%20Concierge,%20I%20need%20assistance"
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => logWhatsAppClick({ page: "Guide Page Mobile Bar", note: "Clicked Concierge icon on /guide page" })}
