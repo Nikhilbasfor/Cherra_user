@@ -1,6 +1,7 @@
-import React, { Suspense } from "react";
+import React from "react";
 import type { Metadata } from "next";
 import HotelsCatalogClient from "@/components/HotelsCatalogClient";
+import { CHERRAPUNJI_HOTELS } from "@/lib/mockData";
 
 export const metadata: Metadata = {
   title: "Best Resorts & Hotels in Cherrapunji (Sohra) | 2026 Direct Rates",
@@ -56,21 +57,32 @@ export default function HotelsPage() {
     ],
   };
 
+  const activeHotels = CHERRAPUNJI_HOTELS.filter((h) => h.status !== "inactive");
+
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Verified Resorts & Hotels in Cherrapunji (Sohra)",
+    numberOfItems: activeHotels.length,
+    itemListElement: activeHotels.map((hotel, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: hotel.name,
+      url: `${baseUrl}/hotels/${hotel.slug}`,
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <Suspense
-        fallback={
-          <div className="min-h-screen bg-[#f8faf9] flex items-center justify-center text-emerald-700 font-semibold text-sm">
-            Loading Cherrapunji Stays...
-          </div>
-        }
-      >
-        <HotelsCatalogClient />
-      </Suspense>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
+      <HotelsCatalogClient />
     </>
   );
 }

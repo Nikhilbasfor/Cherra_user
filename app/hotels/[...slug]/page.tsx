@@ -263,19 +263,11 @@ export default async function CatchAllHotelsPage({ params }: PageProps) {
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
-          <Suspense
-            fallback={
-              <div className="min-h-screen bg-[#f8faf9] flex items-center justify-center text-emerald-700 font-semibold text-sm">
-                Loading Cherrapunji Stays...
-              </div>
-            }
-          >
-            <HotelsCatalogClient
-              initialStarRating={activeStars}
-              initialStarSlug={slug[0]}
-              category={category || null}
-            />
-          </Suspense>
+          <HotelsCatalogClient
+            initialStarRating={activeStars}
+            initialStarSlug={slug[0]}
+            category={category || null}
+          />
         </>
       );
     }

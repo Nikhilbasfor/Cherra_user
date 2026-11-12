@@ -114,8 +114,62 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Popular Resorts & Stays Quick Links (SEO Internal Link Hub) */}
+        <div className="mt-8 pt-6 border-t border-emerald-800/70">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h4 className="font-mono text-[11px] font-bold text-amber-300/90 uppercase tracking-wider">
+              Popular Cherrapunji Resorts &amp; Stays
+            </h4>
+            <Link
+              href="/hotels"
+              className="text-[11px] font-mono text-emerald-200/80 hover:text-amber-300 transition-colors flex items-center gap-1"
+            >
+              <span>Browse All 66 Verified Properties</span>
+              <ArrowUpRight className="w-3 h-3" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-2 text-[11px] text-emerald-100/65">
+            <Link href="/hotels/polo-cherrapunjee-resort" className="hover:text-white transition-colors truncate">
+              Polo Cherrapunjee Resort
+            </Link>
+            <Link href="/hotels/jiva-resort-cherrapunjee" className="hover:text-white transition-colors truncate">
+              Jiva Resort Cherrapunjee
+            </Link>
+            <Link href="/hotels/kutmadan-resort" className="hover:text-white transition-colors truncate">
+              Kutmadan Resort Sohra
+            </Link>
+            <Link href="/hotels/cherrapunjee-holiday-resort" className="hover:text-white transition-colors truncate">
+              Cherrapunjee Holiday Resort
+            </Link>
+            <Link href="/hotels/saimika-resort" className="hover:text-white transition-colors truncate">
+              Saimika Resort Cherrapunji
+            </Link>
+            <Link href="/hotels/7-sisters-falls-view-inn" className="hover:text-white transition-colors truncate">
+              7 Sisters Falls View Inn
+            </Link>
+            <Link href="/hotels/san-nael-la-resort" className="hover:text-white transition-colors truncate">
+              San Nael La Resort
+            </Link>
+            <Link href="/hotels/laitkynsew-resort" className="hover:text-white transition-colors truncate">
+              Laitkynsew Heritage Resort
+            </Link>
+            <Link href="/hotels/serene-resort-nongriat" className="hover:text-white transition-colors truncate">
+              Serene Resort Nongriat
+            </Link>
+            <Link href="/hotels/coniferous-resort" className="hover:text-white transition-colors truncate">
+              Coniferous Resort Sohra
+            </Link>
+            <Link href="/hotels/pala-resort" className="hover:text-white transition-colors truncate">
+              Pala Resort Cherrapunji
+            </Link>
+            <Link href="/hotels/labana-hotel" className="hover:text-white transition-colors truncate">
+              Labana Hotel Sohra
+            </Link>
+          </div>
+        </div>
+
         {/* Clean Bottom Bar */}
-        <div className="mt-8 pt-6 border-t border-emerald-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono text-emerald-100/50">
+        <div className="mt-6 pt-6 border-t border-emerald-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono text-emerald-100/50">
           <p>© {new Date().getFullYear()} CherraStays • Resorts in Cherrapunji. All rights reserved.</p>
           <div className="flex items-center gap-1.5 text-amber-300/90 font-bold">
             <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />

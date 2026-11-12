@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -59,6 +59,52 @@ const ADDITIONAL_AMENITIES = [
   "Travel Desk & Cab Services",
 ];
 
+function CatalogUrlParamsSync({
+  initialStarRating,
+  categorySlug,
+  onSync,
+}: {
+  initialStarRating?: number | null;
+  categorySlug?: string | null;
+  onSync: (params: {
+    area: string;
+    stars: number[];
+    collection: string;
+    checkIn: string;
+    checkOut: string;
+    near: string;
+  }) => void;
+}) {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const rawArea = searchParams.get("area") || searchParams.get("q");
+    const area =
+      !rawArea || rawArea.toLowerCase() === "all" || rawArea === "All Areas"
+        ? ""
+        : rawArea;
+
+    const urlStars = searchParams.get("stars")
+      ? searchParams.get("stars")!.split(",").map(Number)
+      : [];
+
+    const stars = initialStarRating
+      ? [initialStarRating]
+      : urlStars.length > 0
+      ? urlStars
+      : [];
+
+    const collection = categorySlug || searchParams.get("collection") || "all";
+    const checkIn = searchParams.get("checkIn") || "";
+    const checkOut = searchParams.get("checkOut") || "";
+    const near = searchParams.get("near") || "";
+
+    onSync({ area, stars, collection, checkIn, checkOut, near });
+  }, [searchParams, initialStarRating, categorySlug, onSync]);
+
+  return null;
+}
+
 export default function HotelsCatalogClient({
   initialStarRating = null,
   initialStarSlug = null,
@@ -91,36 +137,18 @@ export default function HotelsCatalogClient({
     };
   }, []);
 
-  const searchParams = useSearchParams();
+  const defaultStars = initialStarRating ? [initialStarRating] : [];
+  const initialCollection = category?.slug || "all";
 
-  const rawArea = searchParams.get("area") || searchParams.get("q");
-  const initialArea =
-    !rawArea || rawArea.toLowerCase() === "all" || rawArea === "All Areas"
-      ? ""
-      : rawArea;
-
-  const urlStars = searchParams.get("stars")
-    ? searchParams.get("stars")!.split(",").map(Number)
-    : [];
-
-  const defaultStars = initialStarRating
-    ? [initialStarRating]
-    : urlStars.length > 0
-    ? urlStars
-    : [];
-
-  const initialCollection = category?.slug || searchParams.get("collection") || "all";
-  const initialCheckIn = searchParams.get("checkIn") || "";
-  const initialCheckOut = searchParams.get("checkOut") || "";
-  const initialNear = searchParams.get("near") || "";
-
-  const [searchQuery, setSearchQuery] = useState(initialArea);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCollection, setSelectedCollection] = useState(initialCollection);
   const [selectedStars, setSelectedStars] = useState<number[]>(defaultStars);
   const [activeStarSlug, setActiveStarSlug] = useState<string | null>(
     initialStarSlug || (initialStarRating ? `star-${initialStarRating}` : null)
   );
-  const [selectedLandmark, setSelectedLandmark] = useState<string>(initialNear);
+  const [selectedLandmark, setSelectedLandmark] = useState<string>("");
+  const [initialCheckIn, setInitialCheckIn] = useState<string>("");
+  const [initialCheckOut, setInitialCheckOut] = useState<string>("");
   const [maxPrice, setMaxPrice] = useState<number>(15000);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>("featured");
@@ -129,6 +157,32 @@ export default function HotelsCatalogClient({
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [amenitiesModalOpen, setAmenitiesModalOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState<number>(12);
+
+  const handleUrlParamsSync = React.useCallback(
+    ({
+      area,
+      stars,
+      collection,
+      checkIn,
+      checkOut,
+      near,
+    }: {
+      area: string;
+      stars: number[];
+      collection: string;
+      checkIn: string;
+      checkOut: string;
+      near: string;
+    }) => {
+      if (area) setSearchQuery(area);
+      if (stars.length > 0 && !initialStarRating) setSelectedStars(stars);
+      if (collection && collection !== "all") setSelectedCollection(collection);
+      if (checkIn) setInitialCheckIn(checkIn);
+      if (checkOut) setInitialCheckOut(checkOut);
+      if (near) setSelectedLandmark(near);
+    },
+    [initialStarRating]
+  );
 
   useEffect(() => {
     if (initialStarRating) {
@@ -451,6 +505,13 @@ export default function HotelsCatalogClient({
 
   return (
     <div className="min-h-screen bg-[#faf9f6] text-slate-900 selection:bg-amber-400 selection:text-black pb-16 md:pb-0">
+      <Suspense fallback={null}>
+        <CatalogUrlParamsSync
+          initialStarRating={initialStarRating}
+          categorySlug={category?.slug}
+          onSync={handleUrlParamsSync}
+        />
+      </Suspense>
       <Navbar onOpenInquiry={() => handleOpenInquiry()} />
 
       {/* Header - Uplifted with reduced padding and compact title */}
@@ -786,6 +847,42 @@ export default function HotelsCatalogClient({
             )}
           </main>
         </div>
+
+        {/* Complete Cherrapunji Resorts & Homestays SEO Directory (Crawlable Internal Links for All Properties) */}
+        <section
+          aria-label="Complete Directory of Verified Resorts and Homestays in Cherrapunji"
+          className="mt-14 pt-8 border-t border-stone-200/90"
+        >
+          <div className="mb-4">
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-slate-900">
+              Complete Directory of Verified Cherrapunji (Sohra) Resorts &amp; Stays
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Quick index of all {hotels.length} certified resorts, cliffside cottages, and homestays in Cherrapunji with direct front-desk rates.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
+            {hotels.map((h) => (
+              <Link
+                key={h.id}
+                href={`/hotels/${h.slug}`}
+                className="group flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-white border border-stone-200/80 hover:border-emerald-700/50 hover:shadow-xs transition-all text-xs"
+              >
+                <div className="min-w-0">
+                  <p className="font-semibold text-slate-800 group-hover:text-emerald-900 truncate">
+                    {h.name}
+                  </p>
+                  <p className="text-[10px] text-slate-500 truncate">
+                    {h.area} • {h.starRating}★
+                  </p>
+                </div>
+                <span className="font-mono font-bold text-[11px] text-emerald-800 shrink-0">
+                  ₹{h.pricePerNight.toLocaleString("en-IN")}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
       </div>
 
       {/* Additional Amenities Popup Modal */}

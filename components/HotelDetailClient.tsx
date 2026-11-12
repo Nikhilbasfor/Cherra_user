@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Star,
   MapPin,
@@ -41,6 +42,7 @@ import {
   subscribeToHotels,
 } from "@/lib/firebase";
 import { CHERRAPUNJI_LANDMARKS, dijkstra, haversineDistanceKm } from "@/lib/geoDistance";
+import { CHERRAPUNJI_HOTELS } from "@/lib/mockData";
 
 interface HotelDetailClientProps {
   hotel: Hotel;
@@ -340,6 +342,30 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
       };
     });
   }, [hotel.id, hotel.coordinates]);
+
+  const similarHotels = useMemo(() => {
+    const active = CHERRAPUNJI_HOTELS.filter(
+      (h) => h.status !== "inactive" && h.slug !== hotel.slug
+    );
+    const sameAreaOrTier = active
+      .filter((h) => h.area === hotel.area || h.starRating === hotel.starRating)
+      .slice(0, 3);
+    const selectedSlugs = new Set(sameAreaOrTier.map((h) => h.slug));
+
+    const currentIdx = Math.max(
+      0,
+      CHERRAPUNJI_HOTELS.findIndex((h) => h.slug === hotel.slug)
+    );
+    const rotated: Hotel[] = [];
+    for (let i = 1; i <= active.length && rotated.length < 6 - sameAreaOrTier.length; i++) {
+      const candidate = active[(currentIdx + i * 7) % active.length];
+      if (candidate && !selectedSlugs.has(candidate.slug)) {
+        selectedSlugs.add(candidate.slug);
+        rotated.push(candidate);
+      }
+    }
+    return [...sameAreaOrTier, ...rotated];
+  }, [hotel.slug, hotel.area, hotel.starRating]);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -1062,6 +1088,63 @@ export default function HotelDetailClient({ hotel: initialHotel }: HotelDetailCl
                 )}
               </div>
             </section>
+
+            {/* 7. Similar & Nearby Stays in Cherrapunji (Internal Link Mesh for SEO & Discovery) */}
+            {similarHotels.length > 0 && (
+              <section
+                aria-label="Similar and Nearby Stays in Cherrapunji"
+                className="bg-white border border-emerald-900/10 rounded-2xl p-6 sm:p-7 space-y-4 shadow-sm"
+              >
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
+                      Similar &amp; Nearby Stays in Cherrapunji
+                    </h2>
+                    <p className="text-xs sm:text-sm text-slate-500 font-sans mt-0.5">
+                      Explore other verified resorts and homestays near {hotel.area}
+                    </p>
+                  </div>
+                  <Link
+                    href="/hotels"
+                    className="text-xs font-mono font-bold text-emerald-800 hover:text-emerald-950 uppercase tracking-wider shrink-0"
+                  >
+                    View All →
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+                  {similarHotels.map((sim) => (
+                    <Link
+                      key={sim.id}
+                      href={`/hotels/${sim.slug}`}
+                      className="group rounded-xl border border-slate-200/80 bg-slate-50/70 hover:bg-white hover:border-emerald-700/40 hover:shadow-md transition-all p-3.5 flex flex-col justify-between gap-2"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-1 text-[10px] font-mono text-emerald-800 font-bold uppercase tracking-wider">
+                          <span className="truncate">{sim.area}</span>
+                          <span className="shrink-0 text-amber-600">{sim.starRating}★</span>
+                        </div>
+                        <h3 className="text-sm font-bold text-slate-900 group-hover:text-emerald-900 mt-1 line-clamp-1">
+                          {sim.name}
+                        </h3>
+                        <p className="text-xs text-slate-500 line-clamp-2 mt-0.5 leading-relaxed">
+                          {sim.tagline}
+                        </p>
+                      </div>
+                      <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs">
+                        <span className="font-mono font-bold text-slate-900">
+                          ₹{sim.pricePerNight.toLocaleString("en-IN")}
+                          <span className="text-[10px] font-normal text-slate-500">/night</span>
+                        </span>
+                        <span className="text-[11px] font-mono font-bold text-emerald-700 group-hover:translate-x-0.5 transition-transform">
+                          View Stay →
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
 
           {/* Right Sticky Booking Widget (4 cols) - Complete Self-Contained Direct Reservation */}
